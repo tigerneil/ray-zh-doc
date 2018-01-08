@@ -1,0 +1,408 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Web UI &mdash; Ray 0.3.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Ray 0.3.0 documentation" href="index.html"/>
+        <link rel="next" title="Hyperparameter Optimization" href="example-hyperopt.html"/>
+        <link rel="prev" title="RLlib Developer Guide" href="rllib-dev.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Ray
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install-on-ubuntu.html">Installation on Ubuntu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install-on-macosx.html">Installation on Mac OS X</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install-on-docker.html">Installation on Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation-troubleshooting.html">Installation Troubleshooting</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">The Ray API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="actors.html">Actors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-with-gpus.html">Using Ray with GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tune.html">Ray.tune: Hyperparameter Optimization Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rllib.html">Ray RLlib: A Scalable Reinforcement Learning Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rllib-dev.html">RLlib Developer Guide</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Web UI</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-the-web-ui">Running the Web UI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#features">Features</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#task-and-object-ids">Task and Object IDs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#task-timeline">Task Timeline</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#time-distributions-and-time-series">Time Distributions and Time Series</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="example-hyperopt.html">Hyperparameter Optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-rl-pong.html">Learning to Play Pong</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-policy-gradient.html">Policy Gradient Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-parameter-server.html">Parameter Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-resnet.html">ResNet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-a3c.html">Asynchronous Advantage Actor Critic (A3C)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-lbfgs.html">Batch L-BFGS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-evolution-strategies.html">Evolution Strategies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-cython.html">Cython</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-streaming.html">Streaming MapReduce</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-with-tensorflow.html">Using Ray with TensorFlow</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Design</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="internals-overview.html">An Overview of the Internals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="serialization.html">Serialization in the Object Store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fault-tolerance.html">Fault Tolerance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plasma-object-store.html">The Plasma Object Store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">Resource (CPUs, GPUs)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Cluster Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="autoscaling.html">Cloud Setup and Auto-Scaling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-on-a-cluster.html">Using Ray on a Cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-on-a-large-cluster.html">Using Ray on a Large Cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-and-docker-on-a-cluster.html">Using Ray and Docker on a Cluster (EXPERIMENTAL)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Help</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ray</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Web UI</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/webui.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="web-ui">
+<h1>Web UI<a class="headerlink" href="#web-ui" title="Permalink to this headline">¶</a></h1>
+<p>The Ray web UI includes tools for debugging Ray jobs. The following
+image shows an example of using the task timeline for performance debugging:</p>
+<img alt="_images/timeline.png" src="_images/timeline.png" />
+<div class="section" id="dependencies">
+<h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
+<p>To use the UI, you will need to install the following.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>pip install jupyter ipywidgets bokeh
+</pre></div>
+</div>
+<p>If you see an error like</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>Widget Javascript not detected. It may not be installed properly.
+</pre></div>
+</div>
+<p>Then you may need to run the following.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>jupyter nbextension <span class="nb">enable</span> --py --sys-prefix widgetsnbextension
+</pre></div>
+</div>
+<p><strong>Note:</strong> If you are building Ray from source, then you will also need a
+<code class="docutils literal"><span class="pre">python2</span></code> executable.</p>
+</div>
+<div class="section" id="running-the-web-ui">
+<h2>Running the Web UI<a class="headerlink" href="#running-the-web-ui" title="Permalink to this headline">¶</a></h2>
+<p>Currently, the web UI is launched automatically when <code class="docutils literal"><span class="pre">ray.init</span></code> is called. The
+command will print a URL of the form:</p>
+<div class="highlight-text"><div class="highlight"><pre><span></span>=============================================================================
+View the web UI at http://localhost:8889/notebooks/ray_ui92131.ipynb?token=89354a314e5a81bf56e023ad18bda3a3d272ee216f342938
+=============================================================================
+</pre></div>
+</div>
+<p>If you are running Ray on your local machine, then you can head directly to that
+URL with your browser to see the Jupyter notebook. Otherwise, if you are using
+Ray remotely, such as on EC2, you will need to ensure that port is open on that
+machine. Typically, when you ssh into the machine, you can also port forward
+with the <code class="docutils literal"><span class="pre">-L</span></code> option as such:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>ssh -L &lt;port&gt;:localhost:&lt;port&gt; &lt;user&gt;@&lt;ip-address&gt;
+</pre></div>
+</div>
+<p>So for the above URL, you would use the port 8889. The Jupyter notebook attempts
+to run on port 8888, but if that fails it tries successive ports until it finds
+an open port.</p>
+<p>You can also open the port on the machine as well, which is not recommended for
+security as the machine would be open to the Internet. In this case, you would
+need to replace localhost by the public IP the remote machine is using.</p>
+<p>Once you have navigated to the URL, start the UI by clicking on the following.</p>
+<div class="highlight-text"><div class="highlight"><pre><span></span>Kernel -&gt; Restart and Run all
+</pre></div>
+</div>
+</div>
+<div class="section" id="features">
+<h2>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h2>
+<p>The UI supports a search for additional details on Task IDs and Object IDs, a
+task timeline, a distribution of task completion times, and time series for CPU
+utilization and cluster usage.</p>
+<div class="section" id="task-and-object-ids">
+<h3>Task and Object IDs<a class="headerlink" href="#task-and-object-ids" title="Permalink to this headline">¶</a></h3>
+<p>These widgets show additional details about an object or task given the ID. If
+you have the object in Python, the ID can be found by simply calling <code class="docutils literal"><span class="pre">.hex</span></code> on
+an Object ID as below:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># This will return a hex string of the ID.</span>
+<span class="n">objectid</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">literal_id</span> <span class="o">=</span> <span class="n">objectid</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>and pasting in the returned string with no quotes. Otherwise, they can be found
+in the task timeline in the output area below the timeline when you select a
+task.</p>
+<p>For Task IDs, they can be found by searching for an object ID the task created,
+or via the task timeline in the output area.</p>
+<p>The additional details for tasks here can also be found in the task timeline;
+the search just provides an easier method to find a specific task when you have
+millions.</p>
+</div>
+<div class="section" id="task-timeline">
+<h3>Task Timeline<a class="headerlink" href="#task-timeline" title="Permalink to this headline">¶</a></h3>
+<p>There are three components to this widget: the controls for the widget at the
+top, the timeline itself, and the details area at the bottom. In the controls,
+you first select whether you want to select a subset of tasks via the time they
+were completed or by the number of tasks. You can control the percentages either
+via a double sided slider, or by setting specific values in the text boxes. If
+you choose to select by the number of tasks, then entering a negative number N
+in the text field denotes the last N tasks run, while a positive value N denotes
+the first N tasks run. If there are ten tasks and you enter -1 into the field,
+then the slider will show 90% to 100%, where 1 would show 0% to 10%. Finally,
+you can choose if you want edges for task submission (if a task invokes another
+task) or object dependencies (if the result from a task is passed to another
+task) to be added, and if you want the different phases of a task broken up into
+separate tasks in the timeline.</p>
+<p>For the timeline, each node has its own dropdown with a timeline, and each row
+in the dropdown is a worker. Moving and zooming are handled by selecting the
+appropiate icons on the floating taskbar. The first is selection, the second
+panning, the third zooming, and the fourth timing. To shown edges, you can
+enable Flow Events in View Options.</p>
+<p>If you have selection enabled in the floating taskbar and select a task, then
+the details area at the bottom will fill up with information such as task ID,
+function ID, and the duration in seconds of each phase of the task.</p>
+</div>
+<div class="section" id="time-distributions-and-time-series">
+<h3>Time Distributions and Time Series<a class="headerlink" href="#time-distributions-and-time-series" title="Permalink to this headline">¶</a></h3>
+<p>The completion time distribution, CPU utilization, and cluster usage all have
+the same task selection controls as the task timeline.</p>
+<p>The task completion time distribution tracks the histogram of completion tasks
+for all tasks selected.</p>
+<p>CPU utilization gives you a count of how many CPU cores are being used at a
+given time. As typically each core has a worker assigned to it, this is
+equivalent to utilization of the workers running in Ray.</p>
+<p>Cluster Usage gives you a heat-map with time on the x-axis, node IP addresses on
+the y-axis, and coloring based on how many tasks were running on that node at
+that given time.</p>
+</div>
+</div>
+<div class="section" id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline">¶</a></h2>
+<p>The Ray timeline visualization may not work in Firefox or Safari.</p>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="example-hyperopt.html" class="btn btn-neutral float-right" title="Hyperparameter Optimization" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rllib-dev.html" class="btn btn-neutral" title="RLlib Developer Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, The Ray Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

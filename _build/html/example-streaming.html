@@ -1,0 +1,411 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Streaming MapReduce &mdash; Ray 0.3.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Ray 0.3.0 documentation" href="index.html"/>
+        <link rel="next" title="Using Ray with TensorFlow" href="using-ray-with-tensorflow.html"/>
+        <link rel="prev" title="Cython" href="example-cython.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Ray
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install-on-ubuntu.html">Installation on Ubuntu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install-on-macosx.html">Installation on Mac OS X</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install-on-docker.html">Installation on Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation-troubleshooting.html">Installation Troubleshooting</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">The Ray API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="actors.html">Actors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-with-gpus.html">Using Ray with GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tune.html">Ray.tune: Hyperparameter Optimization Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rllib.html">Ray RLlib: A Scalable Reinforcement Learning Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rllib-dev.html">RLlib Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="webui.html">Web UI</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Examples</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="example-hyperopt.html">Hyperparameter Optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-rl-pong.html">Learning to Play Pong</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-policy-gradient.html">Policy Gradient Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-parameter-server.html">Parameter Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-resnet.html">ResNet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-a3c.html">Asynchronous Advantage Actor Critic (A3C)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-lbfgs.html">Batch L-BFGS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-evolution-strategies.html">Evolution Strategies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-cython.html">Cython</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Streaming MapReduce</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-with-tensorflow.html">Using Ray with TensorFlow</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Design</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="internals-overview.html">An Overview of the Internals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="serialization.html">Serialization in the Object Store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fault-tolerance.html">Fault Tolerance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plasma-object-store.html">The Plasma Object Store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">Resource (CPUs, GPUs)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Cluster Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="autoscaling.html">Cloud Setup and Auto-Scaling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-on-a-cluster.html">Using Ray on a Cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-on-a-large-cluster.html">Using Ray on a Large Cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-and-docker-on-a-cluster.html">Using Ray and Docker on a Cluster (EXPERIMENTAL)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Help</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ray</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Streaming MapReduce</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/example-streaming.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="streaming-mapreduce">
+<h1>Streaming MapReduce<a class="headerlink" href="#streaming-mapreduce" title="Permalink to this headline">¶</a></h1>
+<p>This document walks through how to implement a simple streaming application
+using Ray’s actor capabilities. It implements a streaming MapReduce which
+computes word counts on wikipedia articles.</p>
+<p>You can view the <a class="reference external" href="https://github.com/ray-project/ray/tree/master/examples/streaming">code for this example</a>.</p>
+<p>To run the example, you need to install the dependencies</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>pip install wikipedia
+</pre></div>
+</div>
+<p>and then execute the script as follows:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>python ray/examples/streaming/streaming.py
+</pre></div>
+</div>
+<p>For each round of articles read, the script will output
+the top 10 words in these articles together with their word count:</p>
+<div class="highlight-text"><div class="highlight"><pre><span></span>article index = 0
+   the 2866
+   of 1688
+   and 1448
+   in 1101
+   to 593
+   a 553
+   is 509
+   as 325
+   are 284
+   by 261
+article index = 1
+   the 3597
+   of 1971
+   and 1735
+   in 1429
+   to 670
+   a 623
+   is 578
+   as 401
+   by 293
+   for 285
+article index = 2
+   the 3910
+   of 2123
+   and 1890
+   in 1468
+   to 658
+   a 653
+   is 488
+   as 364
+   by 362
+   for 297
+article index = 3
+   the 2962
+   of 1667
+   and 1472
+   in 1220
+   a 546
+   to 538
+   is 516
+   as 307
+   by 253
+   for 243
+article index = 4
+   the 3523
+   of 1866
+   and 1690
+   in 1475
+   to 645
+   a 583
+   is 572
+   as 352
+   by 318
+   for 306
+...
+</pre></div>
+</div>
+<p>Note that this examples uses <a class="reference external" href="http://ray.readthedocs.io/en/latest/actors.html">distributed actor handles</a>, which are still
+considered experimental.</p>
+<p>There is a <code class="docutils literal"><span class="pre">Mapper</span></code> actor, which has a method <code class="docutils literal"><span class="pre">get_range</span></code> used to retrieve
+word counts for words in a certain range:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="nd">@ray.remote</span>
+<span class="k">class</span> <span class="nc">Mapper</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">title_stream</span><span class="p">):</span>
+        <span class="c1"># Constructor, the title stream parameter is a stream of wikipedia</span>
+        <span class="c1"># article titles that will be read by this mapper</span>
+
+    <span class="k">def</span> <span class="nf">get_range</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">article_index</span><span class="p">,</span> <span class="n">keys</span><span class="p">):</span>
+        <span class="c1"># Return counts of all the words with first</span>
+        <span class="c1"># letter between keys[0] and keys[1] in the</span>
+        <span class="c1"># articles that haven&#39;t been read yet with index</span>
+        <span class="c1"># up to article_index</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal"><span class="pre">Reducer</span></code> actor holds a list of mappers, calls <code class="docutils literal"><span class="pre">get_range</span></code> on them
+and accumulates the results.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="nd">@ray.remote</span>
+<span class="k">class</span> <span class="nc">Reducer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keys</span><span class="p">,</span> <span class="o">*</span><span class="n">mappers</span><span class="p">):</span>
+         <span class="c1"># Constructor for a reducer that gets input from the list of mappers</span>
+         <span class="c1"># in the argument and accumulates word counts for words with first</span>
+         <span class="c1"># letter between keys[0] and keys[1]</span>
+
+    <span class="k">def</span> <span class="nf">next_reduce_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">article_index</span><span class="p">):</span>
+         <span class="c1"># Get articles up to article_index that haven&#39;t been read yet,</span>
+         <span class="c1"># accumulate the word counts and return them</span>
+</pre></div>
+</div>
+<p>On the driver, we then create a number of mappers and reducers and run the
+streaming MapReduce:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">streams</span> <span class="o">=</span> <span class="c1"># Create list of num_mappers streams</span>
+<span class="n">keys</span> <span class="o">=</span> <span class="c1"># Partition the keys among the reducers.</span>
+
+<span class="c1"># Create a number of mappers.</span>
+<span class="n">mappers</span> <span class="o">=</span> <span class="p">[</span><span class="n">Mapper</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span> <span class="k">for</span> <span class="n">stream</span> <span class="ow">in</span> <span class="n">streams</span><span class="p">]</span>
+
+<span class="c1"># Create a number of reduces, each responsible for a different range of keys.</span>
+<span class="c1"># This gives each Reducer actor a handle to each Mapper actor.</span>
+<span class="n">reducers</span> <span class="o">=</span> <span class="p">[</span><span class="n">Reducer</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="o">*</span><span class="n">mappers</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">]</span>
+
+<span class="n">article_index</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+    <span class="n">counts</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">([</span><span class="n">reducer</span><span class="o">.</span><span class="n">next_reduce_result</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">article_index</span><span class="p">)</span>
+                      <span class="k">for</span> <span class="n">reducer</span> <span class="ow">in</span> <span class="n">reducers</span><span class="p">])</span>
+    <span class="n">article_index</span> <span class="o">+=</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>The actual example reads a list of articles and creates a stream object which
+produces an infinite stream of articles from the list. This is a toy example
+meant to illustrate the idea. In practice we would produce a stream of
+non-repeating items for each mapper.</p>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="using-ray-with-tensorflow.html" class="btn btn-neutral float-right" title="Using Ray with TensorFlow" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="example-cython.html" class="btn btn-neutral" title="Cython" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, The Ray Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

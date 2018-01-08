@@ -1,0 +1,390 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Resource (CPUs, GPUs) &mdash; Ray 0.3.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Ray 0.3.0 documentation" href="index.html"/>
+        <link rel="next" title="Cloud Setup and Auto-Scaling" href="autoscaling.html"/>
+        <link rel="prev" title="The Plasma Object Store" href="plasma-object-store.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Ray
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install-on-ubuntu.html">Installation on Ubuntu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install-on-macosx.html">Installation on Mac OS X</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install-on-docker.html">Installation on Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation-troubleshooting.html">Installation Troubleshooting</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">The Ray API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="actors.html">Actors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-with-gpus.html">Using Ray with GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tune.html">Ray.tune: Hyperparameter Optimization Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rllib.html">Ray RLlib: A Scalable Reinforcement Learning Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rllib-dev.html">RLlib Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="webui.html">Web UI</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="example-hyperopt.html">Hyperparameter Optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-rl-pong.html">Learning to Play Pong</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-policy-gradient.html">Policy Gradient Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-parameter-server.html">Parameter Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-resnet.html">ResNet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-a3c.html">Asynchronous Advantage Actor Critic (A3C)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-lbfgs.html">Batch L-BFGS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-evolution-strategies.html">Evolution Strategies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-cython.html">Cython</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-streaming.html">Streaming MapReduce</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-with-tensorflow.html">Using Ray with TensorFlow</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Design</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="internals-overview.html">An Overview of the Internals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="serialization.html">Serialization in the Object Store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fault-tolerance.html">Fault Tolerance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plasma-object-store.html">The Plasma Object Store</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Resource (CPUs, GPUs)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#cpus-and-gpus">CPUs and GPUs</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#specifying-a-node-s-resource-requirements">Specifying a node’s resource requirements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#specifying-a-task-s-cpu-and-gpu-requirements">Specifying a task’s CPU and GPU requirements</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#custom-resources">Custom Resources</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#current-limitations">Current Limitations</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Cluster Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="autoscaling.html">Cloud Setup and Auto-Scaling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-on-a-cluster.html">Using Ray on a Cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-on-a-large-cluster.html">Using Ray on a Large Cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-and-docker-on-a-cluster.html">Using Ray and Docker on a Cluster (EXPERIMENTAL)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Help</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ray</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Resource (CPUs, GPUs)</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/resources.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="resource-cpus-gpus">
+<h1>Resource (CPUs, GPUs)<a class="headerlink" href="#resource-cpus-gpus" title="Permalink to this headline">¶</a></h1>
+<p>This document describes how resources are managed in Ray. Each node in a Ray
+cluster knows its own resource capacities, and each task specifies its resource
+requirements.</p>
+<div class="section" id="cpus-and-gpus">
+<h2>CPUs and GPUs<a class="headerlink" href="#cpus-and-gpus" title="Permalink to this headline">¶</a></h2>
+<p>The Ray backend includes built-in support for CPUs and GPUs.</p>
+<div class="section" id="specifying-a-node-s-resource-requirements">
+<h3>Specifying a node’s resource requirements<a class="headerlink" href="#specifying-a-node-s-resource-requirements" title="Permalink to this headline">¶</a></h3>
+<p>To specify a node’s resource requirements from the command line, pass the
+<code class="docutils literal"><span class="pre">--num-cpus</span></code> and <code class="docutils literal"><span class="pre">--num-cpus</span></code> flags into <code class="docutils literal"><span class="pre">ray</span> <span class="pre">start</span></code>.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="c1"># To start a head node.</span>
+ray start --head --num-cpus<span class="o">=</span><span class="m">8</span> --num-gpus<span class="o">=</span><span class="m">1</span>
+
+<span class="c1"># To start a non-head node.</span>
+ray start --redis-address<span class="o">=</span>&lt;redis-address&gt; --num-cpus<span class="o">=</span><span class="m">4</span> --num-gpus<span class="o">=</span><span class="m">2</span>
+</pre></div>
+</div>
+<p>To specify a node’s resource requirements when the Ray processes are all started
+through <code class="docutils literal"><span class="pre">ray.init</span></code>, do the following.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">ray</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">num_cpus</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">num_gpus</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If the number of CPUs is unspecified, Ray will automatically determine the
+number by running <code class="docutils literal"><span class="pre">psutil.cpu_count()</span></code>. If the number of GPUs is unspecified,
+Ray will attempt to automatically detect the number of GPUs.</p>
+</div>
+<div class="section" id="specifying-a-task-s-cpu-and-gpu-requirements">
+<h3>Specifying a task’s CPU and GPU requirements<a class="headerlink" href="#specifying-a-task-s-cpu-and-gpu-requirements" title="Permalink to this headline">¶</a></h3>
+<p>To specify a task’s CPU and GPU requirements, pass the <code class="docutils literal"><span class="pre">num_cpus</span></code> and
+<code class="docutils literal"><span class="pre">num_gpus</span></code> arguments into the remote decorator.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="nd">@ray.remote</span><span class="p">(</span><span class="n">num_cpus</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">num_gpus</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">():</span>
+    <span class="k">return</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>When <code class="docutils literal"><span class="pre">f</span></code> tasks will be scheduled on machines that have at least 4 CPUs and 2
+GPUs, and when one of the <code class="docutils literal"><span class="pre">f</span></code> tasks executes, 4 CPUs and 2 GPUs will be
+reserved for that task. The IDs of the GPUs that are reserved for the task can
+be accessed with <code class="docutils literal"><span class="pre">ray.get_gpu_ids()</span></code>. Ray will automatically set the
+environment variable <code class="docutils literal"><span class="pre">CUDA_VISIBLE_DEVICES</span></code> for that process. These resources
+will be released when the task finishes executing.</p>
+<p>However, if the task gets blocked in a call to <code class="docutils literal"><span class="pre">ray.get</span></code>. For example,
+consider the following remote function.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="nd">@ray.remote</span><span class="p">(</span><span class="n">num_cpus</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_gpus</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">g</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">remote</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>When a <code class="docutils literal"><span class="pre">g</span></code> task is executing, it will release its CPU resources when it gets
+blocked in the call to <code class="docutils literal"><span class="pre">ray.get</span></code>. It will reacquire the CPU resources when
+<code class="docutils literal"><span class="pre">ray.get</span></code> returns. It will retain its GPU resources throughout the lifetime of
+the task because the task will most likely continue to use GPU memory.</p>
+<p>To specify that an <strong>actor</strong> requires GPUs, do the following.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="nd">@ray.remote</span><span class="p">(</span><span class="n">num_gpus</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Actor</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+<p>When an <code class="docutils literal"><span class="pre">Actor</span></code> instance is created, it will be placed on a node that has at
+least 1 GPU, and the GPU will be reserved for the actor for the duration of the
+actor’s lifetime (even if the actor is not executing tasks). The GPU resources
+will be released when the actor terminates. Note that currently <strong>only GPU
+resources are used for actor placement</strong>.</p>
+</div>
+</div>
+<div class="section" id="custom-resources">
+<h2>Custom Resources<a class="headerlink" href="#custom-resources" title="Permalink to this headline">¶</a></h2>
+<p>While Ray has built-in support for CPUs and GPUs, nodes can be started with
+arbitrary custom resources. <strong>All custom resources behave like GPUs.</strong></p>
+<p>A node can be started with some custom resources as follows.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>ray start --head --resources<span class="o">=</span><span class="s1">&#39;{&quot;Resource1&quot;: 4, &quot;Resource2&quot;: 16}&#39;</span>
+</pre></div>
+</div>
+<p>It can be done through <code class="docutils literal"><span class="pre">ray.init</span></code> as follows.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">ray</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">resources</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Resource1&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;Resource2&#39;</span><span class="p">:</span> <span class="mi">16</span><span class="p">})</span>
+</pre></div>
+</div>
+<p>To require custom resources in a task, specify the requirements in the remote
+decorator.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="nd">@ray.remote</span><span class="p">(</span><span class="n">resources</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Resource2&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">():</span>
+    <span class="k">return</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="current-limitations">
+<h2>Current Limitations<a class="headerlink" href="#current-limitations" title="Permalink to this headline">¶</a></h2>
+<p>We are working to remove the following limitations.</p>
+<ul class="simple">
+<li><strong>Actor Resource Requirements:</strong> Currently only GPUs are used to determine
+actor placement.</li>
+<li><strong>Recovering from Bad Scheduling:</strong> Currently Ray does not recover from poor
+scheduling decisions. For example, suppose there are two GPUs (on separate
+machines) in the cluster and we wish to run two GPU tasks. There are scenarios
+in which both tasks can be accidentally scheduled on the same machine, which
+will result in poor load balancing.</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="autoscaling.html" class="btn btn-neutral float-right" title="Cloud Setup and Auto-Scaling" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="plasma-object-store.html" class="btn btn-neutral" title="The Plasma Object Store" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, The Ray Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

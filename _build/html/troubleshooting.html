@@ -1,0 +1,467 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Troubleshooting &mdash; Ray 0.3.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Ray 0.3.0 documentation" href="index.html"/>
+        <link rel="next" title="Contact" href="contact.html"/>
+        <link rel="prev" title="Using Ray and Docker on a Cluster (EXPERIMENTAL)" href="using-ray-and-docker-on-a-cluster.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Ray
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install-on-ubuntu.html">Installation on Ubuntu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install-on-macosx.html">Installation on Mac OS X</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install-on-docker.html">Installation on Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation-troubleshooting.html">Installation Troubleshooting</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">The Ray API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="actors.html">Actors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-with-gpus.html">Using Ray with GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tune.html">Ray.tune: Hyperparameter Optimization Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rllib.html">Ray RLlib: A Scalable Reinforcement Learning Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rllib-dev.html">RLlib Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="webui.html">Web UI</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="example-hyperopt.html">Hyperparameter Optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-rl-pong.html">Learning to Play Pong</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-policy-gradient.html">Policy Gradient Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-parameter-server.html">Parameter Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-resnet.html">ResNet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-a3c.html">Asynchronous Advantage Actor Critic (A3C)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-lbfgs.html">Batch L-BFGS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-evolution-strategies.html">Evolution Strategies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-cython.html">Cython</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-streaming.html">Streaming MapReduce</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-with-tensorflow.html">Using Ray with TensorFlow</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Design</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="internals-overview.html">An Overview of the Internals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="serialization.html">Serialization in the Object Store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fault-tolerance.html">Fault Tolerance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plasma-object-store.html">The Plasma Object Store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">Resource (CPUs, GPUs)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Cluster Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="autoscaling.html">Cloud Setup and Auto-Scaling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-on-a-cluster.html">Using Ray on a Cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-on-a-large-cluster.html">Using Ray on a Large Cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-and-docker-on-a-cluster.html">Using Ray and Docker on a Cluster (EXPERIMENTAL)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Help</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Troubleshooting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#no-speedup">No Speedup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#crashes">Crashes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#hanging">Hanging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#serialization-problems">Serialization Problems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#outdated-function-definitions">Outdated Function Definitions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ray</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Troubleshooting</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/troubleshooting.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="troubleshooting">
+<h1>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline">¶</a></h1>
+<p>This document discusses some common problems that people run into when using Ray
+as well as some known problems. If you encounter other problems, please
+<a class="reference external" href="https://github.com/ray-project/ray/issues">let us know</a>.</p>
+<div class="section" id="no-speedup">
+<h2>No Speedup<a class="headerlink" href="#no-speedup" title="Permalink to this headline">¶</a></h2>
+<p>You just ran an application using Ray, but it wasn’t as fast as you expected it
+to be. Or worse, perhaps it was slower than the serial version of the
+application! The most common reasons are the following.</p>
+<ul class="simple">
+<li><strong>Number of cores:</strong> How many cores is Ray using? When you start Ray, it will
+determine the number of CPUs on each machine with <code class="docutils literal"><span class="pre">psutil.cpu_count()</span></code>. Ray
+usually will not schedule more tasks in parallel than the number of CPUs. So
+if the number of CPUs is 4, the most you should expect is a 4x speedup.</li>
+<li><strong>Physical versus logical CPUs:</strong> Do the machines you’re running on have fewer
+<strong>physical</strong> cores than <strong>logical</strong> cores? You can check the number of logical
+cores with <code class="docutils literal"><span class="pre">psutil.cpu_count()</span></code> and the number of physical cores with
+<code class="docutils literal"><span class="pre">psutil.cpu_count(logical=False)</span></code>. This is common on a lot of machines and
+especially on EC2. For many workloads (especially numerical workloads), you
+often cannot expect a greater speedup than the number of physical CPUs.</li>
+<li><strong>Small tasks:</strong> Are your tasks very small? Ray introduces some overhead for
+each task (the amount of overhead depends on the arguments that are passed
+in). You will be unlikely to see speedups if your tasks take less than ten
+milliseconds. For many workloads, you can easily increase the sizes of your
+tasks by batching them together.</li>
+<li><strong>Variable durations:</strong> Do your tasks have variable duration? If you run 10
+tasks with variable duration in parallel, you shouldn’t expect an N-fold
+speedup (because you’ll end up waiting for the slowest task). In this case,
+consider using <code class="docutils literal"><span class="pre">ray.wait</span></code> to begin processing tasks that finish first.</li>
+<li><strong>Multi-threaded libraries:</strong> Are all of your tasks attempting to use all of
+the cores on the machine? If so, they are likely to experience contention and
+prevent your application from achieving a speedup. You can diagnose this by
+opening <code class="docutils literal"><span class="pre">top</span></code> while your application is running. If one process is using
+most of the CPUs, and the others are using a small amount, this may be the
+problem. This is very common with some versions of <code class="docutils literal"><span class="pre">numpy</span></code>, and in that case
+can usually be setting an environment variable like <code class="docutils literal"><span class="pre">MKL_NUM_THREADS</span></code> (or
+the equivalent depending on your installation) to <code class="docutils literal"><span class="pre">1</span></code>.</li>
+</ul>
+<p>If you are still experiencing a slowdown, but none of the above problems apply,
+we’d really like to know! Please create a <a class="reference external" href="https://github.com/ray-project/ray/issues">GitHub issue</a> and consider
+submitting a minimal code example that demonstrates the problem.</p>
+</div>
+<div class="section" id="crashes">
+<h2>Crashes<a class="headerlink" href="#crashes" title="Permalink to this headline">¶</a></h2>
+<p>If Ray crashed, you may wonder what happened. Currently, this can occur for some
+of the following reasons.</p>
+<ul>
+<li><p class="first"><strong>Stressful workloads:</strong> Workloads that create many many tasks in a short
+amount of time can sometimes interfere with the heartbeat mechanism that we
+use to check that processes are still alive. On the head node in the cluster,
+you can check the files <code class="docutils literal"><span class="pre">/tmp/raylogs/monitor-******.out</span></code> and
+<code class="docutils literal"><span class="pre">/tmp/raylogs/monitor-******.err</span></code>. They will indicate which processes Ray
+has marked as dead (due to a lack of heartbeats). However, it is currently
+possible for a process to get marked as dead without actually having died.</p>
+</li>
+<li><p class="first"><strong>Starting many actors:</strong> Workloads that start a large number of actors all at
+once may exhibit problems when the processes (or libraries that they use)
+contend for resources. Similarly, a script that starts many actors over the
+lifetime of the application will eventually cause the system to run out of
+file descriptors. This is addressable, but currently we do not garbage collect
+actor processes until the script finishes.</p>
+</li>
+<li><p class="first"><strong>Running out of file descriptors:</strong> As a workaround, you may be able to
+increase the maximum number of file descriptors with a command like
+<code class="docutils literal"><span class="pre">ulimit</span> <span class="pre">-n</span> <span class="pre">65536</span></code>. If that fails, double check that the hard limit is
+sufficiently large by running <code class="docutils literal"><span class="pre">ulimit</span> <span class="pre">-Hn</span></code>. If it is too small, you can
+increase the hard limit as follows (these instructions work on EC2).</p>
+<blockquote>
+<div><ul>
+<li><p class="first">Increase the hard ulimit for open file descriptors system-wide by running
+the following.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo bash -c <span class="s2">&quot;echo </span><span class="nv">$USER</span><span class="s2"> hard nofile 65536 &gt;&gt; /etc/security/limits.conf&quot;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Logout and log back in.</p>
+</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="hanging">
+<h2>Hanging<a class="headerlink" href="#hanging" title="Permalink to this headline">¶</a></h2>
+<p>If a workload is hanging and not progressing, the problem may be one of the
+following.</p>
+<ul class="simple">
+<li><strong>Reconstructing an object created with put:</strong> When an object that is needed
+has been evicted or lost, Ray will attempt to rerun the task that created the
+object. However, there are some cases that currently are not handled. For
+example, if the object was created by a call to <code class="docutils literal"><span class="pre">ray.put</span></code> on the driver
+process, then the argument that was passed into <code class="docutils literal"><span class="pre">ray.put</span></code> is no longer
+available and so the call to <code class="docutils literal"><span class="pre">ray.put</span></code> cannot be rerun (without rerunning
+the driver).</li>
+<li><strong>Reconstructing an object created by actor task:</strong> Ray currently does not
+reconstruct objects created by actor methods.</li>
+</ul>
+</div>
+<div class="section" id="serialization-problems">
+<h2>Serialization Problems<a class="headerlink" href="#serialization-problems" title="Permalink to this headline">¶</a></h2>
+<p>Ray’s serialization is currently imperfect. If you encounter an object that
+Ray does not serialize/deserialize correctly, please let us know. For example,
+you may want to bring it up on <a class="reference external" href="https://github.com/ray-project/ray/issues/557">this thread</a>.</p>
+<ul class="simple">
+<li><a class="reference external" href="https://github.com/ray-project/ray/issues/319">Objects with multiple references to the same object</a>.</li>
+<li><a class="reference external" href="https://github.com/ray-project/ray/issues/512">Subtypes of lists, dictionaries, or tuples</a>.</li>
+</ul>
+</div>
+<div class="section" id="outdated-function-definitions">
+<h2>Outdated Function Definitions<a class="headerlink" href="#outdated-function-definitions" title="Permalink to this headline">¶</a></h2>
+<p>Due to subtleties of Python, if you redefine a remote function, you may not
+always get the expected behavior. In this case, it may be that Ray is not
+running the newest version of the function.</p>
+<p>Suppose you define a remote function <code class="docutils literal"><span class="pre">f</span></code> and then redefine it. Ray should use
+the newest version.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="nd">@ray.remote</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">():</span>
+    <span class="k">return</span> <span class="mi">1</span>
+
+<span class="nd">@ray.remote</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">():</span>
+    <span class="k">return</span> <span class="mi">2</span>
+
+<span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">remote</span><span class="p">())</span>  <span class="c1"># This should be 2.</span>
+</pre></div>
+</div>
+<p>However, the following are cases where modifying the remote function will
+not update Ray to the new version (at least without stopping and restarting
+Ray).</p>
+<ul>
+<li><p class="first"><strong>The function is imported from an external file:</strong> In this case,
+<code class="docutils literal"><span class="pre">f</span></code> is defined in some external file <code class="docutils literal"><span class="pre">file.py</span></code>. If you <code class="docutils literal"><span class="pre">import</span> <span class="pre">file</span></code>,
+change the definition of <code class="docutils literal"><span class="pre">f</span></code> in <code class="docutils literal"><span class="pre">file.py</span></code>, then re-<code class="docutils literal"><span class="pre">import</span> <span class="pre">file</span></code>,
+the function <code class="docutils literal"><span class="pre">f</span></code> will not be updated.</p>
+<p>This is because the second import gets ignored as a no-op, so <code class="docutils literal"><span class="pre">f</span></code> is
+still defined by the first import.</p>
+<p>A solution to this problem is to use <code class="docutils literal"><span class="pre">reload(file)</span></code> instead of a second
+<code class="docutils literal"><span class="pre">import</span> <span class="pre">file</span></code>. Reloading causes the new definition of <code class="docutils literal"><span class="pre">f</span></code> to be
+re-executed, and exports it to the other machines. Note that in Python 3, you
+need to do <code class="docutils literal"><span class="pre">from</span> <span class="pre">importlib</span> <span class="pre">import</span> <span class="pre">reload</span></code>.</p>
+</li>
+<li><p class="first"><strong>The function relies on a helper function from an external file:</strong>
+In this case, <code class="docutils literal"><span class="pre">f</span></code> can be defined within your Ray application, but relies
+on a helper function <code class="docutils literal"><span class="pre">h</span></code> defined in some external file <code class="docutils literal"><span class="pre">file.py</span></code>. If the
+definition of <code class="docutils literal"><span class="pre">h</span></code> gets changed in <code class="docutils literal"><span class="pre">file.py</span></code>, redefining <code class="docutils literal"><span class="pre">f</span></code> will not
+update Ray to use the new version of <code class="docutils literal"><span class="pre">h</span></code>.</p>
+<p>This is because when <code class="docutils literal"><span class="pre">f</span></code> first gets defined, its definition is shipped to
+all of the workers, and is unpickled. During unpickling, <code class="docutils literal"><span class="pre">file.py</span></code> gets
+imported in the workers. Then when <code class="docutils literal"><span class="pre">f</span></code> gets redefined, its definition is
+again shipped and unpickled in all of the workers. But since <code class="docutils literal"><span class="pre">file.py</span></code>
+has been imported in the workers already, it is treated as a second import
+and is ignored as a no-op.</p>
+<p>Unfortunately, reloading on the driver does not update <code class="docutils literal"><span class="pre">h</span></code>, as the reload
+needs to happen on the worker.</p>
+<p>A solution to this problem is to redefine <code class="docutils literal"><span class="pre">f</span></code> to reload <code class="docutils literal"><span class="pre">file.py</span></code> before
+it calls <code class="docutils literal"><span class="pre">h</span></code>. For example, if inside <code class="docutils literal"><span class="pre">file.py</span></code> you have</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">h</span><span class="p">():</span>
+    <span class="k">return</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>And you define remote function <code class="docutils literal"><span class="pre">f</span></code> as</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="nd">@ray.remote</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">():</span>
+    <span class="k">return</span> <span class="nb">file</span><span class="o">.</span><span class="n">h</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>You can redefine <code class="docutils literal"><span class="pre">f</span></code> as follows.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="nd">@ray.remote</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">():</span>
+    <span class="nb">reload</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">file</span><span class="o">.</span><span class="n">h</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>This forces the reload to happen on the workers as needed. Note that in
+Python 3, you need to do <code class="docutils literal"><span class="pre">from</span> <span class="pre">importlib</span> <span class="pre">import</span> <span class="pre">reload</span></code>.</p>
+</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="contact.html" class="btn btn-neutral float-right" title="Contact" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="using-ray-and-docker-on-a-cluster.html" class="btn btn-neutral" title="Using Ray and Docker on a Cluster (EXPERIMENTAL)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, The Ray Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

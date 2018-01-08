@@ -1,0 +1,320 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Cython &mdash; Ray 0.3.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Ray 0.3.0 documentation" href="index.html"/>
+        <link rel="next" title="Streaming MapReduce" href="example-streaming.html"/>
+        <link rel="prev" title="Evolution Strategies" href="example-evolution-strategies.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Ray
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install-on-ubuntu.html">Installation on Ubuntu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install-on-macosx.html">Installation on Mac OS X</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install-on-docker.html">Installation on Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation-troubleshooting.html">Installation Troubleshooting</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">The Ray API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="actors.html">Actors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-with-gpus.html">Using Ray with GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tune.html">Ray.tune: Hyperparameter Optimization Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rllib.html">Ray RLlib: A Scalable Reinforcement Learning Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rllib-dev.html">RLlib Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="webui.html">Web UI</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Examples</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="example-hyperopt.html">Hyperparameter Optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-rl-pong.html">Learning to Play Pong</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-policy-gradient.html">Policy Gradient Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-parameter-server.html">Parameter Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-resnet.html">ResNet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-a3c.html">Asynchronous Advantage Actor Critic (A3C)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-lbfgs.html">Batch L-BFGS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-evolution-strategies.html">Evolution Strategies</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Cython</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#getting-started">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#notes">Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="example-streaming.html">Streaming MapReduce</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-with-tensorflow.html">Using Ray with TensorFlow</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Design</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="internals-overview.html">An Overview of the Internals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="serialization.html">Serialization in the Object Store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fault-tolerance.html">Fault Tolerance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plasma-object-store.html">The Plasma Object Store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">Resource (CPUs, GPUs)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Cluster Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="autoscaling.html">Cloud Setup and Auto-Scaling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-on-a-cluster.html">Using Ray on a Cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-on-a-large-cluster.html">Using Ray on a Large Cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-and-docker-on-a-cluster.html">Using Ray and Docker on a Cluster (EXPERIMENTAL)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Help</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ray</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Cython</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/example-cython.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="cython">
+<h1>Cython<a class="headerlink" href="#cython" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="getting-started">
+<h2>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
+<p>This document provides examples of using Cython-generated code in <code class="docutils literal"><span class="pre">ray</span></code>. To get started, run the following from directory <code class="docutils literal"><span class="pre">$RAY_HOME/examples/cython</span></code>:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>pip install scipy <span class="c1"># For BLAS example</span>
+python setup.py develop
+python cython_main.py --help
+</pre></div>
+</div>
+<p>You can import the <code class="docutils literal"><span class="pre">cython_examples</span></code> module from a Python script or interpreter.</p>
+</div>
+<div class="section" id="notes">
+<h2>Notes<a class="headerlink" href="#notes" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>You <strong>must</strong> include the following two lines at the top of any <code class="docutils literal"><span class="pre">*.pyx</span></code> file:</li>
+</ul>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="ch">#!python</span>
+<span class="c1"># cython: embedsignature=True, binding=True</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>You cannot decorate Cython functions within a <code class="docutils literal"><span class="pre">*.pyx</span></code> file (there are ways around this, but creates a leaky abstraction between Cython and Python that would be very challenging to support generally). Instead, prefer the following in your Python code:</li>
+</ul>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">some_cython_func</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">some_cython_module</span><span class="o">.</span><span class="n">some_cython_func</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>You cannot transfer memory buffers to a remote function (see <code class="docutils literal"><span class="pre">example8</span></code>, which currently fails); your remote function must return a value</li>
+<li>Have a look at <code class="docutils literal"><span class="pre">cython_main.py</span></code>, <code class="docutils literal"><span class="pre">cython_simple.pyx</span></code>, and <code class="docutils literal"><span class="pre">setup.py</span></code> for examples of how to call, define, and build Cython code, respectively. The Cython <a class="reference external" href="http://cython.readthedocs.io/">documentation</a> is also very helpful.</li>
+<li>Several limitations come from Cython’s own <a class="reference external" href="https://github.com/cython/cython/wiki/Unsupported">unsupported</a> Python features.</li>
+<li>We currently do not support compiling and distributing Cython code to <code class="docutils literal"><span class="pre">ray</span></code> clusters. In other words, Cython developers are responsible for compiling and distributing any Cython code to their cluster (much as would be the case for users who need Python packages like <code class="docutils literal"><span class="pre">scipy</span></code>).</li>
+<li>For most simple use cases, developers need not worry about Python 2 or 3, but users who do need to care can have a look at the <code class="docutils literal"><span class="pre">language_level</span></code> Cython compiler directive (see <a class="reference external" href="http://cython.readthedocs.io/en/latest/src/reference/compilation.html">here</a>).</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="example-streaming.html" class="btn btn-neutral float-right" title="Streaming MapReduce" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="example-evolution-strategies.html" class="btn btn-neutral" title="Evolution Strategies" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, The Ray Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,507 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Ray RLlib: A Scalable Reinforcement Learning Library &mdash; Ray 0.3.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Ray 0.3.0 documentation" href="index.html"/>
+        <link rel="next" title="RLlib Developer Guide" href="rllib-dev.html"/>
+        <link rel="prev" title="Ray.tune: Hyperparameter Optimization Framework" href="tune.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Ray
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install-on-ubuntu.html">Installation on Ubuntu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install-on-macosx.html">Installation on Mac OS X</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install-on-docker.html">Installation on Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation-troubleshooting.html">Installation Troubleshooting</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">The Ray API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="actors.html">Actors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-with-gpus.html">Using Ray with GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tune.html">Ray.tune: Hyperparameter Optimization Framework</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Ray RLlib: A Scalable Reinforcement Learning Library</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#getting-started">Getting Started</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#specifying-parameters">Specifying Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#evaluating-trained-agents">Evaluating Trained Agents</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#tuned-examples">Tuned Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#python-user-api">Python User API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#custom-environments">Custom Environments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#custom-models-and-preprocessors">Custom Models and Preprocessors</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#using-rllib-with-ray-tune">Using RLlib with Ray.tune</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#contributing-to-rllib">Contributing to RLlib</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="rllib-dev.html">RLlib Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="webui.html">Web UI</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="example-hyperopt.html">Hyperparameter Optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-rl-pong.html">Learning to Play Pong</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-policy-gradient.html">Policy Gradient Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-parameter-server.html">Parameter Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-resnet.html">ResNet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-a3c.html">Asynchronous Advantage Actor Critic (A3C)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-lbfgs.html">Batch L-BFGS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-evolution-strategies.html">Evolution Strategies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-cython.html">Cython</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-streaming.html">Streaming MapReduce</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-with-tensorflow.html">Using Ray with TensorFlow</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Design</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="internals-overview.html">An Overview of the Internals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="serialization.html">Serialization in the Object Store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fault-tolerance.html">Fault Tolerance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plasma-object-store.html">The Plasma Object Store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">Resource (CPUs, GPUs)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Cluster Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="autoscaling.html">Cloud Setup and Auto-Scaling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-on-a-cluster.html">Using Ray on a Cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-on-a-large-cluster.html">Using Ray on a Large Cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-and-docker-on-a-cluster.html">Using Ray and Docker on a Cluster (EXPERIMENTAL)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Help</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ray</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Ray RLlib: A Scalable Reinforcement Learning Library</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/rllib.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="ray-rllib-a-scalable-reinforcement-learning-library">
+<h1>Ray RLlib: A Scalable Reinforcement Learning Library<a class="headerlink" href="#ray-rllib-a-scalable-reinforcement-learning-library" title="Permalink to this headline">¶</a></h1>
+<p>Ray RLlib is a reinforcement learning library that aims to provide both performance and composability:</p>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt>Performance</dt>
+<dd><ul class="first last">
+<li>High performance algorithm implementions</li>
+<li>Pluggable distributed RL execution strategies</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Composability</dt>
+<dd><ul class="first last">
+<li>Integration with the <a class="reference external" href="tune.html">Ray.tune</a> hyperparam tuning tool</li>
+<li>Support for multiple frameworks (TensorFlow, PyTorch)</li>
+<li>Scalable primitives for developing new algorithms</li>
+<li>Shared models between algorithms</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p>You can find the code for RLlib <a class="reference external" href="https://github.com/ray-project/ray/tree/master/python/ray/rllib">here on GitHub</a>, and the NIPS symposium paper <a class="reference external" href="https://arxiv.org/abs/1712.09381">here</a>.</p>
+<p>RLlib currently provides the following algorithms:</p>
+<ul class="simple">
+<li><a class="reference external" href="https://arxiv.org/abs/1707.06347">Proximal Policy Optimization (PPO)</a> which
+is a proximal variant of <a class="reference external" href="https://arxiv.org/abs/1502.05477">TRPO</a>.</li>
+<li><a class="reference external" href="https://arxiv.org/abs/1602.01783">The Asynchronous Advantage Actor-Critic (A3C)</a>.</li>
+<li><a class="reference external" href="https://arxiv.org/abs/1312.5602">Deep Q Networks (DQN)</a>.</li>
+<li>Evolution Strategies, as described in <a class="reference external" href="https://arxiv.org/abs/1703.03864">this
+paper</a>. Our implementation
+is adapted from
+<a class="reference external" href="https://github.com/openai/evolution-strategies-starter">here</a>.</li>
+</ul>
+<p>These algorithms can be run on any <a class="reference external" href="https://github.com/openai/gym">OpenAI Gym MDP</a>,
+including custom ones written and registered by the user.</p>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>RLlib has extra dependencies on top of <strong>ray</strong>:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>pip install <span class="s1">&#39;ray[rllib]&#39;</span>
+</pre></div>
+</div>
+<p>For usage of PyTorch models, visit the <a class="reference external" href="http://pytorch.org/">PyTorch website</a>
+for instructions on installing PyTorch.</p>
+</div>
+<div class="section" id="getting-started">
+<h2>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
+<p>You can train a simple DQN agent with the following command</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">ray</span><span class="o">/</span><span class="n">python</span><span class="o">/</span><span class="n">ray</span><span class="o">/</span><span class="n">rllib</span><span class="o">/</span><span class="n">train</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">run</span> <span class="n">DQN</span> <span class="o">--</span><span class="n">env</span> <span class="n">CartPole</span><span class="o">-</span><span class="n">v0</span>
+</pre></div>
+</div>
+<p>By default, the results will be logged to a subdirectory of <code class="docutils literal"><span class="pre">~/ray_results</span></code>.
+This subdirectory will contain a file <code class="docutils literal"><span class="pre">params.json</span></code> which contains the
+hyperparameters, a file <code class="docutils literal"><span class="pre">result.json</span></code> which contains a training summary
+for each episode and a TensorBoard file that can be used to visualize
+training process with TensorBoard by running</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">tensorboard</span> <span class="o">--</span><span class="n">logdir</span><span class="o">=~/</span><span class="n">ray_results</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal"><span class="pre">train.py</span></code> script has a number of options you can show by running</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">ray</span><span class="o">/</span><span class="n">python</span><span class="o">/</span><span class="n">ray</span><span class="o">/</span><span class="n">rllib</span><span class="o">/</span><span class="n">train</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">help</span>
+</pre></div>
+</div>
+<p>The most important options are for choosing the environment
+with <code class="docutils literal"><span class="pre">--env</span></code> (any OpenAI gym environment including ones registered by the user
+can be used) and for choosing the algorithm with <code class="docutils literal"><span class="pre">--run</span></code>
+(available options are <code class="docutils literal"><span class="pre">PPO</span></code>, <code class="docutils literal"><span class="pre">A3C</span></code>, <code class="docutils literal"><span class="pre">ES</span></code> and <code class="docutils literal"><span class="pre">DQN</span></code>).</p>
+<div class="section" id="specifying-parameters">
+<h3>Specifying Parameters<a class="headerlink" href="#specifying-parameters" title="Permalink to this headline">¶</a></h3>
+<p>Each algorithm has specific hyperparameters that can be set with <code class="docutils literal"><span class="pre">--config</span></code> - see the
+<code class="docutils literal"><span class="pre">DEFAULT_CONFIG</span></code> variable in
+<a class="reference external" href="https://github.com/ray-project/ray/blob/master/python/ray/rllib/ppo/ppo.py">PPO</a>,
+<a class="reference external" href="https://github.com/ray-project/ray/blob/master/python/ray/rllib/a3c/a3c.py">A3C</a>,
+<a class="reference external" href="https://github.com/ray-project/ray/blob/master/python/ray/rllib/es/es.py">ES</a> and
+<a class="reference external" href="https://github.com/ray-project/ray/blob/master/python/ray/rllib/dqn/dqn.py">DQN</a>.</p>
+<p>In an example below, we train A3C by specifying 8 workers through the config flag.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">ray</span><span class="o">/</span><span class="n">python</span><span class="o">/</span><span class="n">ray</span><span class="o">/</span><span class="n">rllib</span><span class="o">/</span><span class="n">train</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">env</span><span class="o">=</span><span class="n">PongDeterministic</span><span class="o">-</span><span class="n">v4</span> <span class="o">--</span><span class="n">run</span><span class="o">=</span><span class="n">A3C</span> <span class="o">--</span><span class="n">config</span> <span class="s1">&#39;{&quot;num_workers&quot;: 8}&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="evaluating-trained-agents">
+<h3>Evaluating Trained Agents<a class="headerlink" href="#evaluating-trained-agents" title="Permalink to this headline">¶</a></h3>
+<p>In order to save checkpoints from which to evaluate agents,
+set <code class="docutils literal"><span class="pre">--checkpoint-freq</span></code> (number of training iterations between checkpoints)
+when running <code class="docutils literal"><span class="pre">train.py</span></code>.</p>
+<p>You can evaluate a simple DQN agent with the following command</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">ray</span><span class="o">/</span><span class="n">python</span><span class="o">/</span><span class="n">ray</span><span class="o">/</span><span class="n">rllib</span><span class="o">/</span><span class="nb">eval</span><span class="o">.</span><span class="n">py</span> \
+      <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">ray</span><span class="o">/</span><span class="n">default</span><span class="o">/</span><span class="n">DQN_CartPole</span><span class="o">-</span><span class="n">v0_0upjmdgr0</span><span class="o">/</span><span class="n">checkpoint</span><span class="o">-</span><span class="mi">1</span> \
+      <span class="o">--</span><span class="n">run</span> <span class="n">DQN</span> <span class="o">--</span><span class="n">env</span> <span class="n">CartPole</span><span class="o">-</span><span class="n">v0</span>
+</pre></div>
+</div>
+<p>By default, the script reconstructs a DQN agent from the checkpoint
+located at <code class="docutils literal"><span class="pre">/tmp/ray/default/DQN_CartPole-v0_0upjmdgr0/checkpoint-1</span></code>
+and renders its behavior in the environment specified by <code class="docutils literal"><span class="pre">--env</span></code>.
+Checkpoints are be found within the experiment directory,
+specified by <code class="docutils literal"><span class="pre">--local-dir</span></code> and <code class="docutils literal"><span class="pre">--experiment-name</span></code> when running <code class="docutils literal"><span class="pre">train.py</span></code>.</p>
+</div>
+</div>
+<div class="section" id="tuned-examples">
+<h2>Tuned Examples<a class="headerlink" href="#tuned-examples" title="Permalink to this headline">¶</a></h2>
+<p>Some good hyperparameters and settings are available in
+<a class="reference external" href="https://github.com/ray-project/ray/blob/master/python/ray/rllib/test/tuned_examples.sh">the repository</a>
+(some of them are tuned to run on GPUs). If you find better settings or tune
+an algorithm on a different domain, consider submitting a Pull Request!</p>
+</div>
+<div class="section" id="python-user-api">
+<h2>Python User API<a class="headerlink" href="#python-user-api" title="Permalink to this headline">¶</a></h2>
+<p>You will be using this part of the API if you run the existing algorithms
+on a new problem. Here is an example how to use it:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">ray</span>
+<span class="kn">import</span> <span class="nn">ray.rllib.ppo</span> <span class="k">as</span> <span class="nn">ppo</span>
+
+<span class="n">ray</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="n">ppo</span><span class="o">.</span><span class="n">DEFAULT_CONFIG</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">alg</span> <span class="o">=</span> <span class="n">ppo</span><span class="o">.</span><span class="n">PPOAgent</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">env</span><span class="o">=</span><span class="s2">&quot;CartPole-v1&quot;</span><span class="p">)</span>
+
+<span class="c1"># Can optionally call alg.restore(path) to load a checkpoint.</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+   <span class="c1"># Perform one iteration of the algorithm.</span>
+   <span class="n">result</span> <span class="o">=</span> <span class="n">alg</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+   <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;result: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">result</span><span class="p">))</span>
+   <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;checkpoint saved at path: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">alg</span><span class="o">.</span><span class="n">save</span><span class="p">()))</span>
+</pre></div>
+</div>
+<div class="section" id="custom-environments">
+<h3>Custom Environments<a class="headerlink" href="#custom-environments" title="Permalink to this headline">¶</a></h3>
+<p>To train against a custom environment, i.e. one not in the gym catalog, you
+can register a function that creates the env to refer to it by name. For example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">ray</span>
+<span class="kn">from</span> <span class="nn">ray.tune.registry</span> <span class="k">import</span> <span class="n">register_env</span>
+<span class="kn">from</span> <span class="nn">ray.rllib</span> <span class="k">import</span> <span class="n">ppo</span>
+
+<span class="n">env_creator</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">env_config</span><span class="p">:</span> <span class="n">create_my_env</span><span class="p">()</span>
+<span class="n">env_creator_name</span> <span class="o">=</span> <span class="s2">&quot;custom_env&quot;</span>
+<span class="n">register_env</span><span class="p">(</span><span class="n">env_creator_name</span><span class="p">,</span> <span class="n">env_creator</span><span class="p">)</span>
+
+<span class="n">ray</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+<span class="n">alg</span> <span class="o">=</span> <span class="n">ppo</span><span class="o">.</span><span class="n">PPOAgent</span><span class="p">(</span><span class="n">env</span><span class="o">=</span><span class="n">env_creator_name</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="custom-models-and-preprocessors">
+<h3>Custom Models and Preprocessors<a class="headerlink" href="#custom-models-and-preprocessors" title="Permalink to this headline">¶</a></h3>
+<p>RLlib includes default neural network models and preprocessors for common gym
+environments, but you can also specify your own as follows. The interfaces for
+custom model and preprocessor classes are documented in the
+<a class="reference external" href="rllib-dev.html">RLlib Developer Guide</a>.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">ray</span>
+<span class="kn">from</span> <span class="nn">ray.rllib.models</span> <span class="k">import</span> <span class="n">ModelCatalog</span>
+
+<span class="n">ModelCatalog</span><span class="o">.</span><span class="n">register_custom_preprocessor</span><span class="p">(</span><span class="s2">&quot;my_prep&quot;</span><span class="p">,</span> <span class="n">MyPreprocessorClass</span><span class="p">)</span>
+<span class="n">ModelCatalog</span><span class="o">.</span><span class="n">register_custom_model</span><span class="p">(</span><span class="s2">&quot;my_model&quot;</span><span class="p">,</span> <span class="n">MyModelClass</span><span class="p">)</span>
+
+<span class="n">ray</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+<span class="n">alg</span> <span class="o">=</span> <span class="n">ppo</span><span class="o">.</span><span class="n">PPOAgent</span><span class="p">(</span><span class="n">env</span><span class="o">=</span><span class="s2">&quot;CartPole-v0&quot;</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="p">{</span>
+    <span class="s2">&quot;custom_preprocessor&quot;</span><span class="p">:</span> <span class="s2">&quot;my_prep&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;custom_model&quot;</span><span class="p">:</span> <span class="s2">&quot;my_model&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;custom_options&quot;</span><span class="p">:</span> <span class="p">{},</span>  <span class="c1"># extra options to pass to your classes</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="using-rllib-with-ray-tune">
+<h2>Using RLlib with Ray.tune<a class="headerlink" href="#using-rllib-with-ray-tune" title="Permalink to this headline">¶</a></h2>
+<p>All Agents implemented in RLlib support the
+<a class="reference external" href="tune.html#ray.tune.trainable.Trainable">tune Trainable</a> interface.</p>
+<p>Here is an example of using the command-line interface with RLlib:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">ray</span><span class="o">/</span><span class="n">python</span><span class="o">/</span><span class="n">ray</span><span class="o">/</span><span class="n">rllib</span><span class="o">/</span><span class="n">train</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">f</span> <span class="n">tuned_examples</span><span class="o">/</span><span class="n">cartpole</span><span class="o">-</span><span class="n">grid</span><span class="o">-</span><span class="n">search</span><span class="o">-</span><span class="n">example</span><span class="o">.</span><span class="n">yaml</span>
+</pre></div>
+</div>
+<p>Here is an example using the Python API. The same config passed to <code class="docutils literal"><span class="pre">Agents</span></code> may be placed
+in the <code class="docutils literal"><span class="pre">config</span></code> section of the experiments.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ray.tune.tune</span> <span class="k">import</span> <span class="n">run_experiments</span>
+<span class="kn">from</span> <span class="nn">ray.tune.variant_generator</span> <span class="k">import</span> <span class="n">grid_search</span>
+
+
+<span class="n">experiment</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;cartpole-ppo&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;run&#39;</span><span class="p">:</span> <span class="s1">&#39;PPO&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;env&#39;</span><span class="p">:</span> <span class="s1">&#39;CartPole-v0&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;resources&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;cpu&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="s1">&#39;driver_cpu_limit&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+        <span class="s1">&#39;stop&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;episode_reward_mean&#39;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+            <span class="s1">&#39;time_total_s&#39;</span><span class="p">:</span> <span class="mi">180</span>
+        <span class="p">},</span>
+        <span class="s1">&#39;config&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;num_sgd_iter&#39;</span><span class="p">:</span> <span class="n">grid_search</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">]),</span>
+            <span class="s1">&#39;num_workers&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="s1">&#39;sgd_batchsize&#39;</span><span class="p">:</span> <span class="n">grid_search</span><span class="p">([</span><span class="mi">128</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">512</span><span class="p">])</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="c1"># put additional experiments to run concurrently here</span>
+<span class="p">}</span>
+
+<span class="n">run_experiments</span><span class="p">(</span><span class="n">experiment</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="contributing-to-rllib">
+<h2>Contributing to RLlib<a class="headerlink" href="#contributing-to-rllib" title="Permalink to this headline">¶</a></h2>
+<p>See the <a class="reference external" href="rllib-dev.html">RLlib Developer Guide</a>.</p>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="rllib-dev.html" class="btn btn-neutral float-right" title="RLlib Developer Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="tune.html" class="btn btn-neutral" title="Ray.tune: Hyperparameter Optimization Framework" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, The Ray Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

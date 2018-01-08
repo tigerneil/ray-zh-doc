@@ -1,0 +1,426 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Asynchronous Advantage Actor Critic (A3C) &mdash; Ray 0.3.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Ray 0.3.0 documentation" href="index.html"/>
+        <link rel="next" title="Batch L-BFGS" href="example-lbfgs.html"/>
+        <link rel="prev" title="ResNet" href="example-resnet.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Ray
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install-on-ubuntu.html">Installation on Ubuntu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install-on-macosx.html">Installation on Mac OS X</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install-on-docker.html">Installation on Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation-troubleshooting.html">Installation Troubleshooting</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">The Ray API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="actors.html">Actors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-with-gpus.html">Using Ray with GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tune.html">Ray.tune: Hyperparameter Optimization Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rllib.html">Ray RLlib: A Scalable Reinforcement Learning Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rllib-dev.html">RLlib Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="webui.html">Web UI</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Examples</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="example-hyperopt.html">Hyperparameter Optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-rl-pong.html">Learning to Play Pong</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-policy-gradient.html">Policy Gradient Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-parameter-server.html">Parameter Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-resnet.html">ResNet</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Asynchronous Advantage Actor Critic (A3C)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#reinforcement-learning">Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#worker-code-walkthrough">Worker Code Walkthrough</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#driver-code-walkthrough">Driver Code Walkthrough</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#benchmarks-and-visualization">Benchmarks and Visualization</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="example-lbfgs.html">Batch L-BFGS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-evolution-strategies.html">Evolution Strategies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-cython.html">Cython</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-streaming.html">Streaming MapReduce</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-with-tensorflow.html">Using Ray with TensorFlow</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Design</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="internals-overview.html">An Overview of the Internals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="serialization.html">Serialization in the Object Store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fault-tolerance.html">Fault Tolerance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plasma-object-store.html">The Plasma Object Store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">Resource (CPUs, GPUs)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Cluster Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="autoscaling.html">Cloud Setup and Auto-Scaling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-on-a-cluster.html">Using Ray on a Cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-on-a-large-cluster.html">Using Ray on a Large Cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-and-docker-on-a-cluster.html">Using Ray and Docker on a Cluster (EXPERIMENTAL)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Help</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ray</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Asynchronous Advantage Actor Critic (A3C)</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/example-a3c.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="asynchronous-advantage-actor-critic-a3c">
+<h1>Asynchronous Advantage Actor Critic (A3C)<a class="headerlink" href="#asynchronous-advantage-actor-critic-a3c" title="Permalink to this headline">¶</a></h1>
+<p>This document walks through <a class="reference external" href="https://arxiv.org/abs/1602.01783">A3C</a>, a state-of-the-art reinforcement learning
+algorithm. In this example, we adapt the OpenAI <a class="reference external" href="https://github.com/openai/universe-starter-agent">Universe Starter Agent</a>
+implementation of A3C to use Ray.</p>
+<p>View the <a class="reference external" href="https://github.com/ray-project/ray/tree/master/python/ray/rllib/a3c">code for this example</a>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">For an overview of Ray’s reinforcement learning library, see <a class="reference external" href="http://ray.readthedocs.io/en/latest/rllib.html">Ray RLlib</a>.</p>
+</div>
+<p>To run the application, first install <strong>ray</strong> and then some dependencies:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>pip install tensorflow
+pip install six
+pip install gym<span class="o">[</span>atari<span class="o">]</span>
+pip install opencv-python
+pip install scipy
+</pre></div>
+</div>
+<p>You can run the code with</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>python/ray/rllib/train.py --env<span class="o">=</span>Pong-ram-v4 --run<span class="o">=</span>A3C --config<span class="o">=</span><span class="s1">&#39;{&quot;num_workers&quot;: N}&#39;</span>
+</pre></div>
+</div>
+<div class="section" id="reinforcement-learning">
+<h2>Reinforcement Learning<a class="headerlink" href="#reinforcement-learning" title="Permalink to this headline">¶</a></h2>
+<p>Reinforcement Learning is an area of machine learning concerned with <strong>learning
+how an agent should act in an environment</strong> so as to maximize some form of
+cumulative reward. Typically, an agent will observe the current state of the
+environment and take an action based on its observation. The action will change
+the state of the environment and will provide some numerical reward (or penalty)
+to the agent. The agent will then take in another observation and the process
+will repeat. <strong>The mapping from state to action is a policy</strong>, and in
+reinforcement learning, this policy is often represented with a deep neural
+network.</p>
+<p>The <strong>environment</strong> is often a simulator (for example, a physics engine), and
+reinforcement learning algorithms often involve trying out many different
+sequences of actions within these simulators. These <strong>rollouts</strong> can often be
+done in parallel.</p>
+<p>Policies are often initialized randomly and incrementally improved via
+simulation within the environment. To improve a policy, gradient-based updates
+may be computed based on the sequences of states and actions that have been
+observed. The gradient calculation is often delayed until a termination
+condition is reached (that is, the simulation has finished) so that delayed
+rewards have been properly accounted for. However, in the Actor Critic model, we
+can begin the gradient calculation at any point in the simulation rollout by
+predicting future rewards with a Value Function approximator.</p>
+<p>In our A3C implementation, each worker, implemented as a Ray actor, continuously
+simulates the environment. The driver will create a task that runs some steps
+of the simulator using the latest model, computes a gradient update, and returns
+the update to the driver. Whenever a task finishes, the driver will use the
+gradient update to update the model and will launch a new task with the latest
+model.</p>
+<p>There are two main parts to the implementation - the driver and the worker.</p>
+</div>
+<div class="section" id="worker-code-walkthrough">
+<h2>Worker Code Walkthrough<a class="headerlink" href="#worker-code-walkthrough" title="Permalink to this headline">¶</a></h2>
+<p>We use a Ray Actor to simulate the environment.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">ray</span>
+
+<span class="nd">@ray.remote</span>
+<span class="k">class</span> <span class="nc">Runner</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Actor object to start running simulation on workers.</span>
+<span class="sd">        Gradient computation is also executed on this object.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env_name</span><span class="p">,</span> <span class="n">actor_id</span><span class="p">):</span>
+        <span class="c1"># starts simulation environment, policy, and thread.</span>
+        <span class="c1"># Thread will continuously interact with the simulation environment</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="o">=</span> <span class="n">env</span> <span class="o">=</span> <span class="n">create_env</span><span class="p">(</span><span class="n">env_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">actor_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">policy</span> <span class="o">=</span> <span class="n">LSTMPolicy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">runner</span> <span class="o">=</span> <span class="n">RunnerThread</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">policy</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># starts the simulation thread</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">runner</span><span class="o">.</span><span class="n">start_runner</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">pull_batch_from_queue</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Implementation details removed - gets partial rollout from queue</span>
+        <span class="k">return</span> <span class="n">rollout</span>
+
+    <span class="k">def</span> <span class="nf">compute_gradient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">set_weights</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+        <span class="n">rollout</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pull_batch_from_queue</span><span class="p">()</span>
+        <span class="n">batch</span> <span class="o">=</span> <span class="n">process_rollout</span><span class="p">(</span><span class="n">rollout</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">0.99</span><span class="p">,</span> <span class="n">lambda_</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+        <span class="n">gradient</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">compute_gradients</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">batch</span><span class="o">.</span><span class="n">a</span><span class="p">)}</span>
+        <span class="k">return</span> <span class="n">gradient</span><span class="p">,</span> <span class="n">info</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="driver-code-walkthrough">
+<h2>Driver Code Walkthrough<a class="headerlink" href="#driver-code-walkthrough" title="Permalink to this headline">¶</a></h2>
+<p>The driver manages the coordination among workers and handles updating the
+global model parameters. The main training script looks like the following.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">ray</span>
+
+<span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="n">num_workers</span><span class="p">,</span> <span class="n">env_name</span><span class="o">=</span><span class="s2">&quot;PongDeterministic-v4&quot;</span><span class="p">):</span>
+    <span class="c1"># Setup a copy of the environment</span>
+    <span class="c1"># Instantiate a copy of the policy - mainly used as a placeholder</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="n">create_env</span><span class="p">(</span><span class="n">env_name</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+    <span class="n">policy</span> <span class="o">=</span> <span class="n">LSTMPolicy</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">env</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">n</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">obs</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="c1"># Start simulations on actors</span>
+    <span class="n">agents</span> <span class="o">=</span> <span class="p">[</span><span class="n">Runner</span><span class="p">(</span><span class="n">env_name</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_workers</span><span class="p">)]</span>
+
+    <span class="c1"># Start gradient calculation tasks on each actor</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="n">policy</span><span class="o">.</span><span class="n">get_weights</span><span class="p">()</span>
+    <span class="n">gradient_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">agent</span><span class="o">.</span><span class="n">compute_gradient</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span> <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">agents</span><span class="p">]</span>
+
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span> <span class="c1"># Replace with your termination condition</span>
+        <span class="c1"># wait for some gradient to be computed - unblock as soon as the earliest arrives</span>
+        <span class="n">done_id</span><span class="p">,</span> <span class="n">gradient_list</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">gradient_list</span><span class="p">)</span>
+
+        <span class="c1"># get the results of the task from the object store</span>
+        <span class="n">gradient</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">done_id</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">obs</span> <span class="o">+=</span> <span class="n">info</span><span class="p">[</span><span class="s2">&quot;size&quot;</span><span class="p">]</span>
+
+        <span class="c1"># apply update, get the weights from the model, start a new task on the same actor object</span>
+        <span class="n">policy</span><span class="o">.</span><span class="n">apply_gradients</span><span class="p">(</span><span class="n">gradient</span><span class="p">)</span>
+        <span class="n">parameters</span> <span class="o">=</span> <span class="n">policy</span><span class="o">.</span><span class="n">get_weights</span><span class="p">()</span>
+        <span class="n">gradient_list</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">agents</span><span class="p">[</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">compute_gradient</span><span class="p">(</span><span class="n">parameters</span><span class="p">)])</span>
+    <span class="k">return</span> <span class="n">policy</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="benchmarks-and-visualization">
+<h2>Benchmarks and Visualization<a class="headerlink" href="#benchmarks-and-visualization" title="Permalink to this headline">¶</a></h2>
+<p>For the <code class="code docutils literal"><span class="pre">PongDeterministic-v4</span></code> and an Amazon EC2 m4.16xlarge instance, we
+are able to train the agent with 16 workers in around 15 minutes. With 8
+workers, we can train the agent in around 25 minutes.</p>
+<p>You can visualize performance by running
+<code class="code docutils literal"><span class="pre">tensorboard</span> <span class="pre">--logdir</span> <span class="pre">[directory]</span></code> in a separate screen, where
+<code class="code docutils literal"><span class="pre">[directory]</span></code> is defaulted to <code class="code docutils literal"><span class="pre">~/ray_results/</span></code>. If you are running
+multiple experiments, be sure to vary the directory to which Tensorflow saves
+its progress (found in <code class="code docutils literal"><span class="pre">a3c.py</span></code>).</p>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="example-lbfgs.html" class="btn btn-neutral float-right" title="Batch L-BFGS" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="example-resnet.html" class="btn btn-neutral" title="ResNet" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, The Ray Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

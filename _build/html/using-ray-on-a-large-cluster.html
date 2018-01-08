@@ -1,0 +1,554 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Using Ray on a Large Cluster &mdash; Ray 0.3.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Ray 0.3.0 documentation" href="index.html"/>
+        <link rel="next" title="Using Ray and Docker on a Cluster (EXPERIMENTAL)" href="using-ray-and-docker-on-a-cluster.html"/>
+        <link rel="prev" title="Using Ray on a Cluster" href="using-ray-on-a-cluster.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Ray
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install-on-ubuntu.html">Installation on Ubuntu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install-on-macosx.html">Installation on Mac OS X</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install-on-docker.html">Installation on Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation-troubleshooting.html">Installation Troubleshooting</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">The Ray API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="actors.html">Actors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-with-gpus.html">Using Ray with GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tune.html">Ray.tune: Hyperparameter Optimization Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rllib.html">Ray RLlib: A Scalable Reinforcement Learning Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rllib-dev.html">RLlib Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="webui.html">Web UI</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="example-hyperopt.html">Hyperparameter Optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-rl-pong.html">Learning to Play Pong</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-policy-gradient.html">Policy Gradient Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-parameter-server.html">Parameter Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-resnet.html">ResNet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-a3c.html">Asynchronous Advantage Actor Critic (A3C)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-lbfgs.html">Batch L-BFGS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-evolution-strategies.html">Evolution Strategies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-cython.html">Cython</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-streaming.html">Streaming MapReduce</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-with-tensorflow.html">Using Ray with TensorFlow</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Design</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="internals-overview.html">An Overview of the Internals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="serialization.html">Serialization in the Object Store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fault-tolerance.html">Fault Tolerance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plasma-object-store.html">The Plasma Object Store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">Resource (CPUs, GPUs)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Cluster Usage</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="autoscaling.html">Cloud Setup and Auto-Scaling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-on-a-cluster.html">Using Ray on a Cluster</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Using Ray on a Large Cluster</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#booting-up-a-cluster-on-ec2">Booting up a cluster on EC2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#deploying-ray-on-a-cluster">Deploying Ray on a Cluster</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#connect-to-the-head-node">Connect to the head node</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#build-a-list-of-node-ip-addresses">Build a list of node IP addresses</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#confirm-that-you-can-ssh-to-all-nodes">Confirm that you can ssh to all nodes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#starting-ray">Starting Ray</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#stopping-ray">Stopping Ray</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#upgrading-ray">Upgrading Ray</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#sync-application-files-to-other-nodes">Sync Application Files to other nodes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#troubleshooting">Troubleshooting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#problems-with-parallel-ssh">Problems with parallel-ssh</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-and-docker-on-a-cluster.html">Using Ray and Docker on a Cluster (EXPERIMENTAL)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Help</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ray</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Using Ray on a Large Cluster</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/using-ray-on-a-large-cluster.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="using-ray-on-a-large-cluster">
+<h1>Using Ray on a Large Cluster<a class="headerlink" href="#using-ray-on-a-large-cluster" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Starting with Ray 0.4.0 if you’re using AWS you can use the automated <a class="reference external" href="http://ray.readthedocs.io/en/latest/autoscaling.html">setup commands</a>.</p>
+</div>
+<p>Deploying Ray on a cluster requires a bit of manual work. The instructions here
+illustrate how to use parallel ssh commands to simplify the process of running
+commands and scripts on many machines simultaneously.</p>
+<div class="section" id="booting-up-a-cluster-on-ec2">
+<h2>Booting up a cluster on EC2<a class="headerlink" href="#booting-up-a-cluster-on-ec2" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">Create an EC2 instance running Ray following instructions for
+<a class="reference external" href="http://ray.readthedocs.io/en/latest/install-on-ubuntu.html">installation on Ubuntu</a>.</p>
+<blockquote>
+<div><ul class="simple">
+<li>Add any packages that you may need for running your application.</li>
+<li>Install the pssh package: <code class="docutils literal"><span class="pre">sudo</span> <span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">pssh</span></code>.</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first"><a class="reference external" href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/creating-an-ami-ebs.html">Create an AMI</a> with Ray installed and with whatever code and libraries you
+want on the cluster.</p>
+</li>
+<li><p class="first">Use the EC2 console to launch additional instances using the AMI you created.</p>
+</li>
+<li><p class="first">Configure the instance security groups so that they machines can all
+communicate with one another.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="deploying-ray-on-a-cluster">
+<h2>Deploying Ray on a Cluster<a class="headerlink" href="#deploying-ray-on-a-cluster" title="Permalink to this headline">¶</a></h2>
+<p>This section assumes that you have a cluster of machines running and that these
+nodes have network connectivity to one another. It also assumes that Ray is
+installed on each machine.</p>
+<p>Additional assumptions:</p>
+<ul class="simple">
+<li>All of the following commands are run from a machine designated as
+the <strong>head node</strong>.</li>
+<li>The head node will run Redis and the global scheduler.</li>
+<li>The head node has ssh access to all other nodes.</li>
+<li>All nodes are accessible via ssh keys</li>
+<li>Ray is checked out on each node at the location <code class="docutils literal"><span class="pre">$HOME/ray</span></code>.</li>
+</ul>
+<p><strong>Note:</strong> The commands below will probably need to be customized for your
+specific setup.</p>
+<div class="section" id="connect-to-the-head-node">
+<h3>Connect to the head node<a class="headerlink" href="#connect-to-the-head-node" title="Permalink to this headline">¶</a></h3>
+<p>In order to initiate ssh commands from the cluster head node we suggest enabling
+ssh agent forwarding. This will allow the session that you initiate with the
+head node to connect to other nodes in the cluster to run scripts on them. You
+can enable ssh forwarding by running the following command before connecting to
+the head node (replacing <code class="docutils literal"><span class="pre">&lt;ssh-key&gt;</span></code> with the path to the private key that you
+would use when logging in to the nodes in the cluster).</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>ssh-add &lt;ssh-key&gt;
+</pre></div>
+</div>
+<p>Now log in to the head node with the following command, where
+<code class="docutils literal"><span class="pre">&lt;head-node-public-ip&gt;</span></code> is the public IP address of the head node (just choose
+one of the nodes to be the head node).</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>ssh -A ubuntu@&lt;head-node-public-ip&gt;
+</pre></div>
+</div>
+</div>
+<div class="section" id="build-a-list-of-node-ip-addresses">
+<h3>Build a list of node IP addresses<a class="headerlink" href="#build-a-list-of-node-ip-addresses" title="Permalink to this headline">¶</a></h3>
+<p>On the head node, populate a file <code class="docutils literal"><span class="pre">workers.txt</span></code> with one IP address on each
+line. Do not include the head node IP address in this file. These IP addresses
+should typically be private network IP addresses, but any IP addresses which the
+head node can use to ssh to worker nodes will work here. This should look
+something like the following.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="m">172</span>.31.27.16
+<span class="m">172</span>.31.29.173
+<span class="m">172</span>.31.24.132
+<span class="m">172</span>.31.29.224
+</pre></div>
+</div>
+</div>
+<div class="section" id="confirm-that-you-can-ssh-to-all-nodes">
+<h3>Confirm that you can ssh to all nodes<a class="headerlink" href="#confirm-that-you-can-ssh-to-all-nodes" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="k">for</span> host in <span class="k">$(</span>cat workers.txt<span class="k">)</span><span class="p">;</span> <span class="k">do</span>
+  ssh -o <span class="s2">&quot;StrictHostKeyChecking no&quot;</span> <span class="nv">$host</span> uptime
+<span class="k">done</span>
+</pre></div>
+</div>
+<p>You may need to verify the host keys during this process. If so, run this step
+again to verify that it worked. If you see a <strong>permission denied</strong> error, you
+most likely forgot to run <code class="docutils literal"><span class="pre">ssh-add</span> <span class="pre">&lt;ssh-key&gt;</span></code> before connecting to the head
+node.</p>
+</div>
+<div class="section" id="starting-ray">
+<h3>Starting Ray<a class="headerlink" href="#starting-ray" title="Permalink to this headline">¶</a></h3>
+<p><strong>Start Ray on the head node</strong></p>
+<p>On the head node, run the following:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>ray start --head --redis-port<span class="o">=</span><span class="m">6379</span>
+</pre></div>
+</div>
+<p><strong>Start Ray on the worker nodes</strong></p>
+<p>Create a file <code class="docutils literal"><span class="pre">start_worker.sh</span></code> that contains something like the following:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="c1"># Make sure the SSH session has the correct version of Python on its path.</span>
+<span class="c1"># You will probably have to change the line below.</span>
+<span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span>/home/ubuntu/anaconda3/bin/:<span class="nv">$PATH</span>
+ray start --redis-address<span class="o">=</span>&lt;head-node-ip&gt;:6379
+</pre></div>
+</div>
+<p>This script, when run on the worker nodes, will start up Ray. You will need to
+replace <code class="docutils literal"><span class="pre">&lt;head-node-ip&gt;</span></code> with the IP address that worker nodes will use to
+connect to the head node (most likely a <strong>private IP address</strong>). In this
+example we also export the path to the Python installation since our remote
+commands will not be executing in a login shell.</p>
+<p><strong>Warning:</strong> You will probably need to manually export the correct path to
+Python (you will need to change the first line of <code class="docutils literal"><span class="pre">start_worker.sh</span></code> to find
+the version of Python that Ray was built against). This is necessary because the
+<code class="docutils literal"><span class="pre">PATH</span></code> environment variable used by <code class="docutils literal"><span class="pre">parallel-ssh</span></code> can differ from the
+<code class="docutils literal"><span class="pre">PATH</span></code> environment variable that gets set when you <code class="docutils literal"><span class="pre">ssh</span></code> to the machine.</p>
+<p><strong>Warning:</strong> If the <code class="docutils literal"><span class="pre">parallel-ssh</span></code> command below appears to hang or otherwise
+fails, <code class="docutils literal"><span class="pre">head-node-ip</span></code> may need to be a private IP address instead of a public
+IP address (e.g., if you are using EC2). It’s also possible that you forgot to
+run <code class="docutils literal"><span class="pre">ssh-add</span> <span class="pre">&lt;ssh-key&gt;</span></code> or that you forgot the <code class="docutils literal"><span class="pre">-A</span></code> flag when connecting to
+the head node.</p>
+<p>Now use <code class="docutils literal"><span class="pre">parallel-ssh</span></code> to start up Ray on each worker node.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>parallel-ssh -h workers.txt -P -I &lt; start_worker.sh
+</pre></div>
+</div>
+<p>Note that on some distributions the <code class="docutils literal"><span class="pre">parallel-ssh</span></code> command may be called
+<code class="docutils literal"><span class="pre">pssh</span></code>.</p>
+<p><strong>Verification</strong></p>
+<p>Now you have started all of the Ray processes on each node. These include:</p>
+<ul class="simple">
+<li>Some worker processes on each machine.</li>
+<li>An object store on each machine.</li>
+<li>A local scheduler on each machine.</li>
+<li>Multiple Redis servers (on the head node).</li>
+<li>One global scheduler (on the head node).</li>
+</ul>
+<p>To confirm that the Ray cluster setup is working, start up Python on one of the
+nodes in the cluster and enter the following commands to connect to the Ray
+cluster.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">ray</span>
+<span class="n">ray</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">redis_address</span><span class="o">=</span><span class="s2">&quot;&lt;redis-address&gt;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Here <code class="docutils literal"><span class="pre">&lt;redis-address&gt;</span></code> should have the form <code class="docutils literal"><span class="pre">&lt;head-node-ip&gt;:6379</span></code>.</p>
+<p>Now you can define remote functions and execute tasks. For example, to verify
+that the correct number of nodes have joined the cluster, you can run the
+following.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
+
+<span class="nd">@ray.remote</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">():</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.01</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ray</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">get_node_ip_address</span><span class="p">()</span>
+
+<span class="c1"># Get a list of the IP addresses of the nodes that have joined the cluster.</span>
+<span class="nb">set</span><span class="p">(</span><span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">([</span><span class="n">f</span><span class="o">.</span><span class="n">remote</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">)]))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="stopping-ray">
+<h3>Stopping Ray<a class="headerlink" href="#stopping-ray" title="Permalink to this headline">¶</a></h3>
+<p><strong>Stop Ray on worker nodes</strong></p>
+<p>Create a file <code class="docutils literal"><span class="pre">stop_worker.sh</span></code> that contains something like the following:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="c1"># Make sure the SSH session has the correct version of Python on its path.</span>
+<span class="c1"># You will probably have to change the line below.</span>
+<span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span>/home/ubuntu/anaconda3/bin/:<span class="nv">$PATH</span>
+ray stop
+</pre></div>
+</div>
+<p>This script, when run on the worker nodes, will stop Ray. Note, you will need to
+replace <code class="docutils literal"><span class="pre">/home/ubuntu/anaconda3/bin/</span></code> with the correct path to your Python
+installation.</p>
+<p>Now use <code class="docutils literal"><span class="pre">parallel-ssh</span></code> to stop Ray on each worker node.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>parallel-ssh -h workers.txt -P -I &lt; stop_worker.sh
+</pre></div>
+</div>
+<p><strong>Stop Ray on the head node</strong></p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>ray stop
+</pre></div>
+</div>
+</div>
+<div class="section" id="upgrading-ray">
+<h3>Upgrading Ray<a class="headerlink" href="#upgrading-ray" title="Permalink to this headline">¶</a></h3>
+<p>Ray remains under active development so you may at times want to upgrade the
+cluster to take advantage of improvements and fixes.</p>
+<p><strong>Create an upgrade script</strong></p>
+<p>On the head node, create a file called <code class="docutils literal"><span class="pre">upgrade.sh</span></code> that contains the commands
+necessary to upgrade Ray. It should look something like the following:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="c1"># Make sure the SSH session has the correct version of Python on its path.</span>
+<span class="c1"># You will probably have to change the line below.</span>
+<span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span>/home/ubuntu/anaconda3/bin/:<span class="nv">$PATH</span>
+<span class="c1"># Do pushd/popd to make sure we end up in the same directory.</span>
+<span class="nb">pushd</span> .
+<span class="c1"># Upgrade Ray.</span>
+<span class="nb">cd</span> ray
+git remote set-url origin https://github.com/ray-project/ray
+git checkout master
+git pull
+<span class="nb">cd</span> python
+python setup.py install --user
+<span class="nb">popd</span>
+</pre></div>
+</div>
+<p>This script executes a series of git commands to update the Ray source code, then builds
+and installs Ray.</p>
+<p><strong>Stop Ray on the cluster</strong></p>
+<p>Follow the instructions for <a class="reference internal" href="#stopping-ray">Stopping Ray</a>.</p>
+<p><strong>Run the upgrade script on the cluster</strong></p>
+<p>First run the upgrade script on the head node. This will upgrade the head node
+and help confirm that the upgrade script is working properly.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>bash upgrade.sh
+</pre></div>
+</div>
+<p>Next run the upgrade script on the worker nodes.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>parallel-ssh -h workers.txt -P -t <span class="m">0</span> -I &lt; upgrade.sh
+</pre></div>
+</div>
+<p>Note here that we use the <code class="docutils literal"><span class="pre">-t</span> <span class="pre">0</span></code> option to set the timeout to infinite. You
+may also want to use the <code class="docutils literal"><span class="pre">-p</span></code> flag, which controls the degree of parallelism
+used by parallel ssh.</p>
+<p>It is probably a good idea to ssh to one of the other nodes and verify that the
+upgrade script ran as expected.</p>
+</div>
+</div>
+<div class="section" id="sync-application-files-to-other-nodes">
+<h2>Sync Application Files to other nodes<a class="headerlink" href="#sync-application-files-to-other-nodes" title="Permalink to this headline">¶</a></h2>
+<p>If you are running an application that reads input files or uses python
+libraries then you may find it useful to copy a directory on the head node to
+the worker nodes.</p>
+<p>You can do this using the <code class="docutils literal"><span class="pre">parallel-rsync</span></code> command:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>parallel-rsync -h workers.txt -r &lt;workload-dir&gt; /home/ubuntu/&lt;workload-dir&gt;
+</pre></div>
+</div>
+<p>where <code class="docutils literal"><span class="pre">&lt;workload-dir&gt;</span></code> is the directory you want to synchronize. Note that the
+destination argument for this command must represent an absolute path on the
+worker node.</p>
+</div>
+<div class="section" id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="problems-with-parallel-ssh">
+<h3>Problems with parallel-ssh<a class="headerlink" href="#problems-with-parallel-ssh" title="Permalink to this headline">¶</a></h3>
+<p>If any of the above commands fail, verify that the head node has SSH access to
+the other nodes by running</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="k">for</span> host in <span class="k">$(</span>cat workers.txt<span class="k">)</span><span class="p">;</span> <span class="k">do</span>
+  ssh <span class="nv">$host</span> uptime
+<span class="k">done</span>
+</pre></div>
+</div>
+<p>If you get a permission denied error, then make sure you have SSH’ed to the head
+node with agent forwarding enabled. This is done as follows.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>ssh-add &lt;ssh-key&gt;
+ssh -A ubuntu@&lt;head-node-public-ip&gt;
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="using-ray-and-docker-on-a-cluster.html" class="btn btn-neutral float-right" title="Using Ray and Docker on a Cluster (EXPERIMENTAL)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="using-ray-on-a-cluster.html" class="btn btn-neutral" title="Using Ray on a Cluster" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, The Ray Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

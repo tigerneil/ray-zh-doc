@@ -1,0 +1,579 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Using Ray with TensorFlow &mdash; Ray 0.3.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Ray 0.3.0 documentation" href="index.html"/>
+        <link rel="next" title="An Overview of the Internals" href="internals-overview.html"/>
+        <link rel="prev" title="Streaming MapReduce" href="example-streaming.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Ray
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install-on-ubuntu.html">Installation on Ubuntu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install-on-macosx.html">Installation on Mac OS X</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install-on-docker.html">Installation on Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation-troubleshooting.html">Installation Troubleshooting</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">The Ray API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="actors.html">Actors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-with-gpus.html">Using Ray with GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tune.html">Ray.tune: Hyperparameter Optimization Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rllib.html">Ray RLlib: A Scalable Reinforcement Learning Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rllib-dev.html">RLlib Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="webui.html">Web UI</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Examples</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="example-hyperopt.html">Hyperparameter Optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-rl-pong.html">Learning to Play Pong</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-policy-gradient.html">Policy Gradient Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-parameter-server.html">Parameter Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-resnet.html">ResNet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-a3c.html">Asynchronous Advantage Actor Critic (A3C)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-lbfgs.html">Batch L-BFGS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-evolution-strategies.html">Evolution Strategies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-cython.html">Cython</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-streaming.html">Streaming MapReduce</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Using Ray with TensorFlow</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#complete-example">Complete Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-train-in-parallel-using-ray">How to Train in Parallel using Ray</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#extracting-numerical-gradients">Extracting numerical gradients</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#using-the-returned-gradients-to-train-the-network">Using the returned gradients to train the network</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Design</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="internals-overview.html">An Overview of the Internals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="serialization.html">Serialization in the Object Store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fault-tolerance.html">Fault Tolerance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plasma-object-store.html">The Plasma Object Store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">Resource (CPUs, GPUs)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Cluster Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="autoscaling.html">Cloud Setup and Auto-Scaling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-on-a-cluster.html">Using Ray on a Cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-on-a-large-cluster.html">Using Ray on a Large Cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-and-docker-on-a-cluster.html">Using Ray and Docker on a Cluster (EXPERIMENTAL)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Help</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ray</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Using Ray with TensorFlow</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/using-ray-with-tensorflow.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="using-ray-with-tensorflow">
+<h1>Using Ray with TensorFlow<a class="headerlink" href="#using-ray-with-tensorflow" title="Permalink to this headline">¶</a></h1>
+<p>This document describes best practices for using Ray with TensorFlow.</p>
+<p>To see more involved examples using TensorFlow, take a look at <a class="reference external" href="http://ray.readthedocs.io/en/latest/example-hyperopt.html">hyperparameter optimization</a>,
+<a class="reference external" href="http://ray.readthedocs.io/en/latest/example-a3c.html">A3C</a>, <a class="reference external" href="http://ray.readthedocs.io/en/latest/example-resnet.html">ResNet</a>, <a class="reference external" href="http://ray.readthedocs.io/en/latest/example-policy-gradient.html">Policy Gradients</a>, and <a class="reference external" href="http://ray.readthedocs.io/en/latest/example-lbfgs.html">LBFGS</a>.</p>
+<p>If you are training a deep network in the distributed setting, you may need to
+ship your deep network between processes (or machines). For example, you may
+update your model on one machine and then use that model to compute a gradient
+on another machine. However, shipping the model is not always straightforward.</p>
+<p>For example, a straightforward attempt to pickle a TensorFlow graph gives mixed
+results. Some examples fail, and some succeed (but produce very large strings).
+The results are similar with other pickling libraries as well.</p>
+<p>Furthermore, creating a TensorFlow graph can take tens of seconds, and so
+serializing a graph and recreating it in another process will be inefficient.
+The better solution is to create the same TensorFlow graph on each worker once
+at the beginning and then to ship only the weights between the workers.</p>
+<p>Suppose we have a simple network definition (this one is modified from the
+TensorFlow documentation).</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="kn">as</span> <span class="nn">tf</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="n">x_data</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="mi">100</span><span class="p">])</span>
+<span class="n">y_data</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="mi">100</span><span class="p">])</span>
+
+<span class="n">w</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">random_uniform</span><span class="p">([</span><span class="mi">1</span><span class="p">],</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">))</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">1</span><span class="p">]))</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">w</span> <span class="o">*</span> <span class="n">x_data</span> <span class="o">+</span> <span class="n">b</span>
+
+<span class="n">loss</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">y_data</span><span class="p">))</span>
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">GradientDescentOptimizer</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">grads</span> <span class="o">=</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">compute_gradients</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
+<span class="n">train</span> <span class="o">=</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">apply_gradients</span><span class="p">(</span><span class="n">grads</span><span class="p">)</span>
+
+<span class="n">init</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">global_variables_initializer</span><span class="p">()</span>
+<span class="n">sess</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>To extract the weights and set the weights, you can use the following helper
+method.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">ray</span>
+<span class="n">variables</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">experimental</span><span class="o">.</span><span class="n">TensorFlowVariables</span><span class="p">(</span><span class="n">loss</span><span class="p">,</span> <span class="n">sess</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal"><span class="pre">TensorFlowVariables</span></code> object provides methods for getting and setting the
+weights as well as collecting all of the variables in the model.</p>
+<p>Now we can use these methods to extract the weights, and place them back in the
+network as follows.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># First initialize the weights.</span>
+<span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">init</span><span class="p">)</span>
+<span class="c1"># Get the weights</span>
+<span class="n">weights</span> <span class="o">=</span> <span class="n">variables</span><span class="o">.</span><span class="n">get_weights</span><span class="p">()</span>  <span class="c1"># Returns a dictionary of numpy arrays</span>
+<span class="c1"># Set the weights</span>
+<span class="n">variables</span><span class="o">.</span><span class="n">set_weights</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Note:</strong> If we were to set the weights using the <code class="docutils literal"><span class="pre">assign</span></code> method like below,
+each call to <code class="docutils literal"><span class="pre">assign</span></code> would add a node to the graph, and the graph would grow
+unmanageably large over time.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">w</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>  <span class="c1"># This adds a node to the graph every time you call it.</span>
+<span class="n">b</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>  <span class="c1"># This adds a node to the graph every time you call it.</span>
+</pre></div>
+</div>
+<div class="section" id="complete-example">
+<h2>Complete Example<a class="headerlink" href="#complete-example" title="Permalink to this headline">¶</a></h2>
+<p>Putting this all together, we would first embed the graph in an actor. Within
+the actor, we would use the <code class="docutils literal"><span class="pre">get_weights</span></code> and <code class="docutils literal"><span class="pre">set_weights</span></code> methods of the
+<code class="docutils literal"><span class="pre">TensorFlowVariables</span></code> class. We would then use those methods to ship the weights
+(as a dictionary of variable names mapping to numpy arrays) between the
+processes without shipping the actual TensorFlow graphs, which are much more
+complex Python objects.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="kn">as</span> <span class="nn">tf</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">ray</span>
+
+<span class="n">ray</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+
+<span class="n">BATCH_SIZE</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">NUM_BATCHES</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">NUM_ITERS</span> <span class="o">=</span> <span class="mi">201</span>
+
+<span class="k">class</span> <span class="nc">Network</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="c1"># Seed TensorFlow to make the script deterministic.</span>
+        <span class="n">tf</span><span class="o">.</span><span class="n">set_random_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="c1"># Define the inputs.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_data</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_data</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="c1"># Define the weights and computation.</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">random_uniform</span><span class="p">([</span><span class="mi">1</span><span class="p">],</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">))</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">w</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_data</span> <span class="o">+</span> <span class="n">b</span>
+        <span class="c1"># Define the loss.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loss</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_data</span><span class="p">))</span>
+        <span class="n">optimizer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">GradientDescentOptimizer</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grads</span> <span class="o">=</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">compute_gradients</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">loss</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">train</span> <span class="o">=</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">apply_gradients</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grads</span><span class="p">)</span>
+        <span class="c1"># Define the weight initializer and session.</span>
+        <span class="n">init</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">global_variables_initializer</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sess</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+        <span class="c1"># Additional code for setting and getting the weights</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">variables</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">experimental</span><span class="o">.</span><span class="n">TensorFlowVariables</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">loss</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sess</span><span class="p">)</span>
+        <span class="c1"># Return all of the data needed to use the network.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">init</span><span class="p">)</span>
+
+    <span class="c1"># Define a remote function that trains the network for one step and returns the</span>
+    <span class="c1"># new weights.</span>
+    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">weights</span><span class="p">):</span>
+        <span class="c1"># Set the weights in the network.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">set_weights</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
+        <span class="c1"># Do one step of training.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">train</span><span class="p">)</span>
+        <span class="c1"># Return the new weights.</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">get_weights</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">get_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">get_weights</span><span class="p">()</span>
+
+<span class="c1"># Define a remote function for generating fake data.</span>
+<span class="nd">@ray.remote</span><span class="p">(</span><span class="n">num_return_vals</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">generate_fake_x_y_data</span><span class="p">(</span><span class="n">num_data</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="c1"># Seed numpy to make the script deterministic.</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">num_data</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">x</span> <span class="o">*</span> <span class="mf">0.1</span> <span class="o">+</span> <span class="mf">0.3</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span>
+
+<span class="c1"># Generate some training data.</span>
+<span class="n">batch_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">generate_fake_x_y_data</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">BATCH_SIZE</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">NUM_BATCHES</span><span class="p">)]</span>
+<span class="n">x_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">x_id</span> <span class="k">for</span> <span class="n">x_id</span><span class="p">,</span> <span class="n">y_id</span> <span class="ow">in</span> <span class="n">batch_ids</span><span class="p">]</span>
+<span class="n">y_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">y_id</span> <span class="k">for</span> <span class="n">x_id</span><span class="p">,</span> <span class="n">y_id</span> <span class="ow">in</span> <span class="n">batch_ids</span><span class="p">]</span>
+<span class="c1"># Generate some test data.</span>
+<span class="n">x_test</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">generate_fake_x_y_data</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">BATCH_SIZE</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">NUM_BATCHES</span><span class="p">))</span>
+
+<span class="c1"># Create actors to store the networks.</span>
+<span class="n">remote_network</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">Network</span><span class="p">)</span>
+<span class="n">actor_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">remote_network</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">x_ids</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">y_ids</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">NUM_BATCHES</span><span class="p">)]</span>
+
+<span class="c1"># Get initial weights of some actor.</span>
+<span class="n">weights</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">actor_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_weights</span><span class="o">.</span><span class="n">remote</span><span class="p">())</span>
+
+<span class="c1"># Do some steps of training.</span>
+<span class="k">for</span> <span class="n">iteration</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">NUM_ITERS</span><span class="p">):</span>
+    <span class="c1"># Put the weights in the object store. This is optional. We could instead pass</span>
+    <span class="c1"># the variable weights directly into step.remote, in which case it would be</span>
+    <span class="c1"># placed in the object store under the hood. However, in that case multiple</span>
+    <span class="c1"># copies of the weights would be put in the object store, so this approach is</span>
+    <span class="c1"># more efficient.</span>
+    <span class="n">weights_id</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
+    <span class="c1"># Call the remote function multiple times in parallel.</span>
+    <span class="n">new_weights_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">actor</span><span class="o">.</span><span class="n">step</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">weights_id</span><span class="p">)</span> <span class="k">for</span> <span class="n">actor</span> <span class="ow">in</span> <span class="n">actor_list</span><span class="p">]</span>
+    <span class="c1"># Get all of the weights.</span>
+    <span class="n">new_weights_list</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">new_weights_ids</span><span class="p">)</span>
+    <span class="c1"># Add up all the different weights. Each element of new_weights_list is a dict</span>
+    <span class="c1"># of weights, and we want to add up these dicts component wise using the keys</span>
+    <span class="c1"># of the first dict.</span>
+    <span class="n">weights</span> <span class="o">=</span> <span class="p">{</span><span class="n">variable</span><span class="p">:</span> <span class="nb">sum</span><span class="p">(</span><span class="n">weight_dict</span><span class="p">[</span><span class="n">variable</span><span class="p">]</span> <span class="k">for</span> <span class="n">weight_dict</span> <span class="ow">in</span> <span class="n">new_weights_list</span><span class="p">)</span> <span class="o">/</span> <span class="n">NUM_BATCHES</span> <span class="k">for</span> <span class="n">variable</span> <span class="ow">in</span> <span class="n">new_weights_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]}</span>
+    <span class="c1"># Print the current weights. They should converge to roughly to the values 0.1</span>
+    <span class="c1"># and 0.3 used in generate_fake_x_y_data.</span>
+    <span class="k">if</span> <span class="n">iteration</span> <span class="o">%</span> <span class="mi">20</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Iteration {}: weights are {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">iteration</span><span class="p">,</span> <span class="n">weights</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="how-to-train-in-parallel-using-ray">
+<h2>How to Train in Parallel using Ray<a class="headerlink" href="#how-to-train-in-parallel-using-ray" title="Permalink to this headline">¶</a></h2>
+<p>In some cases, you may want to do data-parallel training on your network. We use the network
+above to illustrate how to do this in Ray. The only differences are in the remote function
+<code class="docutils literal"><span class="pre">step</span></code> and the driver code.</p>
+<p>In the function <code class="docutils literal"><span class="pre">step</span></code>, we run the grad operation rather than the train operation to get the gradients.
+Since Tensorflow pairs the gradients with the variables in a tuple, we extract the gradients to avoid
+needless computation.</p>
+<div class="section" id="extracting-numerical-gradients">
+<h3>Extracting numerical gradients<a class="headerlink" href="#extracting-numerical-gradients" title="Permalink to this headline">¶</a></h3>
+<p>Code like the following can be used in a remote function to compute numerical gradients.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">x_values</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span>
+<span class="n">y_values</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span>
+<span class="n">numerical_grads</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">grad</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">grad</span> <span class="ow">in</span> <span class="n">grads</span><span class="p">],</span> <span class="n">feed_dict</span><span class="o">=</span><span class="p">{</span><span class="n">x_data</span><span class="p">:</span> <span class="n">x_values</span><span class="p">,</span> <span class="n">y_data</span><span class="p">:</span> <span class="n">y_values</span><span class="p">})</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="using-the-returned-gradients-to-train-the-network">
+<h3>Using the returned gradients to train the network<a class="headerlink" href="#using-the-returned-gradients-to-train-the-network" title="Permalink to this headline">¶</a></h3>
+<p>By pairing the symbolic gradients with the numerical gradients in a feed_dict, we can update the network.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># We can feed the gradient values in using the associated symbolic gradient</span>
+<span class="c1"># operation defined in tensorflow.</span>
+<span class="n">feed_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">grad</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="n">numerical_grad</span> <span class="k">for</span> <span class="p">(</span><span class="n">grad</span><span class="p">,</span> <span class="n">numerical_grad</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">grads</span><span class="p">,</span> <span class="n">numerical_grads</span><span class="p">)}</span>
+<span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">feed_dict</span><span class="o">=</span><span class="n">feed_dict</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can then run <code class="docutils literal"><span class="pre">variables.get_weights()</span></code> to see the updated weights of the network.</p>
+<p>For reference, the full code is below:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="kn">as</span> <span class="nn">tf</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">ray</span>
+
+<span class="n">ray</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+
+<span class="n">BATCH_SIZE</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">NUM_BATCHES</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">NUM_ITERS</span> <span class="o">=</span> <span class="mi">201</span>
+
+<span class="k">class</span> <span class="nc">Network</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="c1"># Seed TensorFlow to make the script deterministic.</span>
+        <span class="n">tf</span><span class="o">.</span><span class="n">set_random_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="c1"># Define the inputs.</span>
+        <span class="n">x_data</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">y_data</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="c1"># Define the weights and computation.</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">random_uniform</span><span class="p">([</span><span class="mi">1</span><span class="p">],</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">))</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">w</span> <span class="o">*</span> <span class="n">x_data</span> <span class="o">+</span> <span class="n">b</span>
+        <span class="c1"># Define the loss.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loss</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">y_data</span><span class="p">))</span>
+        <span class="n">optimizer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">GradientDescentOptimizer</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grads</span> <span class="o">=</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">compute_gradients</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">loss</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">train</span> <span class="o">=</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">apply_gradients</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grads</span><span class="p">)</span>
+        <span class="c1"># Define the weight initializer and session.</span>
+        <span class="n">init</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">global_variables_initializer</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sess</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+        <span class="c1"># Additional code for setting and getting the weights</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">variables</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">experimental</span><span class="o">.</span><span class="n">TensorFlowVariables</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">loss</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sess</span><span class="p">)</span>
+        <span class="c1"># Return all of the data needed to use the network.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">init</span><span class="p">)</span>
+
+    <span class="c1"># Define a remote function that trains the network for one step and returns the</span>
+    <span class="c1"># new weights.</span>
+    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">weights</span><span class="p">):</span>
+        <span class="c1"># Set the weights in the network.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">set_weights</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
+        <span class="c1"># Do one step of training. We only need the actual gradients so we filter over the list.</span>
+        <span class="n">actual_grads</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">grad</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">grad</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">grads</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">actual_grads</span>
+
+    <span class="k">def</span> <span class="nf">get_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">get_weights</span><span class="p">()</span>
+
+<span class="c1"># Define a remote function for generating fake data.</span>
+<span class="nd">@ray.remote</span><span class="p">(</span><span class="n">num_return_vals</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">generate_fake_x_y_data</span><span class="p">(</span><span class="n">num_data</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="c1"># Seed numpy to make the script deterministic.</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">num_data</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">x</span> <span class="o">*</span> <span class="mf">0.1</span> <span class="o">+</span> <span class="mf">0.3</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span>
+
+<span class="c1"># Generate some training data.</span>
+<span class="n">batch_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">generate_fake_x_y_data</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">BATCH_SIZE</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">NUM_BATCHES</span><span class="p">)]</span>
+<span class="n">x_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">x_id</span> <span class="k">for</span> <span class="n">x_id</span><span class="p">,</span> <span class="n">y_id</span> <span class="ow">in</span> <span class="n">batch_ids</span><span class="p">]</span>
+<span class="n">y_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">y_id</span> <span class="k">for</span> <span class="n">x_id</span><span class="p">,</span> <span class="n">y_id</span> <span class="ow">in</span> <span class="n">batch_ids</span><span class="p">]</span>
+<span class="c1"># Generate some test data.</span>
+<span class="n">x_test</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">generate_fake_x_y_data</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">BATCH_SIZE</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">NUM_BATCHES</span><span class="p">))</span>
+
+<span class="c1"># Create actors to store the networks.</span>
+<span class="n">remote_network</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">Network</span><span class="p">)</span>
+<span class="n">actor_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">remote_network</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">x_ids</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">y_ids</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">NUM_BATCHES</span><span class="p">)]</span>
+<span class="n">local_network</span> <span class="o">=</span> <span class="n">Network</span><span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+
+<span class="c1"># Get initial weights of local network.</span>
+<span class="n">weights</span> <span class="o">=</span> <span class="n">local_network</span><span class="o">.</span><span class="n">get_weights</span><span class="p">()</span>
+
+<span class="c1"># Do some steps of training.</span>
+<span class="k">for</span> <span class="n">iteration</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">NUM_ITERS</span><span class="p">):</span>
+    <span class="c1"># Put the weights in the object store. This is optional. We could instead pass</span>
+    <span class="c1"># the variable weights directly into step.remote, in which case it would be</span>
+    <span class="c1"># placed in the object store under the hood. However, in that case multiple</span>
+    <span class="c1"># copies of the weights would be put in the object store, so this approach is</span>
+    <span class="c1"># more efficient.</span>
+    <span class="n">weights_id</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
+    <span class="c1"># Call the remote function multiple times in parallel.</span>
+    <span class="n">gradients_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">actor</span><span class="o">.</span><span class="n">step</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">weights_id</span><span class="p">)</span> <span class="k">for</span> <span class="n">actor</span> <span class="ow">in</span> <span class="n">actor_list</span><span class="p">]</span>
+    <span class="c1"># Get all of the weights.</span>
+    <span class="n">gradients_list</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">gradients_ids</span><span class="p">)</span>
+
+    <span class="c1"># Take the mean of the different gradients. Each element of gradients_list is a list</span>
+    <span class="c1"># of gradients, and we want to take the mean of each one.</span>
+    <span class="n">mean_grads</span> <span class="o">=</span> <span class="p">[</span><span class="nb">sum</span><span class="p">([</span><span class="n">gradients</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">gradients</span> <span class="ow">in</span> <span class="n">gradients_list</span><span class="p">])</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">gradients_list</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">gradients_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]))]</span>
+
+    <span class="n">feed_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">grad</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="n">mean_grad</span> <span class="k">for</span> <span class="p">(</span><span class="n">grad</span><span class="p">,</span> <span class="n">mean_grad</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">local_network</span><span class="o">.</span><span class="n">grads</span><span class="p">,</span> <span class="n">mean_grads</span><span class="p">)}</span>
+    <span class="n">local_network</span><span class="o">.</span><span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">local_network</span><span class="o">.</span><span class="n">train</span><span class="p">,</span> <span class="n">feed_dict</span><span class="o">=</span><span class="n">feed_dict</span><span class="p">)</span>
+    <span class="n">weights</span> <span class="o">=</span> <span class="n">local_network</span><span class="o">.</span><span class="n">get_weights</span><span class="p">()</span>
+
+    <span class="c1"># Print the current weights. They should converge to roughly to the values 0.1</span>
+    <span class="c1"># and 0.3 used in generate_fake_x_y_data.</span>
+    <span class="k">if</span> <span class="n">iteration</span> <span class="o">%</span> <span class="mi">20</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Iteration {}: weights are {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">iteration</span><span class="p">,</span> <span class="n">weights</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="internals-overview.html" class="btn btn-neutral float-right" title="An Overview of the Internals" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="example-streaming.html" class="btn btn-neutral" title="Streaming MapReduce" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, The Ray Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

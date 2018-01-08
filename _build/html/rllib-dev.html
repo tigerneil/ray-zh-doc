@@ -1,0 +1,951 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>RLlib Developer Guide &mdash; Ray 0.3.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Ray 0.3.0 documentation" href="index.html"/>
+        <link rel="next" title="Web UI" href="webui.html"/>
+        <link rel="prev" title="Ray RLlib: A Scalable Reinforcement Learning Library" href="rllib.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Ray
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install-on-ubuntu.html">Installation on Ubuntu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install-on-macosx.html">Installation on Mac OS X</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install-on-docker.html">Installation on Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation-troubleshooting.html">Installation Troubleshooting</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">The Ray API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="actors.html">Actors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-with-gpus.html">Using Ray with GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tune.html">Ray.tune: Hyperparameter Optimization Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rllib.html">Ray RLlib: A Scalable Reinforcement Learning Library</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">RLlib Developer Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#recipe-for-an-rllib-algorithm">Recipe for an RLlib algorithm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#defining-a-custom-model">Defining a custom model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-developer-api">The Developer API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#agents">Agents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#evaluators-and-optimizers">Evaluators and Optimizers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sample-batches">Sample Batches</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#models-and-preprocessors">Models and Preprocessors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#action-distributions">Action Distributions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-model-catalog">The Model Catalog</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="webui.html">Web UI</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="example-hyperopt.html">Hyperparameter Optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-rl-pong.html">Learning to Play Pong</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-policy-gradient.html">Policy Gradient Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-parameter-server.html">Parameter Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-resnet.html">ResNet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-a3c.html">Asynchronous Advantage Actor Critic (A3C)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-lbfgs.html">Batch L-BFGS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-evolution-strategies.html">Evolution Strategies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-cython.html">Cython</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-streaming.html">Streaming MapReduce</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-with-tensorflow.html">Using Ray with TensorFlow</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Design</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="internals-overview.html">An Overview of the Internals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="serialization.html">Serialization in the Object Store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fault-tolerance.html">Fault Tolerance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plasma-object-store.html">The Plasma Object Store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">Resource (CPUs, GPUs)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Cluster Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="autoscaling.html">Cloud Setup and Auto-Scaling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-on-a-cluster.html">Using Ray on a Cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-on-a-large-cluster.html">Using Ray on a Large Cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-and-docker-on-a-cluster.html">Using Ray and Docker on a Cluster (EXPERIMENTAL)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Help</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ray</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>RLlib Developer Guide</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/rllib-dev.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="rllib-developer-guide">
+<h1>RLlib Developer Guide<a class="headerlink" href="#rllib-developer-guide" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This guide will take you through steps for implementing a new algorithm in RLlib. To apply existing algorithms already implemented in RLlib, please see the <a class="reference external" href="rllib.html">user docs</a>.</p>
+</div>
+<div class="section" id="recipe-for-an-rllib-algorithm">
+<h2>Recipe for an RLlib algorithm<a class="headerlink" href="#recipe-for-an-rllib-algorithm" title="Permalink to this headline">¶</a></h2>
+<p>Here are the steps for implementing a new algorithm in RLlib:</p>
+<ol class="arabic simple">
+<li>Define an algorithm-specific <a class="reference external" href="#evaluators-and-optimizers">Evaluator class</a> (the core of the algorithm). Evaluators encapsulate framework-specific components such as the policy and loss functions. For an example, see the <a class="reference external" href="https://github.com/ray-project/ray/blob/master/python/ray/rllib/a3c/a3c_evaluator.py">A3C Evaluator implementation</a>.</li>
+<li>Pick an appropriate <a class="reference external" href="#evaluators-and-optimizers">RLlib optimizer class</a>. Optimizers manage the parallel execution of the algorithm. RLlib provides several built-in optimizers for gradient-based algorithms. Advanced algorithms may find it beneficial to implement their own optimizers.</li>
+<li>Wrap the two up in an <a class="reference external" href="#agents">Agent class</a>. Agents are the user-facing API of RLlib. They provide the necessary “glue” and implement accessory functionality such as statistics reporting and checkpointing.</li>
+</ol>
+<p>To help with implementation, RLlib provides common action distributions, preprocessors, and neural network models, found in <a class="reference external" href="https://github.com/ray-project/ray/blob/master/python/ray/rllib/models/catalog.py">catalog.py</a>, which are shared by all algorithms. Note that most of these utilities are currently Tensorflow specific.</p>
+</div>
+<div class="section" id="defining-a-custom-model">
+<h2>Defining a custom model<a class="headerlink" href="#defining-a-custom-model" title="Permalink to this headline">¶</a></h2>
+<p>Often you will want to plug in your own neural network into an existing RLlib algorithm.
+This can be easily done by defining your own <a class="reference external" href="#models-and-preprocessors">Model class</a> and registering it in the RLlib catalog, after which it will be available for use by all RLlib algorithms.</p>
+<p>An example usage of a custom model looks like this:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ray.rllib.models</span> <span class="k">import</span> <span class="n">ModelCatalog</span><span class="p">,</span> <span class="n">Model</span>
+
+<span class="k">class</span> <span class="nc">MyModelClass</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_init</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">num_outputs</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+        <span class="n">layer1</span> <span class="o">=</span> <span class="n">slim</span><span class="o">.</span><span class="n">fully_connected</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
+        <span class="n">layer2</span> <span class="o">=</span> <span class="n">slim</span><span class="o">.</span><span class="n">fully_connected</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
+        <span class="o">...</span>
+        <span class="k">return</span> <span class="n">layerN</span><span class="p">,</span> <span class="n">layerN_minus_1</span>
+
+<span class="n">ModelCatalog</span><span class="o">.</span><span class="n">register_custom_model</span><span class="p">(</span><span class="s2">&quot;my_model&quot;</span><span class="p">,</span> <span class="n">MyModelClass</span><span class="p">)</span>
+
+<span class="n">alg</span> <span class="o">=</span> <span class="n">ppo</span><span class="o">.</span><span class="n">PPOAgent</span><span class="p">(</span><span class="n">env</span><span class="o">=</span><span class="s2">&quot;CartPole-v0&quot;</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="p">{</span>
+    <span class="s2">&quot;custom_model&quot;</span><span class="p">:</span> <span class="s2">&quot;my_model&quot;</span><span class="p">,</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+<p>Note that if you need to reference large data objects as part of the computation, e.g. weights, you can put them into the Ray object store with <code class="docutils literal"><span class="pre">ray.put</span></code> and then retrieve them from inside your model class.</p>
+</div>
+<div class="section" id="the-developer-api">
+<h2>The Developer API<a class="headerlink" href="#the-developer-api" title="Permalink to this headline">¶</a></h2>
+<p>The following APIs are the building blocks of RLlib algorithms. Note that they are not yet considered stable.</p>
+<div class="section" id="agents">
+<h3>Agents<a class="headerlink" href="#agents" title="Permalink to this headline">¶</a></h3>
+<p>Agents implement a particular algorithm and can be used to run
+some number of iterations of the algorithm, save and load the state
+of training and evaluate the current policy. All agents inherit from
+a common base class:</p>
+<dl class="class">
+<dt id="ray.rllib.agent.Agent">
+<em class="property">class </em><code class="descclassname">ray.rllib.agent.</code><code class="descname">Agent</code><span class="sig-paren">(</span><em>config={}</em>, <em>env=None</em>, <em>registry=&lt;ray.tune.registry._Registry object&gt;</em>, <em>logger_creator=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ray.rllib.agent.Agent" title="Permalink to this definition">¶</a></dt>
+<dd><p>All RLlib agents extend this base class.</p>
+<p>Agent objects retain internal model state between calls to train(), so
+you should create a new agent instance for each training session.</p>
+<dl class="attribute">
+<dt id="ray.rllib.agent.Agent.env_creator">
+<code class="descname">env_creator</code><a class="headerlink" href="#ray.rllib.agent.Agent.env_creator" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>func</em> – Function that creates a new training env.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ray.rllib.agent.Agent.config">
+<code class="descname">config</code><a class="headerlink" href="#ray.rllib.agent.Agent.config" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>obj</em> – Algorithm-specific configuration data.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ray.rllib.agent.Agent.logdir">
+<code class="descname">logdir</code><a class="headerlink" href="#ray.rllib.agent.Agent.logdir" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> – Directory in which training outputs should be placed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ray.rllib.agent.Agent.registry">
+<code class="descname">registry</code><a class="headerlink" href="#ray.rllib.agent.Agent.registry" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>obj</em> – Tune object registry, for registering user-defined
+classes and objects by name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ray.rllib.agent.Agent.compute_action">
+<code class="descname">compute_action</code><span class="sig-paren">(</span><em>observation</em><span class="sig-paren">)</span><a class="headerlink" href="#ray.rllib.agent.Agent.compute_action" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes an action using the current trained policy.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ray.rllib.agent.Agent.iteration">
+<code class="descname">iteration</code><a class="headerlink" href="#ray.rllib.agent.Agent.iteration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Current training iter, auto-incremented with each train() call.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ray.rllib.agent.Agent.restore">
+<code class="descname">restore</code><span class="sig-paren">(</span><em>checkpoint_path</em><span class="sig-paren">)</span><a class="headerlink" href="#ray.rllib.agent.Agent.restore" title="Permalink to this definition">¶</a></dt>
+<dd><p>Restores training state from a given model checkpoint.</p>
+<p>These checkpoints are returned from calls to save().</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ray.rllib.agent.Agent.restore_from_object">
+<code class="descname">restore_from_object</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="headerlink" href="#ray.rllib.agent.Agent.restore_from_object" title="Permalink to this definition">¶</a></dt>
+<dd><p>Restores training state from a checkpoint object.</p>
+<p>These checkpoints are returned from calls to save_to_object().</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ray.rllib.agent.Agent.save">
+<code class="descname">save</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ray.rllib.agent.Agent.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves the current model state to a checkpoint.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Checkpoint path that may be passed to restore().</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ray.rllib.agent.Agent.save_to_object">
+<code class="descname">save_to_object</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ray.rllib.agent.Agent.save_to_object" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves the current model state to a Python object. It also
+saves to disk but does not return the checkpoint path.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Object holding checkpoint data.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ray.rllib.agent.Agent.stop">
+<code class="descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ray.rllib.agent.Agent.stop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Releases all resources used by this agent.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ray.rllib.agent.Agent.train">
+<code class="descname">train</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ray.rllib.agent.Agent.train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs one logical iteration of training.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A TrainingResult that describes training progress.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="evaluators-and-optimizers">
+<h3>Evaluators and Optimizers<a class="headerlink" href="#evaluators-and-optimizers" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="ray.rllib.optimizers.evaluator.Evaluator">
+<em class="property">class </em><code class="descclassname">ray.rllib.optimizers.evaluator.</code><code class="descname">Evaluator</code><a class="headerlink" href="#ray.rllib.optimizers.evaluator.Evaluator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Algorithms implement this interface to leverage RLlib optimizers.</p>
+<p>Any algorithm that implements Evaluator can plug in any RLLib optimizer,
+e.g. async SGD, local multi-GPU SGD, etc.</p>
+<dl class="method">
+<dt id="ray.rllib.optimizers.evaluator.Evaluator.apply_gradients">
+<code class="descname">apply_gradients</code><span class="sig-paren">(</span><em>grads</em><span class="sig-paren">)</span><a class="headerlink" href="#ray.rllib.optimizers.evaluator.Evaluator.apply_gradients" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies the given gradients to this Evaluator’s weights.</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">samples</span> <span class="o">=</span> <span class="n">ev1</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">grads</span> <span class="o">=</span> <span class="n">ev2</span><span class="o">.</span><span class="n">compute_gradients</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ev1</span><span class="o">.</span><span class="n">apply_gradients</span><span class="p">(</span><span class="n">grads</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="ray.rllib.optimizers.evaluator.Evaluator.compute_gradients">
+<code class="descname">compute_gradients</code><span class="sig-paren">(</span><em>samples</em><span class="sig-paren">)</span><a class="headerlink" href="#ray.rllib.optimizers.evaluator.Evaluator.compute_gradients" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a gradient computed w.r.t the specified samples.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A gradient that can be applied on a compatible evaluator.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ray.rllib.optimizers.evaluator.Evaluator.get_weights">
+<code class="descname">get_weights</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ray.rllib.optimizers.evaluator.Evaluator.get_weights" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the model weights of this Evaluator.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">weights that can be set on a compatible evaluator.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ray.rllib.optimizers.evaluator.Evaluator.sample">
+<code class="descname">sample</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ray.rllib.optimizers.evaluator.Evaluator.sample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns experience samples from this Evaluator.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A columnar batch of experiences.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#ray.rllib.optimizers.SampleBatch" title="ray.rllib.optimizers.SampleBatch">SampleBatch</a></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">ev</span><span class="o">.</span><span class="n">sample</span><span class="p">())</span>
+<span class="go">SampleBatch({&quot;a&quot;: [1, 2, 3], &quot;b&quot;: [4, 5, 6]})</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="ray.rllib.optimizers.evaluator.Evaluator.set_weights">
+<code class="descname">set_weights</code><span class="sig-paren">(</span><em>weights</em><span class="sig-paren">)</span><a class="headerlink" href="#ray.rllib.optimizers.evaluator.Evaluator.set_weights" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the model weights of this Evaluator.</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">weights</span> <span class="o">=</span> <span class="n">ev1</span><span class="o">.</span><span class="n">get_weights</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ev2</span><span class="o">.</span><span class="n">set_weights</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ray.rllib.optimizers.optimizer.Optimizer">
+<em class="property">class </em><code class="descclassname">ray.rllib.optimizers.optimizer.</code><code class="descname">Optimizer</code><span class="sig-paren">(</span><em>config</em>, <em>local_evaluator</em>, <em>remote_evaluators</em><span class="sig-paren">)</span><a class="headerlink" href="#ray.rllib.optimizers.optimizer.Optimizer" title="Permalink to this definition">¶</a></dt>
+<dd><p>RLlib optimizers encapsulate distributed RL optimization strategies.</p>
+<p>For example, AsyncOptimizer is used for A3C, and LocalMultiGPUOptimizer is
+used for PPO. These optimizers are all pluggable however, it is possible
+to mix as match as needed.</p>
+<p>In order for an algorithm to use an RLlib optimizer, it must implement
+the Evaluator interface and pass a number of Evaluators to its Optimizer
+of choice. The Optimizer uses these Evaluators to sample from the
+environment and compute model gradient updates.</p>
+<dl class="method">
+<dt id="ray.rllib.optimizers.optimizer.Optimizer.stats">
+<code class="descname">stats</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ray.rllib.optimizers.optimizer.Optimizer.stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dictionary of internal performance statistics.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ray.rllib.optimizers.optimizer.Optimizer.step">
+<code class="descname">step</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ray.rllib.optimizers.optimizer.Optimizer.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes a logical optimization step.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="sample-batches">
+<h3>Sample Batches<a class="headerlink" href="#sample-batches" title="Permalink to this headline">¶</a></h3>
+<p>In order for Optimizers to manipulate sample data, they should be returned from Evaluators
+in the SampleBatch format (a wrapper around a dict).</p>
+<dl class="class">
+<dt id="ray.rllib.optimizers.SampleBatch">
+<em class="property">class </em><code class="descclassname">ray.rllib.optimizers.</code><code class="descname">SampleBatch</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ray.rllib.optimizers.SampleBatch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper around a dictionary with string keys and array-like values.</p>
+<p>For example, {“obs”: [1, 2, 3], “reward”: [0, -1, 1]} is a batch of three
+samples, each with an “obs” and “reward” attribute.</p>
+<dl class="method">
+<dt id="ray.rllib.optimizers.SampleBatch.columns">
+<code class="descname">columns</code><span class="sig-paren">(</span><em>keys</em><span class="sig-paren">)</span><a class="headerlink" href="#ray.rllib.optimizers.SampleBatch.columns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of just the specified columns.</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">batch</span> <span class="o">=</span> <span class="n">SampleBatch</span><span class="p">({</span><span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;b&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="s2">&quot;c&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">]})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">batch</span><span class="o">.</span><span class="n">columns</span><span class="p">([</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">]))</span>
+<span class="go">[[1], [2]]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="ray.rllib.optimizers.SampleBatch.concat">
+<code class="descname">concat</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="headerlink" href="#ray.rllib.optimizers.SampleBatch.concat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a new SampleBatch with each data column concatenated.</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">b1</span> <span class="o">=</span> <span class="n">SampleBatch</span><span class="p">({</span><span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b2</span> <span class="o">=</span> <span class="n">SampleBatch</span><span class="p">({</span><span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">b1</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">b2</span><span class="p">))</span>
+<span class="go">{&quot;a&quot;: [1, 2, 3, 4, 5]}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="ray.rllib.optimizers.SampleBatch.rows">
+<code class="descname">rows</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ray.rllib.optimizers.SampleBatch.rows" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an iterator over data rows, i.e. dicts with column values.</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">batch</span> <span class="o">=</span> <span class="n">SampleBatch</span><span class="p">({</span><span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s2">&quot;b&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">]})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">batch</span><span class="o">.</span><span class="n">rows</span><span class="p">():</span>
+<span class="go">       print(row)</span>
+<span class="go">{&quot;a&quot;: 1, &quot;b&quot;: 4}</span>
+<span class="go">{&quot;a&quot;: 2, &quot;b&quot;: 5}</span>
+<span class="go">{&quot;a&quot;: 3, &quot;b&quot;: 6}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="models-and-preprocessors">
+<h3>Models and Preprocessors<a class="headerlink" href="#models-and-preprocessors" title="Permalink to this headline">¶</a></h3>
+<p>Algorithms share neural network models which inherit from the following class:</p>
+<dl class="class">
+<dt id="ray.rllib.models.Model">
+<em class="property">class </em><code class="descclassname">ray.rllib.models.</code><code class="descname">Model</code><span class="sig-paren">(</span><em>inputs</em>, <em>num_outputs</em>, <em>options</em><span class="sig-paren">)</span><a class="headerlink" href="#ray.rllib.models.Model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines an abstract network model for use with RLlib.</p>
+<p>Models convert input tensors to a number of output features. These features
+can then be interpreted by ActionDistribution classes to determine
+e.g. agent action values.</p>
+<p>The last layer of the network can also be retrieved if the algorithm
+needs to further post-processing (e.g. Actor and Critic networks in A3C).</p>
+<p>If <cite>options[“free_log_std”]</cite> is True, the last half of the
+output layer will be free variables that are not dependent on
+inputs. This is often used if the output of the network is used
+to parametrize a probability distribution. In this case, the
+first half of the parameters can be interpreted as a location
+parameter (like a mean) and the second half can be interpreted as
+a scale parameter (like a standard deviation).</p>
+<dl class="attribute">
+<dt id="ray.rllib.models.Model.inputs">
+<code class="descname">inputs</code><a class="headerlink" href="#ray.rllib.models.Model.inputs" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>Tensor</em> – The input placeholder for this model.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ray.rllib.models.Model.outputs">
+<code class="descname">outputs</code><a class="headerlink" href="#ray.rllib.models.Model.outputs" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>Tensor</em> – The output vector of this model.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ray.rllib.models.Model.last_layer">
+<code class="descname">last_layer</code><a class="headerlink" href="#ray.rllib.models.Model.last_layer" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>Tensor</em> – The network layer right before the model output.</p>
+</dd></dl>
+
+</dd></dl>
+
+<p>Currently we support fully connected and convolutional TensorFlow policies on all algorithms:</p>
+<dl class="class">
+<dt id="ray.rllib.models.FullyConnectedNetwork">
+<em class="property">class </em><code class="descclassname">ray.rllib.models.</code><code class="descname">FullyConnectedNetwork</code><span class="sig-paren">(</span><em>inputs</em>, <em>num_outputs</em>, <em>options</em><span class="sig-paren">)</span><a class="headerlink" href="#ray.rllib.models.FullyConnectedNetwork" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generic fully connected network.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ray.rllib.models.ConvolutionalNetwork">
+<em class="property">class </em><code class="descclassname">ray.rllib.models.</code><code class="descname">ConvolutionalNetwork</code><span class="sig-paren">(</span><em>inputs</em>, <em>num_outputs</em>, <em>options</em><span class="sig-paren">)</span><a class="headerlink" href="#ray.rllib.models.ConvolutionalNetwork" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generic convolutional network.</p>
+</dd></dl>
+
+<p>A3C also supports a TensorFlow LSTM policy.</p>
+<dl class="class">
+<dt id="ray.rllib.models.LSTM">
+<em class="property">class </em><code class="descclassname">ray.rllib.models.</code><code class="descname">LSTM</code><span class="sig-paren">(</span><em>inputs</em>, <em>num_outputs</em>, <em>options</em><span class="sig-paren">)</span><a class="headerlink" href="#ray.rllib.models.LSTM" title="Permalink to this definition">¶</a></dt>
+<dd><p>Vision LSTM network based here:
+<a class="reference external" href="https://github.com/openai/universe-starter-agent">https://github.com/openai/universe-starter-agent</a></p>
+</dd></dl>
+
+<p>Observations are transformed by Preprocessors before used in the model:</p>
+<dl class="class">
+<dt id="ray.rllib.models.preprocessors.Preprocessor">
+<em class="property">class </em><code class="descclassname">ray.rllib.models.preprocessors.</code><code class="descname">Preprocessor</code><span class="sig-paren">(</span><em>obs_space</em>, <em>options</em><span class="sig-paren">)</span><a class="headerlink" href="#ray.rllib.models.preprocessors.Preprocessor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines an abstract observation preprocessor function.</p>
+<dl class="attribute">
+<dt id="ray.rllib.models.preprocessors.Preprocessor.shape">
+<code class="descname">shape</code><a class="headerlink" href="#ray.rllib.models.preprocessors.Preprocessor.shape" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>obj</em> – Shape of the preprocessed output.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ray.rllib.models.preprocessors.Preprocessor.transform">
+<code class="descname">transform</code><span class="sig-paren">(</span><em>observation</em><span class="sig-paren">)</span><a class="headerlink" href="#ray.rllib.models.preprocessors.Preprocessor.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the preprocessed observation.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="action-distributions">
+<h3>Action Distributions<a class="headerlink" href="#action-distributions" title="Permalink to this headline">¶</a></h3>
+<p>Actions can be sampled from different distributions which have a common base
+class:</p>
+<dl class="class">
+<dt id="ray.rllib.models.ActionDistribution">
+<em class="property">class </em><code class="descclassname">ray.rllib.models.</code><code class="descname">ActionDistribution</code><span class="sig-paren">(</span><em>inputs</em><span class="sig-paren">)</span><a class="headerlink" href="#ray.rllib.models.ActionDistribution" title="Permalink to this definition">¶</a></dt>
+<dd><p>The policy action distribution of an agent.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>inputs</strong> (<em>Tensor</em>) – The input vector to compute samples from.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="ray.rllib.models.ActionDistribution.entropy">
+<code class="descname">entropy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ray.rllib.models.ActionDistribution.entropy" title="Permalink to this definition">¶</a></dt>
+<dd><p>The entroy of the action distribution.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ray.rllib.models.ActionDistribution.kl">
+<code class="descname">kl</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="headerlink" href="#ray.rllib.models.ActionDistribution.kl" title="Permalink to this definition">¶</a></dt>
+<dd><p>The KL-divergence between two action distributions.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ray.rllib.models.ActionDistribution.logp">
+<code class="descname">logp</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="headerlink" href="#ray.rllib.models.ActionDistribution.logp" title="Permalink to this definition">¶</a></dt>
+<dd><p>The log-likelihood of the action distribution.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ray.rllib.models.ActionDistribution.sample">
+<code class="descname">sample</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ray.rllib.models.ActionDistribution.sample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw a sample from the action distribution.</p>
+</dd></dl>
+
+</dd></dl>
+
+<p>Currently we support the following action distributions:</p>
+<dl class="class">
+<dt id="ray.rllib.models.Categorical">
+<em class="property">class </em><code class="descclassname">ray.rllib.models.</code><code class="descname">Categorical</code><span class="sig-paren">(</span><em>inputs</em><span class="sig-paren">)</span><a class="headerlink" href="#ray.rllib.models.Categorical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Categorical distribution for discrete action spaces.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ray.rllib.models.DiagGaussian">
+<em class="property">class </em><code class="descclassname">ray.rllib.models.</code><code class="descname">DiagGaussian</code><span class="sig-paren">(</span><em>inputs</em><span class="sig-paren">)</span><a class="headerlink" href="#ray.rllib.models.DiagGaussian" title="Permalink to this definition">¶</a></dt>
+<dd><p>Action distribution where each vector element is a gaussian.</p>
+<p>The first half of the input vector defines the gaussian means, and the
+second half the gaussian standard deviations.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ray.rllib.models.Deterministic">
+<em class="property">class </em><code class="descclassname">ray.rllib.models.</code><code class="descname">Deterministic</code><span class="sig-paren">(</span><em>inputs</em><span class="sig-paren">)</span><a class="headerlink" href="#ray.rllib.models.Deterministic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Action distribution that returns the input values directly.</p>
+<p>This is similar to DiagGaussian with standard deviation zero.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="the-model-catalog">
+<h3>The Model Catalog<a class="headerlink" href="#the-model-catalog" title="Permalink to this headline">¶</a></h3>
+<p>The Model Catalog is the mechanism for algorithms to get preprocessors, models, and action distributions for varying gym environments. It enables sharing of these components across different algorithms.</p>
+<dl class="class">
+<dt id="ray.rllib.models.ModelCatalog">
+<em class="property">class </em><code class="descclassname">ray.rllib.models.</code><code class="descname">ModelCatalog</code><a class="headerlink" href="#ray.rllib.models.ModelCatalog" title="Permalink to this definition">¶</a></dt>
+<dd><p>Registry of models, preprocessors, and action distributions for envs.</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">prep</span> <span class="o">=</span> <span class="n">ModelCatalog</span><span class="o">.</span><span class="n">get_preprocessor</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">observation</span> <span class="o">=</span> <span class="n">prep</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">raw_observation</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dist_cls</span><span class="p">,</span> <span class="n">dist_dim</span> <span class="o">=</span> <span class="n">ModelCatalog</span><span class="o">.</span><span class="n">get_action_dist</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">action_space</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">ModelCatalog</span><span class="o">.</span><span class="n">get_model</span><span class="p">(</span><span class="n">registry</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">dist_dim</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dist</span> <span class="o">=</span> <span class="n">dist_cls</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">outputs</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">action</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>
+</pre></div>
+</div>
+<dl class="staticmethod">
+<dt id="ray.rllib.models.ModelCatalog.get_action_dist">
+<em class="property">static </em><code class="descname">get_action_dist</code><span class="sig-paren">(</span><em>action_space</em>, <em>dist_type=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ray.rllib.models.ModelCatalog.get_action_dist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns action distribution class and size for the given action space.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>action_space</strong> (<em>Space</em>) – Action space of the target gym env.</li>
+<li><strong>dist_type</strong> (<em>str</em>) – Optional identifier of the action distribution.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Python class of the distribution.
+dist_dim (int): The size of the input vector to the distribution.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dist_class (<a class="reference internal" href="#ray.rllib.models.ActionDistribution" title="ray.rllib.models.ActionDistribution">ActionDistribution</a>)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="ray.rllib.models.ModelCatalog.get_model">
+<em class="property">static </em><code class="descname">get_model</code><span class="sig-paren">(</span><em>registry</em>, <em>inputs</em>, <em>num_outputs</em>, <em>options={}</em><span class="sig-paren">)</span><a class="headerlink" href="#ray.rllib.models.ModelCatalog.get_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a suitable model conforming to given input and output specs.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>registry</strong> (<em>obj</em>) – Registry of named objects (ray.tune.registry).</li>
+<li><strong>inputs</strong> (<em>Tensor</em>) – The input tensor to the model.</li>
+<li><strong>num_outputs</strong> (<em>int</em>) – The size of the output vector of the model.</li>
+<li><strong>options</strong> (<em>dict</em>) – Optional args to pass to the model constructor.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Neural network model.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">model (<a class="reference internal" href="#ray.rllib.models.Model" title="ray.rllib.models.Model">Model</a>)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="ray.rllib.models.ModelCatalog.get_preprocessor">
+<em class="property">static </em><code class="descname">get_preprocessor</code><span class="sig-paren">(</span><em>registry</em>, <em>env</em>, <em>options={}</em><span class="sig-paren">)</span><a class="headerlink" href="#ray.rllib.models.ModelCatalog.get_preprocessor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a suitable processor for the given environment.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>registry</strong> (<em>obj</em>) – Registry of named objects (ray.tune.registry).</li>
+<li><strong>env</strong> (<em>gym.Env</em>) – The gym environment to preprocess.</li>
+<li><strong>options</strong> (<em>dict</em>) – Options to pass to the preprocessor.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Preprocessor for the env observations.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">preprocessor (<a class="reference internal" href="#ray.rllib.models.preprocessors.Preprocessor" title="ray.rllib.models.preprocessors.Preprocessor">Preprocessor</a>)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="ray.rllib.models.ModelCatalog.get_preprocessor_as_wrapper">
+<em class="property">static </em><code class="descname">get_preprocessor_as_wrapper</code><span class="sig-paren">(</span><em>registry</em>, <em>env</em>, <em>options={}</em><span class="sig-paren">)</span><a class="headerlink" href="#ray.rllib.models.ModelCatalog.get_preprocessor_as_wrapper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a preprocessor as a gym observation wrapper.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>registry</strong> (<em>obj</em>) – Registry of named objects (ray.tune.registry).</li>
+<li><strong>env</strong> (<em>gym.Env</em>) – The gym environment to wrap.</li>
+<li><strong>options</strong> (<em>dict</em>) – Options to pass to the preprocessor.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Preprocessor in wrapper form.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">wrapper (gym.ObservationWrapper)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="ray.rllib.models.ModelCatalog.get_torch_model">
+<em class="property">static </em><code class="descname">get_torch_model</code><span class="sig-paren">(</span><em>registry</em>, <em>input_shape</em>, <em>num_outputs</em>, <em>options={}</em><span class="sig-paren">)</span><a class="headerlink" href="#ray.rllib.models.ModelCatalog.get_torch_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a PyTorch suitable model. This is currently only supported
+in A3C.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>registry</strong> (<em>obj</em>) – Registry of named objects (ray.tune.registry).</li>
+<li><strong>input_shape</strong> (<em>tuple</em>) – The input shape to the model.</li>
+<li><strong>num_outputs</strong> (<em>int</em>) – The size of the output vector of the model.</li>
+<li><strong>options</strong> (<em>dict</em>) – Optional args to pass to the model constructor.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Neural network model.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">model (<a class="reference internal" href="#ray.rllib.models.Model" title="ray.rllib.models.Model">Model</a>)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="ray.rllib.models.ModelCatalog.register_custom_model">
+<em class="property">static </em><code class="descname">register_custom_model</code><span class="sig-paren">(</span><em>model_name</em>, <em>model_class</em><span class="sig-paren">)</span><a class="headerlink" href="#ray.rllib.models.ModelCatalog.register_custom_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register a custom model class by name.</p>
+<p>The model can be later used by specifying {“custom_model”: model_name}
+in the model config.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>model_name</strong> (<em>str</em>) – Name to register the model under.</li>
+<li><strong>model_class</strong> (<em>type</em>) – Python class of the model.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="ray.rllib.models.ModelCatalog.register_custom_preprocessor">
+<em class="property">static </em><code class="descname">register_custom_preprocessor</code><span class="sig-paren">(</span><em>preprocessor_name</em>, <em>preprocessor_class</em><span class="sig-paren">)</span><a class="headerlink" href="#ray.rllib.models.ModelCatalog.register_custom_preprocessor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register a custom preprocessor class by name.</p>
+<p>The preprocessor can be later used by specifying
+{“custom_preprocessor”: preprocesor_name} in the model config.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>preprocessor_name</strong> (<em>str</em>) – Name to register the preprocessor under.</li>
+<li><strong>preprocessor_class</strong> (<em>type</em>) – Python class of the preprocessor.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="webui.html" class="btn btn-neutral float-right" title="Web UI" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rllib.html" class="btn btn-neutral" title="Ray RLlib: A Scalable Reinforcement Learning Library" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, The Ray Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

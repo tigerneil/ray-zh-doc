@@ -1,0 +1,358 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Evolution Strategies &mdash; Ray 0.3.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Ray 0.3.0 documentation" href="index.html"/>
+        <link rel="next" title="Cython" href="example-cython.html"/>
+        <link rel="prev" title="Batch L-BFGS" href="example-lbfgs.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Ray
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install-on-ubuntu.html">Installation on Ubuntu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install-on-macosx.html">Installation on Mac OS X</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install-on-docker.html">Installation on Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation-troubleshooting.html">Installation Troubleshooting</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">The Ray API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="actors.html">Actors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-with-gpus.html">Using Ray with GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tune.html">Ray.tune: Hyperparameter Optimization Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rllib.html">Ray RLlib: A Scalable Reinforcement Learning Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rllib-dev.html">RLlib Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="webui.html">Web UI</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Examples</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="example-hyperopt.html">Hyperparameter Optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-rl-pong.html">Learning to Play Pong</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-policy-gradient.html">Policy Gradient Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-parameter-server.html">Parameter Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-resnet.html">ResNet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-a3c.html">Asynchronous Advantage Actor Critic (A3C)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-lbfgs.html">Batch L-BFGS</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Evolution Strategies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-cython.html">Cython</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-streaming.html">Streaming MapReduce</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-with-tensorflow.html">Using Ray with TensorFlow</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Design</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="internals-overview.html">An Overview of the Internals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="serialization.html">Serialization in the Object Store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fault-tolerance.html">Fault Tolerance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plasma-object-store.html">The Plasma Object Store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">Resource (CPUs, GPUs)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Cluster Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="autoscaling.html">Cloud Setup and Auto-Scaling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-on-a-cluster.html">Using Ray on a Cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-on-a-large-cluster.html">Using Ray on a Large Cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-and-docker-on-a-cluster.html">Using Ray and Docker on a Cluster (EXPERIMENTAL)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Help</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ray</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Evolution Strategies</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/example-evolution-strategies.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="evolution-strategies">
+<h1>Evolution Strategies<a class="headerlink" href="#evolution-strategies" title="Permalink to this headline">¶</a></h1>
+<p>This document provides a walkthrough of the evolution strategies example.
+To run the application, first install some dependencies.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>pip install tensorflow
+pip install gym
+</pre></div>
+</div>
+<p>You can view the <a class="reference external" href="https://github.com/ray-project/ray/tree/master/python/ray/rllib/es">code for this example</a>.</p>
+<p>The script can be run as follows. Note that the configuration is tuned to work
+on the <code class="docutils literal"><span class="pre">Humanoid-v1</span></code> gym environment.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>python/ray/rllib/train.py --env<span class="o">=</span>Humanoid-v1 --run<span class="o">=</span>ES
+</pre></div>
+</div>
+<p>To train a policy on a cluster (e.g., using 900 workers), run the following.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>python ray/python/ray/rllib/train.py <span class="se">\</span>
+    --env<span class="o">=</span>Humanoid-v1 <span class="se">\</span>
+    --run<span class="o">=</span>ES <span class="se">\</span>
+    --redis-address<span class="o">=</span>&lt;redis-address&gt; <span class="se">\</span>
+    --config<span class="o">=</span><span class="s1">&#39;{&quot;num_workers&quot;: 900, &quot;episodes_per_batch&quot;: 10000, &quot;timesteps_per_batch&quot;: 100000}&#39;</span>
+</pre></div>
+</div>
+<p>At the heart of this example, we define a <code class="docutils literal"><span class="pre">Worker</span></code> class. These workers have
+a method <code class="docutils literal"><span class="pre">do_rollouts</span></code>, which will be used to perform simulate randomly
+perturbed policies in a given environment.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="nd">@ray.remote</span>
+<span class="k">class</span> <span class="nc">Worker</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">policy_params</span><span class="p">,</span> <span class="n">env_name</span><span class="p">,</span> <span class="n">noise</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="o">=</span> <span class="c1"># Initialize environment.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">policy</span> <span class="o">=</span> <span class="c1"># Construct policy.</span>
+        <span class="c1"># Details omitted.</span>
+
+    <span class="k">def</span> <span class="nf">do_rollouts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+        <span class="n">perturbation</span> <span class="o">=</span> <span class="c1"># Generate a random perturbation to the policy.</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">set_weights</span><span class="p">(</span><span class="n">params</span> <span class="o">+</span> <span class="n">perturbation</span><span class="p">)</span>
+        <span class="c1"># Do rollout with the perturbed policy.</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">set_weights</span><span class="p">(</span><span class="n">params</span> <span class="o">-</span> <span class="n">perturbation</span><span class="p">)</span>
+        <span class="c1"># Do rollout with the perturbed policy.</span>
+
+        <span class="c1"># Return the rewards.</span>
+</pre></div>
+</div>
+<p>In the main loop, we create a number of actors with this class.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">workers</span> <span class="o">=</span> <span class="p">[</span><span class="n">Worker</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">policy_params</span><span class="p">,</span> <span class="n">env_name</span><span class="p">,</span> <span class="n">noise_id</span><span class="p">)</span>
+           <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_workers</span><span class="p">)]</span>
+</pre></div>
+</div>
+<p>We then enter an infinite loop in which we use the actors to perform rollouts
+and use the rewards from the rollouts to update the policy.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+    <span class="c1"># Get the current policy weights.</span>
+    <span class="n">theta</span> <span class="o">=</span> <span class="n">policy</span><span class="o">.</span><span class="n">get_weights</span><span class="p">()</span>
+    <span class="c1"># Put the current policy weights in the object store.</span>
+    <span class="n">theta_id</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+    <span class="c1"># Use the actors to do rollouts, note that we pass in the ID of the policy</span>
+    <span class="c1"># weights.</span>
+    <span class="n">rollout_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">worker</span><span class="o">.</span><span class="n">do_rollouts</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">theta_id</span><span class="p">),</span> <span class="k">for</span> <span class="n">worker</span> <span class="ow">in</span> <span class="n">workers</span><span class="p">]</span>
+    <span class="c1"># Get the results of the rollouts.</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">rollout_ids</span><span class="p">)</span>
+    <span class="c1"># Update the policy.</span>
+    <span class="n">optimizer</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In addition, note that we create a large object representing a shared block of
+random noise. We then put the block in the object store so that each <code class="docutils literal"><span class="pre">Worker</span></code>
+actor can use it without creating its own copy.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="nd">@ray.remote</span>
+<span class="k">def</span> <span class="nf">create_shared_noise</span><span class="p">():</span>
+    <span class="n">noise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">250000000</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">noise</span>
+
+<span class="n">noise_id</span> <span class="o">=</span> <span class="n">create_shared_noise</span><span class="o">.</span><span class="n">remote</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Recall that the <code class="docutils literal"><span class="pre">noise_id</span></code> argument is passed into the actor constructor.</p>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="example-cython.html" class="btn btn-neutral float-right" title="Cython" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="example-lbfgs.html" class="btn btn-neutral" title="Batch L-BFGS" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, The Ray Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

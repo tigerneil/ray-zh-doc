@@ -1,0 +1,475 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>An Overview of the Internals &mdash; Ray 0.3.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Ray 0.3.0 documentation" href="index.html"/>
+        <link rel="next" title="Serialization in the Object Store" href="serialization.html"/>
+        <link rel="prev" title="Using Ray with TensorFlow" href="using-ray-with-tensorflow.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Ray
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install-on-ubuntu.html">Installation on Ubuntu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install-on-macosx.html">Installation on Mac OS X</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install-on-docker.html">Installation on Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation-troubleshooting.html">Installation Troubleshooting</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">The Ray API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="actors.html">Actors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-with-gpus.html">Using Ray with GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tune.html">Ray.tune: Hyperparameter Optimization Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rllib.html">Ray RLlib: A Scalable Reinforcement Learning Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rllib-dev.html">RLlib Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="webui.html">Web UI</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="example-hyperopt.html">Hyperparameter Optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-rl-pong.html">Learning to Play Pong</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-policy-gradient.html">Policy Gradient Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-parameter-server.html">Parameter Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-resnet.html">ResNet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-a3c.html">Asynchronous Advantage Actor Critic (A3C)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-lbfgs.html">Batch L-BFGS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-evolution-strategies.html">Evolution Strategies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-cython.html">Cython</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-streaming.html">Streaming MapReduce</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-with-tensorflow.html">Using Ray with TensorFlow</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Design</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">An Overview of the Internals</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#connecting-to-ray">Connecting to Ray</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#running-ray-standalone">Running Ray standalone</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#connecting-to-an-existing-ray-cluster">Connecting to an existing Ray cluster</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#defining-a-remote-function">Defining a remote function</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#notes-and-limitations">Notes and limitations</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#calling-a-remote-function">Calling a remote function</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Notes and limitations</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#getting-an-object-id">Getting an object ID</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="serialization.html">Serialization in the Object Store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fault-tolerance.html">Fault Tolerance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plasma-object-store.html">The Plasma Object Store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">Resource (CPUs, GPUs)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Cluster Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="autoscaling.html">Cloud Setup and Auto-Scaling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-on-a-cluster.html">Using Ray on a Cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-on-a-large-cluster.html">Using Ray on a Large Cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-and-docker-on-a-cluster.html">Using Ray and Docker on a Cluster (EXPERIMENTAL)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Help</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ray</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>An Overview of the Internals</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/internals-overview.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="an-overview-of-the-internals">
+<h1>An Overview of the Internals<a class="headerlink" href="#an-overview-of-the-internals" title="Permalink to this headline">¶</a></h1>
+<p>In this document, we trace through in more detail what happens at the system
+level when certain API calls are made.</p>
+<div class="section" id="connecting-to-ray">
+<h2>Connecting to Ray<a class="headerlink" href="#connecting-to-ray" title="Permalink to this headline">¶</a></h2>
+<p>There are two ways that a Ray script can be initiated. It can either be run in a
+standalone fashion or it can be connect to an existing Ray cluster.</p>
+<div class="section" id="running-ray-standalone">
+<h3>Running Ray standalone<a class="headerlink" href="#running-ray-standalone" title="Permalink to this headline">¶</a></h3>
+<p>Ray can be used standalone by calling <code class="docutils literal"><span class="pre">ray.init()</span></code> within a script. When the
+call to <code class="docutils literal"><span class="pre">ray.init()</span></code> happens, all of the relevant processes are started.
+These include a local scheduler, a global scheduler, an object store and
+manager, a Redis server, and a number of worker processes.</p>
+<p>When the script exits, these processes will be killed.</p>
+<p><strong>Note:</strong> This approach is limited to a single machine.</p>
+</div>
+<div class="section" id="connecting-to-an-existing-ray-cluster">
+<h3>Connecting to an existing Ray cluster<a class="headerlink" href="#connecting-to-an-existing-ray-cluster" title="Permalink to this headline">¶</a></h3>
+<p>To connect to an existing Ray cluster, simply pass the argument address of the
+Redis server as the <code class="docutils literal"><span class="pre">redis_address=</span></code> keyword argument into <code class="docutils literal"><span class="pre">ray.init</span></code>. In
+this case, no new processes will be started when <code class="docutils literal"><span class="pre">ray.init</span></code> is called, and
+similarly the processes will continue running when the script exits. In this
+case, all processes except workers that correspond to actors are shared between
+different driver processes.</p>
+</div>
+</div>
+<div class="section" id="defining-a-remote-function">
+<h2>Defining a remote function<a class="headerlink" href="#defining-a-remote-function" title="Permalink to this headline">¶</a></h2>
+<p>A central component of this system is the <strong>centralized control plane</strong>. This is
+implemented using one or more Redis servers. <a class="reference external" href="https://github.com/antirez/redis">Redis</a> is an in-memory key-value
+store.</p>
+<p>We use the centralized control plane in two ways. First, as persistent store of
+the system’s control state. Second, as a message bus for communication between
+processes (using Redis’s publish-subscribe functionality).</p>
+<p>Now, consider a remote function definition as below.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="nd">@ray.remote</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>When the remote function is defined as above, the function is immediately
+pickled, assigned a unique ID, and stored in a Redis server. You can view the
+remote functions in the centralized control plane as below.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">TODO</span><span class="p">:</span> <span class="n">Fill</span> <span class="n">this</span> <span class="ow">in</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>Each worker process has a separate thread running in the background that
+listens for the addition of remote functions to the centralized control state.
+When a new remote function is added, the thread fetches the pickled remote
+function, unpickles it, and can then execute that function.</p>
+<div class="section" id="notes-and-limitations">
+<h3>Notes and limitations<a class="headerlink" href="#notes-and-limitations" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first">Because we export remote functions as soon as they are defined, that means
+that remote functions can’t close over variables that are defined after the
+remote function is defined. For example, the following code gives an error.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="nd">@ray.remote</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">helper</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">helper</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>If you call <code class="docutils literal"><span class="pre">f.remote(0)</span></code>, it will give an error of the form.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
+    <span class="n">File</span> <span class="s2">&quot;&lt;ipython-input-3-12a5beeb2306&gt;&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">3</span><span class="p">,</span> <span class="ow">in</span> <span class="n">f</span>
+<span class="ne">NameError</span><span class="p">:</span> <span class="n">name</span> <span class="s1">&#39;helper&#39;</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">defined</span>
+</pre></div>
+</div>
+<p>On the other hand, if <code class="docutils literal"><span class="pre">helper</span></code> is defined before <code class="docutils literal"><span class="pre">f</span></code>, then it will work.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="calling-a-remote-function">
+<h2>Calling a remote function<a class="headerlink" href="#calling-a-remote-function" title="Permalink to this headline">¶</a></h2>
+<p>When a driver or worker invokes a remote function, a number of things happen.</p>
+<ul>
+<li><p class="first">First, a task object is created. The task object includes the following.</p>
+<ul class="simple">
+<li>The ID of the function being called.</li>
+<li>The IDs or values of the arguments to the function. Python primitives like
+integers or short strings will be pickled and included as part of the task
+object. Larger or more complex objects will be put into the object store
+with an internal call to <code class="docutils literal"><span class="pre">ray.put</span></code>, and the resulting IDs are included in
+the task object. Object IDs that are passed directly as arguments are also
+included in the task object.</li>
+<li>The ID of the task. This is generated uniquely from the above content.</li>
+<li>The IDs for the return values of the task. These are generated uniquely
+from the above content.</li>
+</ul>
+</li>
+<li><p class="first">The task object is then sent to the local scheduler on the same node as the
+driver or worker.</p>
+</li>
+<li><p class="first">The local scheduler makes a decision to either schedule the task locally or to
+pass the task on to a global scheduler.</p>
+<ul>
+<li><p class="first">If all of the task’s object dependencies are present in the local object
+store and there are enough CPU and GPU resources available to execute the
+task, then the local scheduler will assign the task to one of its
+available workers.</p>
+</li>
+<li><p class="first">If those conditions are not met, the task will be passed on to a global
+scheduler. This is done by adding the task to the <strong>task table</strong>, which is
+part of the centralized control state.
+The task table can be inspected as follows.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">TODO</span><span class="p">:</span> <span class="n">Fill</span> <span class="n">this</span> <span class="ow">in</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>A global scheduler will be notified of the update and will assign the task
+to a local scheduler by updating the task’s state in the task table. The
+local scheduler will be notified and pull the task object.</p>
+</li>
+</ul>
+</li>
+<li><p class="first">Once a task has been scheduled to a local scheduler, whether by itself or by
+a global scheduler, the local scheduler queues the task for execution. A task
+is assigned to a worker when enough resources become available and the object
+dependencies are available locally, in first-in, first-out order.</p>
+</li>
+<li><p class="first">When the task has been assigned to a worker, the worker executes the task and
+puts the task’s return values into the object store. The object store will
+then update the <strong>object table</strong>, which is part of the centralized control
+state, to reflect the fact that it contains the newly created objects. The
+object table can be viewed as follows.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">TODO</span><span class="p">:</span> <span class="n">Fill</span> <span class="n">this</span> <span class="ow">in</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>When the task’s return values are placed into the object store, they are first
+serialized into a contiguous blob of bytes using the <a class="reference external" href="https://arrow.apache.org/">Apache Arrow</a> data
+layout, which is helpful for efficiently sharing data between processes using
+shared memory.</p>
+</li>
+</ul>
+<div class="section" id="id1">
+<h3>Notes and limitations<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>When an object store on a particular node fills up, it will begin evicting
+objects in a least-recently-used manner. If an object that is needed later is
+evicted, then the call to <code class="docutils literal"><span class="pre">ray.get</span></code> for that object will initiate the
+reconstruction of the object. The local scheduler will attempt to reconstruct
+the object by replaying its task lineage.</li>
+</ul>
+<p>TODO: Limitations on reconstruction.</p>
+</div>
+</div>
+<div class="section" id="getting-an-object-id">
+<h2>Getting an object ID<a class="headerlink" href="#getting-an-object-id" title="Permalink to this headline">¶</a></h2>
+<p>Several things happen when a driver or worker calls <code class="docutils literal"><span class="pre">ray.get</span></code> on an object ID.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">x_id</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>The driver or worker goes to the object store on the same node and requests
+the relevant object. Each object store consists of two components, a
+shared-memory key-value store of immutable objects, and a manager to
+coordinate the transfer of objects between nodes.<ul>
+<li>If the object is not present in the object store, the manager checks the
+object table to see which other object stores, if any, have the object. It
+then requests the object directly from one of those object stores, via its
+manager. If the object doesn’t exist anywhere, then the centralized control
+state will notify the requesting manager when the object is created. If the
+object doesn’t exist anywhere because it has been evicted from all object
+stores, the worker will also request reconstruction of the object from the
+local scheduler. These checks repeat periodically until the object is
+available in the local object store, whether through reconstruction or
+through object transfer.</li>
+</ul>
+</li>
+<li>Once the object is available in the local object store, the driver or worker
+will map the relevant region of memory into its own address space (to avoid
+copying the object), and will deserialize the bytes into a Python object.
+Note that any numpy arrays that are part of the object will not be copied.</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="serialization.html" class="btn btn-neutral float-right" title="Serialization in the Object Store" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="using-ray-with-tensorflow.html" class="btn btn-neutral" title="Using Ray with TensorFlow" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, The Ray Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,403 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Cloud Setup and Auto-Scaling &mdash; Ray 0.3.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Ray 0.3.0 documentation" href="index.html"/>
+        <link rel="next" title="Using Ray on a Cluster" href="using-ray-on-a-cluster.html"/>
+        <link rel="prev" title="Resource (CPUs, GPUs)" href="resources.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Ray
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install-on-ubuntu.html">Installation on Ubuntu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install-on-macosx.html">Installation on Mac OS X</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install-on-docker.html">Installation on Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation-troubleshooting.html">Installation Troubleshooting</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">The Ray API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="actors.html">Actors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-with-gpus.html">Using Ray with GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tune.html">Ray.tune: Hyperparameter Optimization Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rllib.html">Ray RLlib: A Scalable Reinforcement Learning Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rllib-dev.html">RLlib Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="webui.html">Web UI</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="example-hyperopt.html">Hyperparameter Optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-rl-pong.html">Learning to Play Pong</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-policy-gradient.html">Policy Gradient Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-parameter-server.html">Parameter Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-resnet.html">ResNet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-a3c.html">Asynchronous Advantage Actor Critic (A3C)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-lbfgs.html">Batch L-BFGS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-evolution-strategies.html">Evolution Strategies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-cython.html">Cython</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-streaming.html">Streaming MapReduce</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-with-tensorflow.html">Using Ray with TensorFlow</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Design</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="internals-overview.html">An Overview of the Internals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="serialization.html">Serialization in the Object Store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fault-tolerance.html">Fault Tolerance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plasma-object-store.html">The Plasma Object Store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">Resource (CPUs, GPUs)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Cluster Usage</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Cloud Setup and Auto-Scaling</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#quick-start">Quick start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#updating-your-cluster">Updating your cluster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#autoscaling">Autoscaling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#monitoring-cluster-status">Monitoring cluster status</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#customizing-cluster-setup">Customizing cluster setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#syncing-git-branches">Syncing git branches</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#common-cluster-configurations">Common cluster configurations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#additional-cloud-providers">Additional Cloud providers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-on-a-cluster.html">Using Ray on a Cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-on-a-large-cluster.html">Using Ray on a Large Cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-and-docker-on-a-cluster.html">Using Ray and Docker on a Cluster (EXPERIMENTAL)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Help</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ray</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Cloud Setup and Auto-Scaling</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/autoscaling.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="cloud-setup-and-auto-scaling">
+<h1>Cloud Setup and Auto-Scaling<a class="headerlink" href="#cloud-setup-and-auto-scaling" title="Permalink to this headline">¶</a></h1>
+<p>The <code class="docutils literal"><span class="pre">ray</span> <span class="pre">create_or_update</span></code> command starts an AWS Ray cluster from your personal computer. Once the cluster is up, you can then SSH into it to run Ray programs.</p>
+<div class="section" id="quick-start">
+<h2>Quick start<a class="headerlink" href="#quick-start" title="Permalink to this headline">¶</a></h2>
+<p>First, ensure you have configured your AWS credentials in <code class="docutils literal"><span class="pre">~/.aws/credentials</span></code>,
+as described in <a class="reference external" href="http://boto3.readthedocs.io/en/latest/guide/configuration.html">the boto docs</a>.</p>
+<p>Then you’re ready to go. The provided <a class="reference external" href="https://github.com/ray-project/ray/tree/master/python/ray/autoscaler/aws/example.yaml">ray/python/ray/autoscaler/aws/example.yaml</a> cluster config file will create a small cluster with a m4.large head node (on-demand), and two m4.large <a class="reference external" href="https://aws.amazon.com/ec2/spot/">spot workers</a>, configured to autoscale up to four m4.large workers.</p>
+<p>Try it out by running these commands from your personal computer. Once the cluster is started, you can then
+SSH into the head node to run Ray programs with <code class="docutils literal"><span class="pre">ray.init(redis_address=&quot;&lt;node_internal_ip&gt;:6379&quot;)</span></code>.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="c1"># Create or update the cluster. When the command finishes, it will print</span>
+<span class="c1"># out the command that can be used to SSH into the cluster head node.</span>
+$ ray create_or_update ray/python/ray/autoscaler/aws/example.yaml
+
+<span class="c1"># Reconfigure autoscaling behavior without interrupting running jobs</span>
+$ ray create_or_update ray/python/ray/autoscaler/aws/example.yaml <span class="se">\</span>
+    --max-workers<span class="o">=</span>N --no-restart
+
+<span class="c1"># Teardown the cluster</span>
+$ ray teardown ray/python/ray/autoscaler/aws/example.yaml
+</pre></div>
+</div>
+</div>
+<div class="section" id="updating-your-cluster">
+<h2>Updating your cluster<a class="headerlink" href="#updating-your-cluster" title="Permalink to this headline">¶</a></h2>
+<p>When you run <code class="docutils literal"><span class="pre">ray</span> <span class="pre">create_or_update</span></code> with an existing cluster, the command checks if the local configuration differs from the applied configuration of the cluster. This includes any changes to synced files specified in the <code class="docutils literal"><span class="pre">file_mounts</span></code> section of the config. If so, the new files and config will be uploaded to the cluster. Following that, Ray services will be restarted.</p>
+<p>You can also run <code class="docutils literal"><span class="pre">ray</span> <span class="pre">create_or_update</span></code> to restart a cluster if it seems to be in a bad state (this will restart all Ray services even if there are no config changes).</p>
+<p>If you don’t want the update to restart services (e.g. because the changes don’t require a restart), pass <code class="docutils literal"><span class="pre">--no-restart</span></code> to the update call.</p>
+</div>
+<div class="section" id="autoscaling">
+<h2>Autoscaling<a class="headerlink" href="#autoscaling" title="Permalink to this headline">¶</a></h2>
+<p>Ray clusters come with a load-based auto-scaler. When cluster resource usage exceeds a configurable threshold (80% by default), new nodes will be launched up the specified <code class="docutils literal"><span class="pre">max_workers</span></code> limit. When nodes are idle for more than a timeout, they will be removed, down to the <code class="docutils literal"><span class="pre">min_workers</span></code> limit. The head node is never removed.</p>
+<p>The default idle timeout is 5 minutes. This is because in AWS there is a minimum billing charge of 5 minutes per instance, after which usage is billed by the second.</p>
+</div>
+<div class="section" id="monitoring-cluster-status">
+<h2>Monitoring cluster status<a class="headerlink" href="#monitoring-cluster-status" title="Permalink to this headline">¶</a></h2>
+<p>You can monitor cluster usage and auto-scaling status by tailing the autoscaling logs in <code class="docutils literal"><span class="pre">/tmp/raylogs/monitor-*.log</span></code>.</p>
+<p>The Ray autoscaler also reports per-node status in the form of instance tags. In the AWS console, you can click on a Node, go the the “Tags” pane, and add the <code class="docutils literal"><span class="pre">ray:NodeStatus</span></code> tag as a column. This lets you see per-node statuses at a glance:</p>
+<img alt="_images/autoscaler-status.png" src="_images/autoscaler-status.png" />
+</div>
+<div class="section" id="customizing-cluster-setup">
+<h2>Customizing cluster setup<a class="headerlink" href="#customizing-cluster-setup" title="Permalink to this headline">¶</a></h2>
+<p>You are encouraged to copy the example YAML file and modify it to your needs. This may include adding additional setup commands to install libraries or sync local data files. After you have customized the nodes, it is also a good idea to create a new machine image (AMI) and use that in the config file. This reduces worker setup time, improving the efficiency of auto-scaling.</p>
+<p>The setup commands you use should ideally be <em>idempotent</em>, that is, can be run more than once. This allows Ray to update nodes after they have been created. You can usually make commands idempotent with small modifications, e.g. <code class="docutils literal"><span class="pre">git</span> <span class="pre">clone</span> <span class="pre">foo</span></code> can be rewritten as <code class="docutils literal"><span class="pre">test</span> <span class="pre">-e</span> <span class="pre">foo</span> <span class="pre">||</span> <span class="pre">git</span> <span class="pre">clone</span> <span class="pre">foo</span></code> which checks if the repo is already cloned first.</p>
+</div>
+<div class="section" id="syncing-git-branches">
+<h2>Syncing git branches<a class="headerlink" href="#syncing-git-branches" title="Permalink to this headline">¶</a></h2>
+<p>A common use case is syncing a particular local git branch to all workers of the cluster. There is a nice way to do this as follows:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">file_mounts</span><span class="p p-Indicator">:</span> <span class="p p-Indicator">{</span>
+    <span class="s">&quot;/tmp/current_branch_sha&quot;</span><span class="p p-Indicator">:</span> <span class="s">&quot;/path/to/local/repo/.git/refs/heads/&lt;YOUR_BRANCH_NAME&gt;&quot;</span><span class="p p-Indicator">,</span>
+<span class="p p-Indicator">}</span>
+
+<span class="l l-Scalar l-Scalar-Plain">setup_commands</span><span class="p p-Indicator">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">test -e &lt;REPO_NAME&gt; || git clone https://github.com/&lt;REPO_ORG&gt;/&lt;REPO_NAME&gt;.git</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">cd &lt;REPO_NAME&gt; &amp;&amp; git fetch &amp;&amp; git checkout `cat /tmp/current_branch_sha`</span>
+</pre></div>
+</div>
+<p>This tells <code class="docutils literal"><span class="pre">ray</span> <span class="pre">create_or_update</span></code> to sync the current git branch SHA from your personal computer to a temporary file on the cluster. Then, the setup commands read that file to figure out which SHA they should checkout on the nodes. The final workflow to update the cluster then becomes just this:</p>
+<ol class="arabic simple">
+<li>Make local changes to a git branch</li>
+<li>Commit the changes with <code class="docutils literal"><span class="pre">git</span> <span class="pre">commit</span></code> and <code class="docutils literal"><span class="pre">git</span> <span class="pre">push</span></code></li>
+<li>Update files on your Ray cluster with <code class="docutils literal"><span class="pre">ray</span> <span class="pre">create_or_update</span></code></li>
+</ol>
+</div>
+<div class="section" id="common-cluster-configurations">
+<h2>Common cluster configurations<a class="headerlink" href="#common-cluster-configurations" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal"><span class="pre">example.yaml</span></code> configuration is enough to get started with Ray, but for more compute intensive workloads you will want to change the instance types to e.g. use GPU or larger compute instance by editing the yaml file. Here are a few common configurations:</p>
+<p><strong>GPU single node</strong>: use Ray on a single large GPU instance.</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">max_workers</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="l l-Scalar l-Scalar-Plain">head_node</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">InstanceType</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">p2.8xlarge</span>
+</pre></div>
+</div>
+<p><strong>Mixed GPU and CPU nodes</strong>: for RL applications that require proportionally more
+CPU than GPU resources, you can use additional CPU workers with a GPU head node.</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">max_workers</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">10</span>
+<span class="l l-Scalar l-Scalar-Plain">head_node</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">InstanceType</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">p2.8xlarge</span>
+<span class="l l-Scalar l-Scalar-Plain">worker_nodes</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">InstanceType</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">m4.16xlarge</span>
+</pre></div>
+</div>
+<p><strong>Autoscaling CPU cluster</strong>: use a small head node and have Ray auto-scale
+workers as needed. This can be a cost-efficient configuration for clusters with
+bursty workloads. You can also request spot workers for additional cost savings.</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">min_workers</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="l l-Scalar l-Scalar-Plain">max_workers</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">10</span>
+<span class="l l-Scalar l-Scalar-Plain">head_node</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">InstanceType</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">m4.large</span>
+<span class="l l-Scalar l-Scalar-Plain">worker_nodes</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">InstanceMarketOptions</span><span class="p p-Indicator">:</span>
+        <span class="l l-Scalar l-Scalar-Plain">MarketType</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">spot</span>
+    <span class="l l-Scalar l-Scalar-Plain">InstanceType</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">m4.16xlarge</span>
+</pre></div>
+</div>
+<p><strong>Autoscaling GPU cluster</strong>: similar to the autoscaling CPU cluster, but
+with GPU worker nodes instead.</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">min_workers</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="l l-Scalar l-Scalar-Plain">max_workers</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">10</span>
+<span class="l l-Scalar l-Scalar-Plain">head_node</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">InstanceType</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">m4.large</span>
+<span class="l l-Scalar l-Scalar-Plain">worker_nodes</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">InstanceMarketOptions</span><span class="p p-Indicator">:</span>
+        <span class="l l-Scalar l-Scalar-Plain">MarketType</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">spot</span>
+    <span class="l l-Scalar l-Scalar-Plain">InstanceType</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">p2.xlarge</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="additional-cloud-providers">
+<h2>Additional Cloud providers<a class="headerlink" href="#additional-cloud-providers" title="Permalink to this headline">¶</a></h2>
+<p>To use Ray autoscaling on other Cloud providers or cluster management systems, you can implement the <code class="docutils literal"><span class="pre">NodeProvider</span></code> interface (~100 LOC) and register it in <a class="reference external" href="https://github.com/ray-project/ray/tree/master/python/ray/autoscaler/node_provider.py">node_provider.py</a>. Contributions are welcome!</p>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="using-ray-on-a-cluster.html" class="btn btn-neutral float-right" title="Using Ray on a Cluster" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="resources.html" class="btn btn-neutral" title="Resource (CPUs, GPUs)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, The Ray Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

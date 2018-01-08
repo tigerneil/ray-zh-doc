@@ -1,0 +1,396 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Serialization in the Object Store &mdash; Ray 0.3.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Ray 0.3.0 documentation" href="index.html"/>
+        <link rel="next" title="Fault Tolerance" href="fault-tolerance.html"/>
+        <link rel="prev" title="An Overview of the Internals" href="internals-overview.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Ray
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install-on-ubuntu.html">Installation on Ubuntu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install-on-macosx.html">Installation on Mac OS X</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install-on-docker.html">Installation on Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation-troubleshooting.html">Installation Troubleshooting</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">The Ray API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="actors.html">Actors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-with-gpus.html">Using Ray with GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tune.html">Ray.tune: Hyperparameter Optimization Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rllib.html">Ray RLlib: A Scalable Reinforcement Learning Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rllib-dev.html">RLlib Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="webui.html">Web UI</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="example-hyperopt.html">Hyperparameter Optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-rl-pong.html">Learning to Play Pong</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-policy-gradient.html">Policy Gradient Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-parameter-server.html">Parameter Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-resnet.html">ResNet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-a3c.html">Asynchronous Advantage Actor Critic (A3C)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-lbfgs.html">Batch L-BFGS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-evolution-strategies.html">Evolution Strategies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-cython.html">Cython</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-streaming.html">Streaming MapReduce</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-with-tensorflow.html">Using Ray with TensorFlow</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Design</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="internals-overview.html">An Overview of the Internals</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Serialization in the Object Store</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#what-objects-does-ray-handle">What Objects Does Ray Handle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#notes-and-limitations">Notes and limitations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#last-resort-workaround">Last Resort Workaround</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="fault-tolerance.html">Fault Tolerance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plasma-object-store.html">The Plasma Object Store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">Resource (CPUs, GPUs)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Cluster Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="autoscaling.html">Cloud Setup and Auto-Scaling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-on-a-cluster.html">Using Ray on a Cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-on-a-large-cluster.html">Using Ray on a Large Cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-and-docker-on-a-cluster.html">Using Ray and Docker on a Cluster (EXPERIMENTAL)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Help</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ray</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Serialization in the Object Store</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/serialization.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="serialization-in-the-object-store">
+<h1>Serialization in the Object Store<a class="headerlink" href="#serialization-in-the-object-store" title="Permalink to this headline">¶</a></h1>
+<p>This document describes what Python objects Ray can and cannot serialize into
+the object store. Once an object is placed in the object store, it is immutable.</p>
+<p>There are a number of situations in which Ray will place objects in the object
+store.</p>
+<ol class="arabic simple">
+<li>The return values of a remote function.</li>
+<li>The value <code class="docutils literal"><span class="pre">x</span></code> in a call to <code class="docutils literal"><span class="pre">ray.put(x)</span></code>.</li>
+<li>Arguments to remote functions (except for simple arguments like ints or
+floats).</li>
+</ol>
+<p>A Python object may have an arbitrary number of pointers with arbitrarily deep
+nesting. To place an object in the object store or send it between processes,
+it must first be converted to a contiguous string of bytes. This process is
+known as serialization. The process of converting the string of bytes back into a
+Python object is known as deserialization. Serialization and deserialization
+are often bottlenecks in distributed computing.</p>
+<p>Pickle is one example of a library for serialization and deserialization in
+Python.</p>
+<p>Pickle (and the variant we use, cloudpickle) is general-purpose. It can
+serialize a large variety of Python objects. However, for numerical workloads,
+pickling and unpickling can be inefficient. For example, if multiple processes
+want to access a Python list of numpy arrays, each process must unpickle the
+list and create its own new copies of the arrays. This can lead to high memory
+overheads, even when all processes are read-only and could easily share memory.</p>
+<p>In Ray, we optimize for numpy arrays by using the <a class="reference external" href="https://arrow.apache.org/">Apache Arrow</a> data format.
+When we deserialize a list of numpy arrays from the object store, we still
+create a Python list of numpy array objects. However, rather than copy each
+numpy array, each numpy array object holds a pointer to the relevant array held
+in shared memory. There are some advantages to this form of serialization.</p>
+<ul class="simple">
+<li>Deserialization can be very fast.</li>
+<li>Memory is shared between processes so worker processes can all read the same
+data without having to copy it.</li>
+</ul>
+<div class="section" id="what-objects-does-ray-handle">
+<h2>What Objects Does Ray Handle<a class="headerlink" href="#what-objects-does-ray-handle" title="Permalink to this headline">¶</a></h2>
+<p>Ray does not currently support serialization of arbitrary Python objects.  The
+set of Python objects that Ray can serialize using Arrow includes the following.</p>
+<ol class="arabic simple">
+<li>Primitive types: ints, floats, longs, bools, strings, unicode, and numpy
+arrays.</li>
+<li>Any list, dictionary, or tuple whose elements can be serialized by Ray.</li>
+</ol>
+<p>For a more general object, Ray will first attempt to serialize the object by
+unpacking the object as a dictionary of its fields. This behavior is not
+correct in all cases. If Ray cannot serialize the object as a dictionary of its
+fields, Ray will fall back to using pickle. However, using pickle will likely
+be inefficient.</p>
+</div>
+<div class="section" id="notes-and-limitations">
+<h2>Notes and limitations<a class="headerlink" href="#notes-and-limitations" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">We currently handle certain patterns incorrectly, according to Python
+semantics. For example, a list that contains two copies of the same list will
+be serialized as if the two lists were distinct.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">l1</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">l2</span> <span class="o">=</span> <span class="p">[</span><span class="n">l1</span><span class="p">,</span> <span class="n">l1</span><span class="p">]</span>
+<span class="n">l3</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">ray</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">l2</span><span class="p">))</span>
+
+<span class="n">l2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="n">l2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># True.</span>
+<span class="n">l3</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="n">l3</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># False.</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">For reasons similar to the above example, we also do not currently handle
+objects that recursively contain themselves (this may be common in graph-like
+data structures).</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">l</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">l</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
+
+<span class="c1"># Try to put this list that recursively contains itself in the object store.</span>
+<span class="n">ray</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This will throw an exception with a message like the following.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>This object exceeds the maximum recursion depth. It may contain itself recursively.
+</pre></div>
+</div>
+</li>
+<li><p class="first">Whenever possible, use numpy arrays for maximum performance.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="last-resort-workaround">
+<h2>Last Resort Workaround<a class="headerlink" href="#last-resort-workaround" title="Permalink to this headline">¶</a></h2>
+<p>If you find cases where Ray serialization doesn’t work or does something
+unexpected, please <a class="reference external" href="https://github.com/ray-project/ray/issues">let us know</a> so we can fix it. In the meantime, you may
+have to resort to writing custom serialization and deserialization code (e.g.,
+calling pickle by hand).</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pickle</span>
+
+<span class="nd">@ray.remote</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">complicated_object</span><span class="p">):</span>
+    <span class="c1"># Deserialize the object manually.</span>
+    <span class="n">obj</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">complicated_object</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s2">&quot;Successfully passed {} into f.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+
+<span class="c1"># Define a complicated object.</span>
+<span class="n">l</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">l</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
+
+<span class="c1"># Manually serialize the object and pass it in as a string.</span>
+<span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">pickle</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">l</span><span class="p">)))</span>  <span class="c1"># prints &#39;Successfully passed [[...]] into f.&#39;</span>
+</pre></div>
+</div>
+<p><strong>Note:</strong> If you have trouble with pickle, you may have better luck with
+cloudpickle.</p>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="fault-tolerance.html" class="btn btn-neutral float-right" title="Fault Tolerance" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="internals-overview.html" class="btn btn-neutral" title="An Overview of the Internals" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, The Ray Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

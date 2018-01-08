@@ -1,0 +1,355 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Using Ray on a Cluster &mdash; Ray 0.3.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Ray 0.3.0 documentation" href="index.html"/>
+        <link rel="next" title="Using Ray on a Large Cluster" href="using-ray-on-a-large-cluster.html"/>
+        <link rel="prev" title="Cloud Setup and Auto-Scaling" href="autoscaling.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Ray
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install-on-ubuntu.html">Installation on Ubuntu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install-on-macosx.html">Installation on Mac OS X</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install-on-docker.html">Installation on Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation-troubleshooting.html">Installation Troubleshooting</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">The Ray API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="actors.html">Actors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-with-gpus.html">Using Ray with GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tune.html">Ray.tune: Hyperparameter Optimization Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rllib.html">Ray RLlib: A Scalable Reinforcement Learning Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rllib-dev.html">RLlib Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="webui.html">Web UI</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="example-hyperopt.html">Hyperparameter Optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-rl-pong.html">Learning to Play Pong</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-policy-gradient.html">Policy Gradient Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-parameter-server.html">Parameter Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-resnet.html">ResNet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-a3c.html">Asynchronous Advantage Actor Critic (A3C)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-lbfgs.html">Batch L-BFGS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-evolution-strategies.html">Evolution Strategies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-cython.html">Cython</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-streaming.html">Streaming MapReduce</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-with-tensorflow.html">Using Ray with TensorFlow</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Design</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="internals-overview.html">An Overview of the Internals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="serialization.html">Serialization in the Object Store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fault-tolerance.html">Fault Tolerance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plasma-object-store.html">The Plasma Object Store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">Resource (CPUs, GPUs)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Cluster Usage</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="autoscaling.html">Cloud Setup and Auto-Scaling</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Using Ray on a Cluster</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#deploying-ray-on-a-cluster">Deploying Ray on a Cluster</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#starting-ray-on-each-machine">Starting Ray on each machine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#stopping-ray">Stopping Ray</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-on-a-large-cluster.html">Using Ray on a Large Cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-and-docker-on-a-cluster.html">Using Ray and Docker on a Cluster (EXPERIMENTAL)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Help</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ray</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Using Ray on a Cluster</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/using-ray-on-a-cluster.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="using-ray-on-a-cluster">
+<h1>Using Ray on a Cluster<a class="headerlink" href="#using-ray-on-a-cluster" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Starting with Ray 0.4.0 if you’re using AWS you can use the automated <a class="reference external" href="http://ray.readthedocs.io/en/latest/autoscaling.html">setup commands</a>.</p>
+</div>
+<p>The instructions in this document work well for small clusters. For larger
+clusters, follow the instructions for <a class="reference external" href="http://ray.readthedocs.io/en/latest/using-ray-on-a-large-cluster.html">managing a cluster with parallel ssh</a>.</p>
+<div class="section" id="deploying-ray-on-a-cluster">
+<h2>Deploying Ray on a Cluster<a class="headerlink" href="#deploying-ray-on-a-cluster" title="Permalink to this headline">¶</a></h2>
+<p>This section assumes that you have a cluster running and that the nodes in the
+cluster can communicate with each other. It also assumes that Ray is installed
+on each machine. To install Ray, follow the instructions for
+<a class="reference external" href="http://ray.readthedocs.io/en/latest/install-on-ubuntu.html">installation on Ubuntu</a>.</p>
+<div class="section" id="starting-ray-on-each-machine">
+<h3>Starting Ray on each machine<a class="headerlink" href="#starting-ray-on-each-machine" title="Permalink to this headline">¶</a></h3>
+<p>On the head node (just choose some node to be the head node), run the following.
+If the <code class="docutils literal"><span class="pre">--redis-port</span></code> argument is omitted, Ray will choose a port at random.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>ray start --head --redis-port<span class="o">=</span><span class="m">6379</span>
+</pre></div>
+</div>
+<p>The command will print out the address of the Redis server that was started
+(and some other address information).</p>
+<p>Then on all of the other nodes, run the following. Make sure to replace
+<code class="docutils literal"><span class="pre">&lt;redis-address&gt;</span></code> with the value printed by the command on the head node (it
+should look something like <code class="docutils literal"><span class="pre">123.45.67.89:6379</span></code>).</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>ray start --redis-address<span class="o">=</span>&lt;redis-address&gt;
+</pre></div>
+</div>
+<p>If you wish to specify that a machine has 10 CPUs and 1 GPU, you can do this
+with the flags <code class="docutils literal"><span class="pre">--num-cpus=10</span></code> and <code class="docutils literal"><span class="pre">--num-gpus=1</span></code>. If these flags are not
+used, then Ray will detect the number of CPUs automatically and will assume
+there are 0 GPUs.</p>
+<p>Now we’ve started all of the Ray processes on each node Ray. This includes</p>
+<ul class="simple">
+<li>Some worker processes on each machine.</li>
+<li>An object store on each machine.</li>
+<li>A local scheduler on each machine.</li>
+<li>Multiple Redis servers (on the head node).</li>
+<li>One global scheduler (on the head node).</li>
+</ul>
+<p>To run some commands, start up Python on one of the nodes in the cluster, and do
+the following.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">ray</span>
+<span class="n">ray</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">redis_address</span><span class="o">=</span><span class="s2">&quot;&lt;redis-address&gt;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now you can define remote functions and execute tasks. For example, to verify
+that the correct number of nodes have joined the cluster, you can run the
+following.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
+
+<span class="nd">@ray.remote</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">():</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.01</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ray</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">get_node_ip_address</span><span class="p">()</span>
+
+<span class="c1"># Get a list of the IP addresses of the nodes that have joined the cluster.</span>
+<span class="nb">set</span><span class="p">(</span><span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">([</span><span class="n">f</span><span class="o">.</span><span class="n">remote</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">)]))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="stopping-ray">
+<h3>Stopping Ray<a class="headerlink" href="#stopping-ray" title="Permalink to this headline">¶</a></h3>
+<p>When you want to stop the Ray processes, run <code class="docutils literal"><span class="pre">ray</span> <span class="pre">stop</span></code> on each node.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="using-ray-on-a-large-cluster.html" class="btn btn-neutral float-right" title="Using Ray on a Large Cluster" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="autoscaling.html" class="btn btn-neutral" title="Cloud Setup and Auto-Scaling" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, The Ray Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

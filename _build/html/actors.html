@@ -1,0 +1,574 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Actors &mdash; Ray 0.3.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Ray 0.3.0 documentation" href="index.html"/>
+        <link rel="next" title="Using Ray with GPUs" href="using-ray-with-gpus.html"/>
+        <link rel="prev" title="The Ray API" href="api.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Ray
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install-on-ubuntu.html">Installation on Ubuntu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install-on-macosx.html">Installation on Mac OS X</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install-on-docker.html">Installation on Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation-troubleshooting.html">Installation Troubleshooting</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">The Ray API</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Actors</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#defining-and-creating-an-actor">Defining and creating an actor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#using-an-actor">Using an actor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#a-more-interesting-actor-example">A More Interesting Actor Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#using-gpus-on-actors">Using GPUs on actors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#passing-around-actor-handles-experimental">Passing Around Actor Handles (Experimental)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#current-actor-limitations">Current Actor Limitations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-with-gpus.html">Using Ray with GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tune.html">Ray.tune: Hyperparameter Optimization Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rllib.html">Ray RLlib: A Scalable Reinforcement Learning Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rllib-dev.html">RLlib Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="webui.html">Web UI</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="example-hyperopt.html">Hyperparameter Optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-rl-pong.html">Learning to Play Pong</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-policy-gradient.html">Policy Gradient Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-parameter-server.html">Parameter Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-resnet.html">ResNet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-a3c.html">Asynchronous Advantage Actor Critic (A3C)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-lbfgs.html">Batch L-BFGS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-evolution-strategies.html">Evolution Strategies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-cython.html">Cython</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-streaming.html">Streaming MapReduce</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-with-tensorflow.html">Using Ray with TensorFlow</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Design</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="internals-overview.html">An Overview of the Internals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="serialization.html">Serialization in the Object Store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fault-tolerance.html">Fault Tolerance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plasma-object-store.html">The Plasma Object Store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">Resource (CPUs, GPUs)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Cluster Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="autoscaling.html">Cloud Setup and Auto-Scaling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-on-a-cluster.html">Using Ray on a Cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-on-a-large-cluster.html">Using Ray on a Large Cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-and-docker-on-a-cluster.html">Using Ray and Docker on a Cluster (EXPERIMENTAL)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Help</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ray</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Actors</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/actors.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="actors">
+<h1>Actors<a class="headerlink" href="#actors" title="Permalink to this headline">¶</a></h1>
+<p>Remote functions in Ray should be thought of as functional and side-effect free.
+Restricting ourselves only to remote functions gives us distributed functional
+programming, which is great for many use cases, but in practice is a bit
+limited.</p>
+<p>Ray extends the dataflow model with <strong>actors</strong>. An actor is essentially a
+stateful worker (or a service). When a new actor is instantiated, a new worker
+is created, and methods of the actor are scheduled on that specific worker and
+can access and mutate the state of that worker.</p>
+<p>Suppose we’ve already started Ray.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">ray</span>
+<span class="n">ray</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="section" id="defining-and-creating-an-actor">
+<h2>Defining and creating an actor<a class="headerlink" href="#defining-and-creating-an-actor" title="Permalink to this headline">¶</a></h2>
+<p>Consider the following simple example. The <code class="docutils literal"><span class="pre">ray.remote</span></code> decorator indicates
+that instances of the <code class="docutils literal"><span class="pre">Counter</span></code> class will be actors.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="nd">@ray.remote</span>
+<span class="k">class</span> <span class="nc">Counter</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">increment</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
+</pre></div>
+</div>
+<p>To actually create an actor, we can instantiate this class by calling
+<code class="docutils literal"><span class="pre">Counter.remote()</span></code>.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">a1</span> <span class="o">=</span> <span class="n">Counter</span><span class="o">.</span><span class="n">remote</span><span class="p">()</span>
+<span class="n">a2</span> <span class="o">=</span> <span class="n">Counter</span><span class="o">.</span><span class="n">remote</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>When an actor is instantiated, the following events happen.</p>
+<ol class="arabic simple">
+<li>A node in the cluster is chosen and a worker process is created on that node
+(by the local scheduler on that node) for the purpose of running methods
+called on the actor.</li>
+<li>A <code class="docutils literal"><span class="pre">Counter</span></code> object is created on that worker and the <code class="docutils literal"><span class="pre">Counter</span></code>
+constructor is run.</li>
+</ol>
+</div>
+<div class="section" id="using-an-actor">
+<h2>Using an actor<a class="headerlink" href="#using-an-actor" title="Permalink to this headline">¶</a></h2>
+<p>We can schedule tasks on the actor by calling its methods.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">a1</span><span class="o">.</span><span class="n">increment</span><span class="o">.</span><span class="n">remote</span><span class="p">()</span>  <span class="c1"># ray.get returns 1</span>
+<span class="n">a2</span><span class="o">.</span><span class="n">increment</span><span class="o">.</span><span class="n">remote</span><span class="p">()</span>  <span class="c1"># ray.get returns 1</span>
+</pre></div>
+</div>
+<p>When <code class="docutils literal"><span class="pre">a1.increment.remote()</span></code> is called, the following events happens.</p>
+<ol class="arabic simple">
+<li>A task is created.</li>
+<li>The task is assigned directly to the local scheduler responsible for the
+actor by the driver’s local scheduler. Thus, this scheduling procedure
+bypasses the global scheduler.</li>
+<li>An object ID is returned.</li>
+</ol>
+<p>We can then call <code class="docutils literal"><span class="pre">ray.get</span></code> on the object ID to retrieve the actual value.</p>
+<p>Similarly, the call to <code class="docutils literal"><span class="pre">a2.increment.remote()</span></code> generates a task that is
+scheduled on the second <code class="docutils literal"><span class="pre">Counter</span></code> actor. Since these two tasks run on
+different actors, they can be executed in parallel (note that only actor
+methods will be scheduled on actor workers, regular remote functions will not
+be).</p>
+<p>On the other hand, methods called on the same <code class="docutils literal"><span class="pre">Counter</span></code> actor are executed
+serially in the order that they are called. They can thus share state with
+one another, as shown below.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># Create ten Counter actors.</span>
+<span class="n">counters</span> <span class="o">=</span> <span class="p">[</span><span class="n">Counter</span><span class="o">.</span><span class="n">remote</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)]</span>
+
+<span class="c1"># Increment each Counter once and get the results. These tasks all happen in</span>
+<span class="c1"># parallel.</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">([</span><span class="n">c</span><span class="o">.</span><span class="n">increment</span><span class="o">.</span><span class="n">remote</span><span class="p">()</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">counters</span><span class="p">])</span>
+<span class="k">print</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>  <span class="c1"># prints [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]</span>
+
+<span class="c1"># Increment the first Counter five times. These tasks are executed serially</span>
+<span class="c1"># and share state.</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">([</span><span class="n">counters</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">increment</span><span class="o">.</span><span class="n">remote</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)])</span>
+<span class="k">print</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>  <span class="c1"># prints [2, 3, 4, 5, 6]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="a-more-interesting-actor-example">
+<h2>A More Interesting Actor Example<a class="headerlink" href="#a-more-interesting-actor-example" title="Permalink to this headline">¶</a></h2>
+<p>A common pattern is to use actors to encapsulate the mutable state managed by an
+external library or service.</p>
+<p><a class="reference external" href="https://gym.openai.com/">Gym</a> provides an interface to a number of simulated environments for testing
+and training reinforcement learning agents. These simulators are stateful, and
+tasks that use these simulators must mutate their state. We can use actors to
+encapsulate the state of these simulators.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gym</span>
+
+<span class="nd">@ray.remote</span>
+<span class="k">class</span> <span class="nc">GymEnvironment</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>We can then instantiate an actor and schedule a task on that actor as follows.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">pong</span> <span class="o">=</span> <span class="n">GymEnvironment</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="s2">&quot;Pong-v0&quot;</span><span class="p">)</span>
+<span class="n">pong</span><span class="o">.</span><span class="n">step</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># Take action 0 in the simulator.</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="using-gpus-on-actors">
+<h2>Using GPUs on actors<a class="headerlink" href="#using-gpus-on-actors" title="Permalink to this headline">¶</a></h2>
+<p>A common use case is for an actor to contain a neural network. For example,
+suppose we have imported Tensorflow and have created a method for constructing
+a neural net.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="kn">as</span> <span class="nn">tf</span>
+
+<span class="k">def</span> <span class="nf">construct_network</span><span class="p">():</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="p">[</span><span class="bp">None</span><span class="p">,</span> <span class="mi">784</span><span class="p">])</span>
+    <span class="n">y_</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="p">[</span><span class="bp">None</span><span class="p">,</span> <span class="mi">10</span><span class="p">])</span>
+
+    <span class="n">W</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">784</span><span class="p">,</span> <span class="mi">10</span><span class="p">]))</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">10</span><span class="p">]))</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">W</span><span class="p">)</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span>
+
+    <span class="n">cross_entropy</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="o">-</span><span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">y_</span> <span class="o">*</span> <span class="n">tf</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="n">reduction_indices</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="n">train_step</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">GradientDescentOptimizer</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="n">cross_entropy</span><span class="p">)</span>
+    <span class="n">correct_prediction</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">tf</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">y_</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">accuracy</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">correct_prediction</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y_</span><span class="p">,</span> <span class="n">train_step</span><span class="p">,</span> <span class="n">accuracy</span>
+</pre></div>
+</div>
+<p>We can then define an actor for this network as follows.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+
+<span class="c1"># Define an actor that runs on GPUs. If there are no GPUs, then simply use</span>
+<span class="c1"># ray.remote without any arguments and no parentheses.</span>
+<span class="nd">@ray.remote</span><span class="p">(</span><span class="n">num_gpus</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">NeuralNetOnGPU</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Set an environment variable to tell TensorFlow which GPUs to use. Note</span>
+        <span class="c1"># that this must be done before the call to tf.Session.</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;CUDA_VISIBLE_DEVICES&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ray</span><span class="o">.</span><span class="n">get_gpu_ids</span><span class="p">()])</span>
+        <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span><span class="o">.</span><span class="n">as_default</span><span class="p">():</span>
+            <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;/gpu:0&quot;</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_step</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">accuracy</span> <span class="o">=</span> <span class="n">construct_network</span><span class="p">()</span>
+                <span class="c1"># Allow this to run on CPUs if there aren&#39;t any GPUs.</span>
+                <span class="n">config</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">ConfigProto</span><span class="p">(</span><span class="n">allow_soft_placement</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">sess</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
+                <span class="c1"># Initialize the network.</span>
+                <span class="n">init</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">global_variables_initializer</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">init</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To indicate that an actor requires one GPU, we pass in <code class="docutils literal"><span class="pre">num_gpus=1</span></code> to
+<code class="docutils literal"><span class="pre">ray.remote</span></code>. Note that in order for this to work, Ray must have been started
+with some GPUs, e.g., via <code class="docutils literal"><span class="pre">ray.init(num_gpus=2)</span></code>. Otherwise, when you try to
+instantiate the GPU version with <code class="docutils literal"><span class="pre">NeuralNetOnGPU.remote()</span></code>, an exception will
+be thrown saying that there aren’t enough GPUs in the system.</p>
+<p>When the actor is created, it will have access to a list of the IDs of the GPUs
+that it is allowed to use via <code class="docutils literal"><span class="pre">ray.get_gpu_ids()</span></code>. This is a list of integers,
+like <code class="docutils literal"><span class="pre">[]</span></code>, or <code class="docutils literal"><span class="pre">[1]</span></code>, or <code class="docutils literal"><span class="pre">[2,</span> <span class="pre">5,</span> <span class="pre">6]</span></code>. Since we passed in
+<code class="docutils literal"><span class="pre">ray.remote(num_gpus=1)</span></code>, this list will have length one.</p>
+<p>We can put this all together as follows.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">ray</span>
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="kn">as</span> <span class="nn">tf</span>
+<span class="kn">from</span> <span class="nn">tensorflow.examples.tutorials.mnist</span> <span class="kn">import</span> <span class="n">input_data</span>
+
+<span class="n">ray</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">num_gpus</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">construct_network</span><span class="p">():</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="p">[</span><span class="bp">None</span><span class="p">,</span> <span class="mi">784</span><span class="p">])</span>
+    <span class="n">y_</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="p">[</span><span class="bp">None</span><span class="p">,</span> <span class="mi">10</span><span class="p">])</span>
+
+    <span class="n">W</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">784</span><span class="p">,</span> <span class="mi">10</span><span class="p">]))</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">10</span><span class="p">]))</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">W</span><span class="p">)</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span>
+
+    <span class="n">cross_entropy</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="o">-</span><span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">y_</span> <span class="o">*</span> <span class="n">tf</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="n">reduction_indices</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="n">train_step</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">GradientDescentOptimizer</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="n">cross_entropy</span><span class="p">)</span>
+    <span class="n">correct_prediction</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">tf</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">y_</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">accuracy</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">correct_prediction</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y_</span><span class="p">,</span> <span class="n">train_step</span><span class="p">,</span> <span class="n">accuracy</span>
+
+<span class="nd">@ray.remote</span><span class="p">(</span><span class="n">num_gpus</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">NeuralNetOnGPU</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mnist_data</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mnist</span> <span class="o">=</span> <span class="n">mnist_data</span>
+        <span class="c1"># Set an environment variable to tell TensorFlow which GPUs to use. Note</span>
+        <span class="c1"># that this must be done before the call to tf.Session.</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;CUDA_VISIBLE_DEVICES&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ray</span><span class="o">.</span><span class="n">get_gpu_ids</span><span class="p">()])</span>
+        <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span><span class="o">.</span><span class="n">as_default</span><span class="p">():</span>
+            <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;/gpu:0&quot;</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_step</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">accuracy</span> <span class="o">=</span> <span class="n">construct_network</span><span class="p">()</span>
+                <span class="c1"># Allow this to run on CPUs if there aren&#39;t any GPUs.</span>
+                <span class="n">config</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">ConfigProto</span><span class="p">(</span><span class="n">allow_soft_placement</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">sess</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
+                <span class="c1"># Initialize the network.</span>
+                <span class="n">init</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">global_variables_initializer</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">init</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_steps</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_steps</span><span class="p">):</span>
+            <span class="n">batch_xs</span><span class="p">,</span> <span class="n">batch_ys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mnist</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">next_batch</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">train_step</span><span class="p">,</span> <span class="n">feed_dict</span><span class="o">=</span><span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">:</span> <span class="n">batch_xs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_</span><span class="p">:</span> <span class="n">batch_ys</span><span class="p">})</span>
+
+    <span class="k">def</span> <span class="nf">get_accuracy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">accuracy</span><span class="p">,</span> <span class="n">feed_dict</span><span class="o">=</span><span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">mnist</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">images</span><span class="p">,</span>
+                                                       <span class="bp">self</span><span class="o">.</span><span class="n">y_</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">mnist</span><span class="o">.</span><span class="n">test</span><span class="o">.</span><span class="n">labels</span><span class="p">})</span>
+
+
+<span class="c1"># Load the MNIST dataset and tell Ray how to serialize the custom classes.</span>
+<span class="n">mnist</span> <span class="o">=</span> <span class="n">input_data</span><span class="o">.</span><span class="n">read_data_sets</span><span class="p">(</span><span class="s2">&quot;MNIST_data&quot;</span><span class="p">,</span> <span class="n">one_hot</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+<span class="c1"># Create the actor.</span>
+<span class="n">nn</span> <span class="o">=</span> <span class="n">NeuralNetOnGPU</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">mnist</span><span class="p">)</span>
+
+<span class="c1"># Run a few steps of training and print the accuracy.</span>
+<span class="n">nn</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">accuracy</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">get_accuracy</span><span class="o">.</span><span class="n">remote</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Accuracy is {}.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">accuracy</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="passing-around-actor-handles-experimental">
+<h2>Passing Around Actor Handles (Experimental)<a class="headerlink" href="#passing-around-actor-handles-experimental" title="Permalink to this headline">¶</a></h2>
+<p>Actor handles can be passed into other tasks. To see an example of this, take a
+look at the <a class="reference external" href="http://ray.readthedocs.io/en/latest/example-parameter-server.html">asynchronous parameter server example</a>. To illustrate this with
+a simple example, consider a simple actor definition. This functionality is
+currently <strong>experimental</strong> and subject to the limitations described below.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="nd">@ray.remote</span>
+<span class="k">class</span> <span class="nc">Counter</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">inc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">def</span> <span class="nf">get_counter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">counter</span>
+</pre></div>
+</div>
+<p>We can define remote functions (or actor methods) that use actor handles.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="nd">@ray.remote</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">counter</span><span class="p">):</span>
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="n">counter</span><span class="o">.</span><span class="n">inc</span><span class="o">.</span><span class="n">remote</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>If we instantiate an actor, we can pass the handle around to various tasks.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">counter</span> <span class="o">=</span> <span class="n">Counter</span><span class="o">.</span><span class="n">remote</span><span class="p">()</span>
+
+<span class="c1"># Start some tasks that use the actor.</span>
+<span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">counter</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">)]</span>
+
+<span class="c1"># Print the counter value.</span>
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">counter</span><span class="o">.</span><span class="n">get_counter</span><span class="o">.</span><span class="n">remote</span><span class="p">()))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="current-actor-limitations">
+<h2>Current Actor Limitations<a class="headerlink" href="#current-actor-limitations" title="Permalink to this headline">¶</a></h2>
+<p>We are working to address the following issues.</p>
+<ol class="arabic simple">
+<li><strong>Actor lifetime management:</strong> Currently, when the original actor handle for
+an actor goes out of scope, a task is scheduled on that actor that kills the
+actor process (this new task will run once all previous tasks have finished
+running). This could be an issue if the original actor handle goes out of
+scope, but the actor is still being used by tasks that have been passed the
+actor handle.</li>
+<li><strong>Returning actor handles:</strong> Actor handles currently cannot be returned from
+a remote function or actor method. Similarly, <code class="docutils literal"><span class="pre">ray.put</span></code> cannot be called on
+an actor handle.</li>
+<li><strong>Reconstruction evicted actor objects:</strong> If <code class="docutils literal"><span class="pre">ray.get</span></code> is called on an
+evicted object that was created by an actor method, Ray currently will not
+reconstruct the object. For more information, see the documentation on
+<a class="reference external" href="http://ray.readthedocs.io/en/latest/fault-tolerance.html">fault tolerance</a>.</li>
+</ol>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="using-ray-with-gpus.html" class="btn btn-neutral float-right" title="Using Ray with GPUs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="api.html" class="btn btn-neutral" title="The Ray API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, The Ray Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

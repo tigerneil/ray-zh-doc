@@ -1,0 +1,496 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Hyperparameter Optimization &mdash; Ray 0.3.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Ray 0.3.0 documentation" href="index.html"/>
+        <link rel="next" title="Learning to Play Pong" href="example-rl-pong.html"/>
+        <link rel="prev" title="Web UI" href="webui.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Ray
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install-on-ubuntu.html">Installation on Ubuntu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install-on-macosx.html">Installation on Mac OS X</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install-on-docker.html">Installation on Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation-troubleshooting.html">Installation Troubleshooting</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">The Ray API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="actors.html">Actors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-with-gpus.html">Using Ray with GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tune.html">Ray.tune: Hyperparameter Optimization Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rllib.html">Ray RLlib: A Scalable Reinforcement Learning Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rllib-dev.html">RLlib Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="webui.html">Web UI</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Examples</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Hyperparameter Optimization</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#problem-setup">Problem Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#basic-random-search">Basic random search</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#processing-results-as-they-become-available">Processing results as they become available</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#more-sophisticated-hyperparameter-search">More sophisticated hyperparameter search</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="example-rl-pong.html">Learning to Play Pong</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-policy-gradient.html">Policy Gradient Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-parameter-server.html">Parameter Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-resnet.html">ResNet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-a3c.html">Asynchronous Advantage Actor Critic (A3C)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-lbfgs.html">Batch L-BFGS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-evolution-strategies.html">Evolution Strategies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-cython.html">Cython</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-streaming.html">Streaming MapReduce</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-with-tensorflow.html">Using Ray with TensorFlow</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Design</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="internals-overview.html">An Overview of the Internals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="serialization.html">Serialization in the Object Store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fault-tolerance.html">Fault Tolerance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plasma-object-store.html">The Plasma Object Store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">Resource (CPUs, GPUs)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Cluster Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="autoscaling.html">Cloud Setup and Auto-Scaling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-on-a-cluster.html">Using Ray on a Cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-on-a-large-cluster.html">Using Ray on a Large Cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-and-docker-on-a-cluster.html">Using Ray and Docker on a Cluster (EXPERIMENTAL)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Help</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ray</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Hyperparameter Optimization</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/example-hyperopt.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="hyperparameter-optimization">
+<h1>Hyperparameter Optimization<a class="headerlink" href="#hyperparameter-optimization" title="Permalink to this headline">¶</a></h1>
+<p>This document provides a walkthrough of the hyperparameter optimization example.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">To learn about Ray’s built-in hyperparameter optimization framework, see <a class="reference external" href="http://ray.readthedocs.io/en/latest/tune.html">Ray.tune</a>.</p>
+</div>
+<p>To run the application, first install some dependencies.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>pip install tensorflow
+</pre></div>
+</div>
+<p>You can view the <a class="reference external" href="https://github.com/ray-project/ray/tree/master/examples/hyperopt">code for this example</a>.</p>
+<p>The simple script that processes results as they become available and launches
+new experiments can be run as follows.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>python ray/examples/hyperopt/hyperopt_simple.py --trials<span class="o">=</span><span class="m">5</span> --steps<span class="o">=</span><span class="m">10</span>
+</pre></div>
+</div>
+<p>The variant that divides training into multiple segments and aggressively
+terminates poorly performing models can be run as follows.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>python ray/examples/hyperopt/hyperopt_adaptive.py --num-starting-segments<span class="o">=</span><span class="m">5</span> <span class="se">\</span>
+                                                  --num-segments<span class="o">=</span><span class="m">10</span> <span class="se">\</span>
+                                                  --steps-per-segment<span class="o">=</span><span class="m">20</span>
+</pre></div>
+</div>
+<p>Machine learning algorithms often have a number of <em>hyperparameters</em> whose
+values must be chosen by the practitioner. For example, an optimization
+algorithm may have a step size, a decay rate, and a regularization coefficient.
+In a deep network, the network parameterization itself (e.g., the number of
+layers and the number of units per layer) can be considered a hyperparameter.</p>
+<p>Choosing these parameters can be challenging, and so a common practice is to
+search over the space of hyperparameters. One approach that works surprisingly
+well is to randomly sample different options.</p>
+<div class="section" id="problem-setup">
+<h2>Problem Setup<a class="headerlink" href="#problem-setup" title="Permalink to this headline">¶</a></h2>
+<p>Suppose that we want to train a convolutional network, but we aren’t sure how to
+choose the following hyperparameters:</p>
+<ul class="simple">
+<li>the learning rate</li>
+<li>the batch size</li>
+<li>the dropout probability</li>
+<li>the standard deviation of the distribution from which to initialize the
+network weights</li>
+</ul>
+<p>Suppose that we’ve defined a remote function <code class="docutils literal"><span class="pre">train_cnn_and_compute_accuracy</span></code>,
+which takes values for these hyperparameters as its input (along with the
+dataset), trains a convolutional network using those hyperparameters, and
+returns the accuracy of the trained model on a validation set.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">ray</span>
+
+<span class="nd">@ray.remote</span>
+<span class="k">def</span> <span class="nf">train_cnn_and_compute_accuracy</span><span class="p">(</span><span class="n">hyperparameters</span><span class="p">,</span>
+                                   <span class="n">train_images</span><span class="p">,</span>
+                                   <span class="n">train_labels</span><span class="p">,</span>
+                                   <span class="n">validation_images</span><span class="p">,</span>
+                                   <span class="n">validation_labels</span><span class="p">):</span>
+    <span class="c1"># Construct a deep network, train it, and return the accuracy on the</span>
+    <span class="c1"># validation data.</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="basic-random-search">
+<h2>Basic random search<a class="headerlink" href="#basic-random-search" title="Permalink to this headline">¶</a></h2>
+<p>Something that works surprisingly well is to try random values for the
+hyperparameters. For example, we can write a function that randomly generates
+hyperparameter configurations.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">generate_hyperparameters</span><span class="p">():</span>
+    <span class="c1"># Randomly choose values for the hyperparameters.</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;learning_rate&quot;</span><span class="p">:</span> <span class="mi">10</span> <span class="o">**</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+            <span class="s2">&quot;batch_size&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span>
+            <span class="s2">&quot;dropout&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+            <span class="s2">&quot;stddev&quot;</span><span class="p">:</span> <span class="mi">10</span> <span class="o">**</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">)}</span>
+</pre></div>
+</div>
+<p>In addition, let’s assume that we’ve started Ray and loaded some data.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">ray</span>
+
+<span class="n">ray</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+
+<span class="kn">from</span> <span class="nn">tensorflow.examples.tutorials.mnist</span> <span class="kn">import</span> <span class="n">input_data</span>
+<span class="n">mnist</span> <span class="o">=</span> <span class="n">input_data</span><span class="o">.</span><span class="n">read_data_sets</span><span class="p">(</span><span class="s2">&quot;MNIST_data&quot;</span><span class="p">,</span> <span class="n">one_hot</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">train_images</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">mnist</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">images</span><span class="p">)</span>
+<span class="n">train_labels</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">mnist</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">labels</span><span class="p">)</span>
+<span class="n">validation_images</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">mnist</span><span class="o">.</span><span class="n">validation</span><span class="o">.</span><span class="n">images</span><span class="p">)</span>
+<span class="n">validation_labels</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">mnist</span><span class="o">.</span><span class="n">validation</span><span class="o">.</span><span class="n">labels</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Then basic random hyperparameter search looks something like this. We launch a
+bunch of experiments, and we get the results.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># Generate a bunch of hyperparameter configurations.</span>
+<span class="n">hyperparameter_configurations</span> <span class="o">=</span> <span class="p">[</span><span class="n">generate_hyperparameters</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">)]</span>
+
+<span class="c1"># Launch some experiments.</span>
+<span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">hyperparameters</span> <span class="ow">in</span> <span class="n">hyperparameter_configurations</span><span class="p">:</span>
+    <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">train_cnn_and_compute_accuracy</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">hyperparameters</span><span class="p">,</span>
+                                                         <span class="n">train_images</span><span class="p">,</span>
+                                                         <span class="n">train_labels</span><span class="p">,</span>
+                                                         <span class="n">validation_images</span><span class="p">,</span>
+                                                         <span class="n">validation_labels</span><span class="p">))</span>
+
+<span class="c1"># Get the results.</span>
+<span class="n">accuracies</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Then we can inspect the contents of <cite>accuracies</cite> and see which set of
+hyperparameters worked the best. Note that in the above example, the for loop
+will run instantaneously and the program will block in the call to <code class="docutils literal"><span class="pre">ray.get</span></code>,
+which will wait until all of the experiments have finished.</p>
+</div>
+<div class="section" id="processing-results-as-they-become-available">
+<h2>Processing results as they become available<a class="headerlink" href="#processing-results-as-they-become-available" title="Permalink to this headline">¶</a></h2>
+<p>One problem with the above approach is that you have to wait for all of the
+experiments to finish before you can process the results. Instead, you may want
+to process the results as they become available, perhaps in order to adaptively
+choose new experiments to run, or perhaps simply so you know how well the
+experiments are doing. To process the results as they become available, we can
+use the <code class="docutils literal"><span class="pre">ray.wait</span></code> primitive.</p>
+<p>The most simple usage is the following. This example is implemented in more
+detail in <a class="reference external" href="https://github.com/ray-project/ray/blob/master/examples/hyperopt/driver.py">driver.py</a>.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># Launch some experiments.</span>
+<span class="n">remaining_ids</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">hyperparameters</span> <span class="ow">in</span> <span class="n">hyperparameter_configurations</span><span class="p">:</span>
+    <span class="n">remaining_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">train_cnn_and_compute_accuracy</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">hyperparameters</span><span class="p">,</span>
+                                                               <span class="n">train_images</span><span class="p">,</span>
+                                                               <span class="n">train_labels</span><span class="p">,</span>
+                                                               <span class="n">validation_images</span><span class="p">,</span>
+                                                               <span class="n">validation_labels</span><span class="p">))</span>
+
+<span class="c1"># Whenever a new experiment finishes, print the value and start a new</span>
+<span class="c1"># experiment.</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
+    <span class="n">ready_ids</span><span class="p">,</span> <span class="n">remaining_ids</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">remaining_ids</span><span class="p">,</span> <span class="n">num_returns</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">accuracy</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">ready_ids</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Accuracy is {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">accuracy</span><span class="p">))</span>
+    <span class="c1"># Start a new experiment.</span>
+    <span class="n">new_hyperparameters</span> <span class="o">=</span> <span class="n">generate_hyperparameters</span><span class="p">()</span>
+    <span class="n">remaining_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">train_cnn_and_compute_accuracy</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">new_hyperparameters</span><span class="p">,</span>
+                                                               <span class="n">train_images</span><span class="p">,</span>
+                                                               <span class="n">train_labels</span><span class="p">,</span>
+                                                               <span class="n">validation_images</span><span class="p">,</span>
+                                                               <span class="n">validation_labels</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="more-sophisticated-hyperparameter-search">
+<h2>More sophisticated hyperparameter search<a class="headerlink" href="#more-sophisticated-hyperparameter-search" title="Permalink to this headline">¶</a></h2>
+<p>Hyperparameter search algorithms can get much more sophisticated. So far, we’ve
+been treating the function <code class="docutils literal"><span class="pre">train_cnn_and_compute_accuracy</span></code> as a black box,
+that we can choose its inputs and inspect its outputs, but once we decide to run
+it, we have to run it until it finishes.</p>
+<p>However, there is often more structure to be exploited. For example, if the
+training procedure is going poorly, we can end the session early and invest more
+resources in the more promising hyperparameter experiments. And if we’ve saved
+the state of the training procedure, we can always restart it again later.</p>
+<p>This is one of the ideas of the <a class="reference external" href="https://arxiv.org/abs/1603.06560">Hyperband</a> algorithm. Start with a huge number
+of hyperparameter configurations, aggressively stop the bad ones, and invest
+more resources in the promising experiments.</p>
+<p>To implement this, we can first adapt our training method to optionally take a
+model and to return the updated model.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="nd">@ray.remote</span>
+<span class="k">def</span> <span class="nf">train_cnn_and_compute_accuracy</span><span class="p">(</span><span class="n">hyperparameters</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="c1"># Construct a deep network, train it, and return the accuracy on the</span>
+    <span class="c1"># validation data as well as the latest version of the model. If the model</span>
+    <span class="c1"># argument is not None, this will continue training an existing model.</span>
+    <span class="n">validation_accuracy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">new_model</span> <span class="o">=</span> <span class="n">model</span>
+    <span class="k">return</span> <span class="n">validation_accuracy</span><span class="p">,</span> <span class="n">new_model</span>
+</pre></div>
+</div>
+<p>Here’s a different variant that uses the same principles. Divide each training
+session into a series of shorter training sessions. Whenever a short session
+finishes, if it still looks promising, then continue running it. If it isn’t
+doing well, then terminate it and start a new experiment.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="k">def</span> <span class="nf">is_promising</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+    <span class="c1"># Return true if the model is doing well and false otherwise. In practice,</span>
+    <span class="c1"># this function will want more information than just the model.</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">])</span>
+
+<span class="c1"># Start 10 experiments.</span>
+<span class="n">remaining_ids</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="n">experiment_id</span> <span class="o">=</span> <span class="n">train_cnn_and_compute_accuracy</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">hyperparameters</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
+    <span class="n">remaining_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">experiment_id</span><span class="p">)</span>
+
+<span class="n">accuracies</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
+    <span class="c1"># Whenever a segment of an experiment finishes, decide if it looks promising</span>
+    <span class="c1"># or not.</span>
+    <span class="n">ready_ids</span><span class="p">,</span> <span class="n">remaining_ids</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">remaining_ids</span><span class="p">,</span> <span class="n">num_returns</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">experiment_id</span> <span class="o">=</span> <span class="n">ready_ids</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">current_accuracy</span><span class="p">,</span> <span class="n">current_model</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">experiment_id</span><span class="p">)</span>
+    <span class="n">accuracies</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_accuracy</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">is_promising</span><span class="p">(</span><span class="n">experiment_id</span><span class="p">):</span>
+        <span class="c1"># Continue running the experiment.</span>
+        <span class="n">experiment_id</span> <span class="o">=</span> <span class="n">train_cnn_and_compute_accuracy</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">hyperparameters</span><span class="p">,</span>
+                                                              <span class="n">model</span><span class="o">=</span><span class="n">current_model</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Start a new experiment.</span>
+        <span class="n">experiment_id</span> <span class="o">=</span> <span class="n">train_cnn_and_compute_accuracy</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">hyperparameters</span><span class="p">)</span>
+
+    <span class="n">remaining_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">experiment_id</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="example-rl-pong.html" class="btn btn-neutral float-right" title="Learning to Play Pong" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="webui.html" class="btn btn-neutral" title="Web UI" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, The Ray Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

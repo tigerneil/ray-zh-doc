@@ -1,0 +1,15 @@
+colorama
+click
+cloudpickle
+funcsigs
+mock
+numpy
+opencv-python
+pyarrow
+pyyaml
+psutil
+recommonmark
+redis
+sphinx
+sphinx_rtd_theme
+pandas

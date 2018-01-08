@@ -1,0 +1,413 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Batch L-BFGS &mdash; Ray 0.3.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Ray 0.3.0 documentation" href="index.html"/>
+        <link rel="next" title="Evolution Strategies" href="example-evolution-strategies.html"/>
+        <link rel="prev" title="Asynchronous Advantage Actor Critic (A3C)" href="example-a3c.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Ray
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install-on-ubuntu.html">Installation on Ubuntu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install-on-macosx.html">Installation on Mac OS X</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install-on-docker.html">Installation on Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation-troubleshooting.html">Installation Troubleshooting</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">The Ray API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="actors.html">Actors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-with-gpus.html">Using Ray with GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tune.html">Ray.tune: Hyperparameter Optimization Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rllib.html">Ray RLlib: A Scalable Reinforcement Learning Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rllib-dev.html">RLlib Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="webui.html">Web UI</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Examples</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="example-hyperopt.html">Hyperparameter Optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-rl-pong.html">Learning to Play Pong</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-policy-gradient.html">Policy Gradient Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-parameter-server.html">Parameter Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-resnet.html">ResNet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-a3c.html">Asynchronous Advantage Actor Critic (A3C)</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Batch L-BFGS</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#the-serial-version">The serial version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-distributed-version">The distributed version</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="example-evolution-strategies.html">Evolution Strategies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-cython.html">Cython</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-streaming.html">Streaming MapReduce</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-with-tensorflow.html">Using Ray with TensorFlow</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Design</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="internals-overview.html">An Overview of the Internals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="serialization.html">Serialization in the Object Store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fault-tolerance.html">Fault Tolerance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plasma-object-store.html">The Plasma Object Store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">Resource (CPUs, GPUs)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Cluster Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="autoscaling.html">Cloud Setup and Auto-Scaling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-on-a-cluster.html">Using Ray on a Cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-on-a-large-cluster.html">Using Ray on a Large Cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-and-docker-on-a-cluster.html">Using Ray and Docker on a Cluster (EXPERIMENTAL)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Help</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ray</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Batch L-BFGS</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/example-lbfgs.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="batch-l-bfgs">
+<h1>Batch L-BFGS<a class="headerlink" href="#batch-l-bfgs" title="Permalink to this headline">¶</a></h1>
+<p>This document provides a walkthrough of the L-BFGS example. To run the
+application, first install these dependencies.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>pip install tensorflow
+pip install scipy
+</pre></div>
+</div>
+<p>You can view the <a class="reference external" href="https://github.com/ray-project/ray/tree/master/examples/lbfgs">code for this example</a>.</p>
+<p>Then you can run the example as follows.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>python ray/examples/lbfgs/driver.py
+</pre></div>
+</div>
+<p>Optimization is at the heart of many machine learning algorithms. Much of
+machine learning involves specifying a loss function and finding the parameters
+that minimize the loss. If we can compute the gradient of the loss function,
+then we can apply a variety of gradient-based optimization algorithms. L-BFGS is
+one such algorithm. It is a quasi-Newton method that uses gradient information
+to approximate the inverse Hessian of the loss function in a computationally
+efficient manner.</p>
+<div class="section" id="the-serial-version">
+<h2>The serial version<a class="headerlink" href="#the-serial-version" title="Permalink to this headline">¶</a></h2>
+<p>First we load the data in batches. Here, each element in <code class="docutils literal"><span class="pre">batches</span></code> is a tuple
+whose first component is a batch of <code class="docutils literal"><span class="pre">100</span></code> images and whose second component is a
+batch of the <code class="docutils literal"><span class="pre">100</span></code> corresponding labels. For simplicity, we use TensorFlow’s
+built in methods for loading the data.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tensorflow.examples.tutorials.mnist</span> <span class="kn">import</span> <span class="n">input_data</span>
+<span class="n">mnist</span> <span class="o">=</span> <span class="n">input_data</span><span class="o">.</span><span class="n">read_data_sets</span><span class="p">(</span><span class="s2">&quot;MNIST_data/&quot;</span><span class="p">,</span> <span class="n">one_hot</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">batch_size</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">num_batches</span> <span class="o">=</span> <span class="n">mnist</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">num_examples</span> <span class="o">//</span> <span class="n">batch_size</span>
+<span class="n">batches</span> <span class="o">=</span> <span class="p">[</span><span class="n">mnist</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">next_batch</span><span class="p">(</span><span class="n">batch_size</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_batches</span><span class="p">)]</span>
+</pre></div>
+</div>
+<p>Now, suppose we have defined a function which takes a set of model parameters
+<code class="docutils literal"><span class="pre">theta</span></code> and a batch of data (both images and labels) and computes the loss for
+that choice of model parameters on that batch of data. Similarly, suppose we’ve
+also defined a function that takes the same arguments and computes the gradient
+of the loss for that choice of model parameters.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">loss</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">):</span>
+    <span class="c1"># compute the loss on a batch of data</span>
+    <span class="k">return</span> <span class="n">loss</span>
+
+<span class="k">def</span> <span class="nf">grad</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">):</span>
+    <span class="c1"># compute the gradient on a batch of data</span>
+    <span class="k">return</span> <span class="n">grad</span>
+
+<span class="k">def</span> <span class="nf">full_loss</span><span class="p">(</span><span class="n">theta</span><span class="p">):</span>
+    <span class="c1"># compute the loss on the full data set</span>
+    <span class="k">return</span> <span class="nb">sum</span><span class="p">([</span><span class="n">loss</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">)</span> <span class="ow">in</span> <span class="n">batches</span><span class="p">])</span>
+
+<span class="k">def</span> <span class="nf">full_grad</span><span class="p">(</span><span class="n">theta</span><span class="p">):</span>
+    <span class="c1"># compute the gradient on the full data set</span>
+    <span class="k">return</span> <span class="nb">sum</span><span class="p">([</span><span class="n">grad</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">)</span> <span class="ow">in</span> <span class="n">batches</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Since we are working with a small dataset, we don’t actually need to separate
+these methods into the part that operates on a batch and the part that operates
+on the full dataset, but doing so will make the distributed version clearer.</p>
+<p>Now, if we wish to optimize the loss function using L-BFGS, we simply plug these
+functions, along with an initial choice of model parameters, into
+<code class="docutils literal"><span class="pre">scipy.optimize.fmin_l_bfgs_b</span></code>.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">theta_init</span> <span class="o">=</span> <span class="mf">1e-2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">dim</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">optimize</span><span class="o">.</span><span class="n">fmin_l_bfgs_b</span><span class="p">(</span><span class="n">full_loss</span><span class="p">,</span> <span class="n">theta_init</span><span class="p">,</span> <span class="n">fprime</span><span class="o">=</span><span class="n">full_grad</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="the-distributed-version">
+<h2>The distributed version<a class="headerlink" href="#the-distributed-version" title="Permalink to this headline">¶</a></h2>
+<p>In this example, the computation of the gradient itself can be done in parallel
+on a number of workers or machines.</p>
+<p>First, let’s turn the data into a collection of remote objects.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">batch_ids</span> <span class="o">=</span> <span class="p">[(</span><span class="n">ray</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">xs</span><span class="p">),</span> <span class="n">ray</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">ys</span><span class="p">))</span> <span class="k">for</span> <span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">)</span> <span class="ow">in</span> <span class="n">batches</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>We can load the data on the driver and distribute it this way because MNIST
+easily fits on a single machine. However, for larger data sets, we will need to
+use remote functions to distribute the loading of the data.</p>
+<p>Now, lets turn <code class="docutils literal"><span class="pre">loss</span></code> and <code class="docutils literal"><span class="pre">grad</span></code> into methods of an actor that will contain our network.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Network</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">():</span>
+        <span class="c1"># Initialize network.</span>
+
+    <span class="k">def</span> <span class="nf">loss</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">):</span>
+        <span class="c1"># compute the loss</span>
+        <span class="k">return</span> <span class="n">loss</span>
+
+    <span class="k">def</span> <span class="nf">grad</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">):</span>
+        <span class="c1"># compute the gradient</span>
+        <span class="k">return</span> <span class="n">grad</span>
+</pre></div>
+</div>
+<p>Now, it is easy to speed up the computation of the full loss and the full
+gradient.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">full_loss</span><span class="p">(</span><span class="n">theta</span><span class="p">):</span>
+    <span class="n">theta_id</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+    <span class="n">loss_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">actor</span><span class="o">.</span><span class="n">loss</span><span class="p">(</span><span class="n">theta_id</span><span class="p">)</span> <span class="k">for</span> <span class="n">actor</span> <span class="ow">in</span> <span class="n">actors</span><span class="p">]</span>
+    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">loss_ids</span><span class="p">))</span>
+
+<span class="k">def</span> <span class="nf">full_grad</span><span class="p">(</span><span class="n">theta</span><span class="p">):</span>
+    <span class="n">theta_id</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+    <span class="n">grad_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">actor</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">theta_id</span><span class="p">)</span> <span class="k">for</span> <span class="n">actor</span> <span class="ow">in</span> <span class="n">actors</span><span class="p">]</span>
+    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">grad_ids</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;float64&quot;</span><span class="p">)</span> <span class="c1"># This conversion is necessary for use with fmin_l_bfgs_b.</span>
+</pre></div>
+</div>
+<p>Note that we turn <code class="docutils literal"><span class="pre">theta</span></code> into a remote object with the line <code class="docutils literal"><span class="pre">theta_id</span> <span class="pre">=</span>
+<span class="pre">ray.put(theta)</span></code> before passing it into the remote functions. If we had written</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">actor</span><span class="o">.</span><span class="n">loss</span><span class="p">(</span><span class="n">theta_id</span><span class="p">)</span> <span class="k">for</span> <span class="n">actor</span> <span class="ow">in</span> <span class="n">actors</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>instead of</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">theta_id</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+<span class="p">[</span><span class="n">actor</span><span class="o">.</span><span class="n">loss</span><span class="p">(</span><span class="n">theta_id</span><span class="p">)</span> <span class="k">for</span> <span class="n">actor</span> <span class="ow">in</span> <span class="n">actors</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>then each task that got sent to the scheduler (one for every element of
+<code class="docutils literal"><span class="pre">batch_ids</span></code>) would have had a copy of <code class="docutils literal"><span class="pre">theta</span></code> serialized inside of it. Since
+<code class="docutils literal"><span class="pre">theta</span></code> here consists of the parameters of a potentially large model, this is
+inefficient. <em>Large objects should be passed by object ID to remote functions
+and not by value</em>.</p>
+<p>We use remote actors and remote objects internally in the implementation of
+<code class="docutils literal"><span class="pre">full_loss</span></code> and <code class="docutils literal"><span class="pre">full_grad</span></code>, but the user-facing behavior of these methods is
+identical to the behavior in the serial version.</p>
+<p>We can now optimize the objective with the same function call as before.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">theta_init</span> <span class="o">=</span> <span class="mf">1e-2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">dim</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">optimize</span><span class="o">.</span><span class="n">fmin_l_bfgs_b</span><span class="p">(</span><span class="n">full_loss</span><span class="p">,</span> <span class="n">theta_init</span><span class="p">,</span> <span class="n">fprime</span><span class="o">=</span><span class="n">full_grad</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="example-evolution-strategies.html" class="btn btn-neutral float-right" title="Evolution Strategies" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="example-a3c.html" class="btn btn-neutral" title="Asynchronous Advantage Actor Critic (A3C)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, The Ray Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

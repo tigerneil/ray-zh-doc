@@ -1,0 +1,482 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Using Ray and Docker on a Cluster (EXPERIMENTAL) &mdash; Ray 0.3.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Ray 0.3.0 documentation" href="index.html"/>
+        <link rel="next" title="Troubleshooting" href="troubleshooting.html"/>
+        <link rel="prev" title="Using Ray on a Large Cluster" href="using-ray-on-a-large-cluster.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Ray
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install-on-ubuntu.html">Installation on Ubuntu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install-on-macosx.html">Installation on Mac OS X</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install-on-docker.html">Installation on Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation-troubleshooting.html">Installation Troubleshooting</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">The Ray API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="actors.html">Actors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-with-gpus.html">Using Ray with GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tune.html">Ray.tune: Hyperparameter Optimization Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rllib.html">Ray RLlib: A Scalable Reinforcement Learning Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rllib-dev.html">RLlib Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="webui.html">Web UI</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="example-hyperopt.html">Hyperparameter Optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-rl-pong.html">Learning to Play Pong</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-policy-gradient.html">Policy Gradient Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-parameter-server.html">Parameter Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-resnet.html">ResNet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-a3c.html">Asynchronous Advantage Actor Critic (A3C)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-lbfgs.html">Batch L-BFGS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-evolution-strategies.html">Evolution Strategies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-cython.html">Cython</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-streaming.html">Streaming MapReduce</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-with-tensorflow.html">Using Ray with TensorFlow</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Design</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="internals-overview.html">An Overview of the Internals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="serialization.html">Serialization in the Object Store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fault-tolerance.html">Fault Tolerance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plasma-object-store.html">The Plasma Object Store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">Resource (CPUs, GPUs)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Cluster Usage</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="autoscaling.html">Cloud Setup and Auto-Scaling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-on-a-cluster.html">Using Ray on a Cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-on-a-large-cluster.html">Using Ray on a Large Cluster</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Using Ray and Docker on a Cluster (EXPERIMENTAL)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#create-your-docker-image">Create your Docker image</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#creating-a-customized-dockerfile">Creating a customized Dockerfile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#creating-a-docker-image-manually">Creating a Docker image manually</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#publishing-your-docker-image-to-a-repository">Publishing your Docker image to a repository</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#starting-a-cluster">Starting a cluster</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#install-the-docker-image-on-all-nodes">Install the Docker image on all nodes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#launch-ray-cluster-using-docker">Launch Ray cluster using Docker</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#running-jobs-on-a-cluster">Running jobs on a cluster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#shutting-down-a-cluster">Shutting down a cluster</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Help</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ray</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Using Ray and Docker on a Cluster (EXPERIMENTAL)</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/using-ray-and-docker-on-a-cluster.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="using-ray-and-docker-on-a-cluster-experimental">
+<span id="using-ray-and-docker-on-a-cluster-experimental"></span><h1>Using Ray and Docker on a Cluster (EXPERIMENTAL)<a class="headerlink" href="#using-ray-and-docker-on-a-cluster-experimental" title="Permalink to this headline">¶</a></h1>
+<p>Packaging and deploying an application using Docker can provide certain advantages. It can make managing dependencies easier, help ensure that each cluster node receives a uniform configuration, and facilitate swapping hardware resources between applications.</p>
+<div class="section" id="create-your-docker-image">
+<span id="create-your-docker-image"></span><h2>Create your Docker image<a class="headerlink" href="#create-your-docker-image" title="Permalink to this headline">¶</a></h2>
+<p>First build a Ray Docker image by following the instructions for <a class="reference external" href="install-on-docker.md">Installation on Docker</a>.
+This will allow you to create the <code class="docutils literal"><span class="pre">ray-project/deploy</span></code> image that serves as a basis for using Ray on a cluster with Docker.</p>
+<p>Docker images encapsulate the system state that will be used to run nodes in the cluster.
+We recommend building on top of the Ray-provided Docker images to add your application code and dependencies.</p>
+<p>You can do this in one of two ways: by building from a customized Dockerfile or by saving an image after entering commands manually into a running container.
+We describe both approaches below.</p>
+<div class="section" id="creating-a-customized-dockerfile">
+<span id="creating-a-customized-dockerfile"></span><h3>Creating a customized Dockerfile<a class="headerlink" href="#creating-a-customized-dockerfile" title="Permalink to this headline">¶</a></h3>
+<p>We recommend that you read the official Docker documentation for <a class="reference external" href="https://docs.docker.com/engine/getstarted/step_four/">Building your own image</a> ahead of starting this section.
+Your customized Dockerfile is a script of commands needed to set up your application,
+possibly packaged in a folder with related resources.</p>
+<p>A simple template Dockerfile for a Ray application looks like this:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># Application Dockerfile template</span>
+<span class="n">FROM</span> <span class="n">ray</span><span class="o">-</span><span class="n">project</span><span class="o">/</span><span class="n">deploy</span>
+<span class="n">RUN</span> <span class="n">git</span> <span class="n">clone</span> <span class="o">&lt;</span><span class="n">my</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="n">url</span><span class="o">&gt;</span>
+<span class="n">RUN</span> <span class="o">&lt;</span><span class="n">my</span><span class="o">-</span><span class="n">project</span><span class="o">-</span><span class="n">installation</span><span class="o">-</span><span class="n">script</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>This file instructs Docker to load the image tagged <code class="docutils literal"><span class="pre">ray-project/deploy</span></code>, check out the git
+repository at <code class="docutils literal"><span class="pre">&lt;my-project-url&gt;</span></code>, and then run the script <code class="docutils literal"><span class="pre">&lt;my-project-installation-script&gt;</span></code>.</p>
+<p>Build the image by running something like:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">build</span> <span class="o">-</span><span class="n">t</span> <span class="o">&lt;</span><span class="n">my</span><span class="o">-</span><span class="n">app</span><span class="o">&gt;</span> <span class="o">.</span>
+</pre></div>
+</div>
+<p>Replace <code class="docutils literal"><span class="pre">&lt;app-tag&gt;</span></code> with a tag of your choice.</p>
+</div>
+<div class="section" id="creating-a-docker-image-manually">
+<span id="creating-a-docker-image-manually"></span><h3>Creating a Docker image manually<a class="headerlink" href="#creating-a-docker-image-manually" title="Permalink to this headline">¶</a></h3>
+<p>Launch the <code class="docutils literal"><span class="pre">ray-project/deploy</span></code> image interactively</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">t</span> <span class="o">-</span><span class="n">i</span> <span class="n">ray</span><span class="o">-</span><span class="n">project</span><span class="o">/</span><span class="n">deploy</span>
+</pre></div>
+</div>
+<p>Next, run whatever commands are needed to install your application.
+When you are finished type <code class="docutils literal"><span class="pre">exit</span></code> to stop the container.</p>
+<p>Run</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">ps</span> <span class="o">-</span><span class="n">a</span>
+</pre></div>
+</div>
+<p>to identify the id of the container you just exited.</p>
+<p>Next, commit the container</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">commit</span> <span class="o">-</span><span class="n">t</span> <span class="o">&lt;</span><span class="n">app</span><span class="o">-</span><span class="n">tag</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">container</span><span class="o">-</span><span class="nb">id</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Replace <code class="docutils literal"><span class="pre">&lt;app-tag&gt;</span></code> with a name for your container and replace <code class="docutils literal"><span class="pre">&lt;container-id&gt;</span></code> id with the hash id of the container used in configuration.</p>
+</div>
+</div>
+<div class="section" id="publishing-your-docker-image-to-a-repository">
+<span id="publishing-your-docker-image-to-a-repository"></span><h2>Publishing your Docker image to a repository<a class="headerlink" href="#publishing-your-docker-image-to-a-repository" title="Permalink to this headline">¶</a></h2>
+<p>When using Amazon EC2 it can be practical to publish images using the Repositories feature of Elastic Container Service.
+Follow the steps below and see <a class="reference external" href="http://docs.aws.amazon.com/AmazonECR/latest/userguide/repository-create.html">documentation for creating a repository</a> for additional context.</p>
+<p>First ensure that the AWS command-line interface is installed.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> <span class="n">awscli</span>
+</pre></div>
+</div>
+<p>Next create a repository in Amazon's Elastic Container Registry.
+This results in a shared resource for storing Docker images that will be accessible from all nodes.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">aws</span> <span class="n">ecr</span> <span class="n">create</span><span class="o">-</span><span class="n">repository</span> <span class="o">--</span><span class="n">repository</span><span class="o">-</span><span class="n">name</span> <span class="o">&lt;</span><span class="n">repository</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">region</span><span class="o">=&lt;</span><span class="n">region</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Replace <code class="docutils literal"><span class="pre">&lt;repository-name&gt;</span></code> with a string describing the application.
+Replace <code class="docutils literal"><span class="pre">&lt;region&gt;</span></code> with the AWS region string, e.g., <code class="docutils literal"><span class="pre">us-west-2</span></code>.
+This should produce output like the following:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;repository&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;repositoryUri&quot;</span><span class="p">:</span> <span class="s2">&quot;123456789012.dkr.ecr.us-west-2.amazonaws.com/my-app&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;createdAt&quot;</span><span class="p">:</span> <span class="mf">1487227244.0</span><span class="p">,</span>
+        <span class="s2">&quot;repositoryArn&quot;</span><span class="p">:</span> <span class="s2">&quot;arn:aws:ecr:us-west-2:123456789012:repository/my-app&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;registryId&quot;</span><span class="p">:</span> <span class="s2">&quot;123456789012&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;repositoryName&quot;</span><span class="p">:</span> <span class="s2">&quot;my-app&quot;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Take note of the <code class="docutils literal"><span class="pre">repositoryUri</span></code> string, in this example <code class="docutils literal"><span class="pre">123456789012.dkr.ecr.us-west-2.amazonaws.com/my-app</span></code>.</p>
+<p>Tag the Docker image with the repository URI.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">tag</span> <span class="o">&lt;</span><span class="n">app</span><span class="o">-</span><span class="n">tag</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">repository</span><span class="o">-</span><span class="n">uri</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Replace the <code class="docutils literal"><span class="pre">&lt;app-tag&gt;</span></code> with the container name used previously and replace <code class="docutils literal"><span class="pre">&lt;repository-uri&gt;</span></code> with URI returned by the command used to create the repository.</p>
+<p>Log into the repository:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>eval $(aws ecr get-login --region &lt;region&gt;)
+</pre></div>
+</div>
+<p>Replace <code class="docutils literal"><span class="pre">&lt;region&gt;</span></code> with your selected AWS region.</p>
+<p>Push the image to the repository:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">push</span> <span class="o">&lt;</span><span class="n">repository</span><span class="o">-</span><span class="n">uri</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Replace <code class="docutils literal"><span class="pre">&lt;repository-uri&gt;</span></code> with the URI of your repository. Now other hosts will be able to access your application Docker image.</p>
+</div>
+<div class="section" id="starting-a-cluster">
+<span id="starting-a-cluster"></span><h2>Starting a cluster<a class="headerlink" href="#starting-a-cluster" title="Permalink to this headline">¶</a></h2>
+<p>We assume a cluster configuration like that described in instructions for <a class="reference external" href="using-ray-on-a-large-cluster.md">using Ray on a large cluster</a>.
+In particular, we assume that there is a head node that has ssh access to all of the worker nodes, and that there is a file <code class="docutils literal"><span class="pre">workers.txt</span></code> listing the IP addresses of all worker nodes.</p>
+<div class="section" id="install-the-docker-image-on-all-nodes">
+<span id="install-the-docker-image-on-all-nodes"></span><h3>Install the Docker image on all nodes<a class="headerlink" href="#install-the-docker-image-on-all-nodes" title="Permalink to this headline">¶</a></h3>
+<p>Create a script called <code class="docutils literal"><span class="pre">setup-docker.sh</span></code> on the head node.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span># setup-docker.sh
+sudo apt-get install -y docker.io
+sudo service docker start
+sudo usermod -a -G docker ubuntu
+exec sudo su -l ubuntu
+eval $(aws ecr get-login --region &lt;region&gt;)
+docker pull &lt;repository-uri&gt;
+</pre></div>
+</div>
+<p>Replace <code class="docutils literal"><span class="pre">&lt;repository-uri&gt;</span></code> with the URI of the repository created in the previous section.
+Replace <code class="docutils literal"><span class="pre">&lt;region&gt;</span></code> with the AWS region in which you created that repository.
+This script will install Docker, authenticate the session with the container registry, and download the container image from that registry.</p>
+<p>Run <code class="docutils literal"><span class="pre">setup-docker.sh</span></code> on the head node (if you used the head node to build the Docker image then you can skip this step):</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">bash</span> <span class="n">setup</span><span class="o">-</span><span class="n">docker</span><span class="o">.</span><span class="n">sh</span>
+</pre></div>
+</div>
+<p>Run <code class="docutils literal"><span class="pre">setup-docker.sh</span></code> on the worker nodes:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">parallel</span><span class="o">-</span><span class="n">ssh</span> <span class="o">-</span><span class="n">h</span> <span class="n">workers</span><span class="o">.</span><span class="n">txt</span> <span class="o">-</span><span class="n">P</span> <span class="o">-</span><span class="n">t</span> <span class="mi">0</span> <span class="o">-</span><span class="n">I</span> <span class="o">&lt;</span> <span class="n">setup</span><span class="o">-</span><span class="n">docker</span><span class="o">.</span><span class="n">sh</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="launch-ray-cluster-using-docker">
+<span id="launch-ray-cluster-using-docker"></span><h3>Launch Ray cluster using Docker<a class="headerlink" href="#launch-ray-cluster-using-docker" title="Permalink to this headline">¶</a></h3>
+<p>To start Ray on the head node run the following command:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>eval $(aws ecr get-login --region &lt;region&gt;)
+docker run \
+    -d --shm-size=&lt;shm-size&gt; --net=host \
+    &lt;repository-uri&gt; \
+    ray start --head \
+        --object-manager-port=8076 \
+        --redis-port=6379 \
+        --num-workers=&lt;num-workers&gt;
+</pre></div>
+</div>
+<p>Replace <code class="docutils literal"><span class="pre">&lt;repository-uri&gt;</span></code> with the URI of the repository.
+Replace <code class="docutils literal"><span class="pre">&lt;region&gt;</span></code> with the region of the repository.
+Replace <code class="docutils literal"><span class="pre">&lt;num-workers&gt;</span></code> with the number of workers, e.g., typically a number similar to the number of cores in the system.
+Replace <code class="docutils literal"><span class="pre">&lt;shm-size&gt;</span></code> with the the amount of shared memory to make available within the Docker container, e.g., <code class="docutils literal"><span class="pre">8G</span></code>.</p>
+<p>To start Ray on the worker nodes create a script <code class="docutils literal"><span class="pre">start-worker-docker.sh</span></code> with content like the following:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>eval $(aws ecr get-login --region &lt;region&gt;)
+docker run -d --shm-size=&lt;shm-size&gt; --net=host \
+    &lt;repository-uri&gt; \
+    ray start \
+        --object-manager-port=8076 \
+        --redis-address=&lt;redis-address&gt; \
+        --num-workers=&lt;num-workers&gt;
+</pre></div>
+</div>
+<p>Replace <code class="docutils literal"><span class="pre">&lt;redis-address&gt;</span></code> with the string <code class="docutils literal"><span class="pre">&lt;head-node-private-ip&gt;:6379</span></code> where <code class="docutils literal"><span class="pre">&lt;head-node-private-ip&gt;</span></code> is the private network IP address of the head node.</p>
+<p>Execute the script on the worker nodes:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">parallel</span><span class="o">-</span><span class="n">ssh</span> <span class="o">-</span><span class="n">h</span> <span class="n">workers</span><span class="o">.</span><span class="n">txt</span> <span class="o">-</span><span class="n">P</span> <span class="o">-</span><span class="n">t</span> <span class="mi">0</span> <span class="o">-</span><span class="n">I</span> <span class="o">&lt;</span> <span class="n">setup</span><span class="o">-</span><span class="n">worker</span><span class="o">-</span><span class="n">docker</span><span class="o">.</span><span class="n">sh</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="running-jobs-on-a-cluster">
+<span id="running-jobs-on-a-cluster"></span><h2>Running jobs on a cluster<a class="headerlink" href="#running-jobs-on-a-cluster" title="Permalink to this headline">¶</a></h2>
+<p>On the head node, identify the id of the container that you launched as the Ray head.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">ps</span>
+</pre></div>
+</div>
+<p>the container id appears in the first column of the output.</p>
+<p>Now launch an interactive shell within the container:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">exec</span> <span class="o">-</span><span class="n">t</span> <span class="o">-</span><span class="n">i</span> <span class="o">&lt;</span><span class="n">container</span><span class="o">-</span><span class="nb">id</span><span class="o">&gt;</span> <span class="n">bash</span>
+</pre></div>
+</div>
+<p>Replace <code class="docutils literal"><span class="pre">&lt;container-id&gt;</span></code> with the container id found in the previous step.</p>
+<p>Next, launch your application program.
+The Python program should contain an initialization command that takes the Redis address as a parameter:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ray</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">redis_address</span><span class="o">=</span><span class="s2">&quot;&lt;redis-address&gt;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="shutting-down-a-cluster">
+<span id="shutting-down-a-cluster"></span><h2>Shutting down a cluster<a class="headerlink" href="#shutting-down-a-cluster" title="Permalink to this headline">¶</a></h2>
+<p>Kill all running Docker images on the worker nodes:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">parallel</span><span class="o">-</span><span class="n">ssh</span> <span class="o">-</span><span class="n">h</span> <span class="n">workers</span><span class="o">.</span><span class="n">txt</span> <span class="o">-</span><span class="n">P</span> <span class="s1">&#39;docker kill $(docker ps -q)&#39;</span>
+</pre></div>
+</div>
+<p>Kill all running Docker images on the head node:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>docker kill $(docker ps -q)
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="troubleshooting.html" class="btn btn-neutral float-right" title="Troubleshooting" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="using-ray-on-a-large-cluster.html" class="btn btn-neutral" title="Using Ray on a Large Cluster" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, The Ray Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

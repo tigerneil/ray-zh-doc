@@ -1,0 +1,534 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Ray.tune: Hyperparameter Optimization Framework &mdash; Ray 0.3.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Ray 0.3.0 documentation" href="index.html"/>
+        <link rel="next" title="Ray RLlib: A Scalable Reinforcement Learning Library" href="rllib.html"/>
+        <link rel="prev" title="Using Ray with GPUs" href="using-ray-with-gpus.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Ray
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install-on-ubuntu.html">Installation on Ubuntu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install-on-macosx.html">Installation on Mac OS X</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install-on-docker.html">Installation on Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation-troubleshooting.html">Installation Troubleshooting</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">The Ray API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="actors.html">Actors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-with-gpus.html">Using Ray with GPUs</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Ray.tune: Hyperparameter Optimization Framework</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#getting-started">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#visualizing-results">Visualizing Results</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#trial-variant-generation">Trial Variant Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#early-stopping">Early Stopping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#checkpointing-support">Checkpointing support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#resource-allocation">Resource Allocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#command-line-json-yaml-api">Command-line JSON/YAML API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-in-a-large-cluster">Running in a large cluster</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="rllib.html">Ray RLlib: A Scalable Reinforcement Learning Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rllib-dev.html">RLlib Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="webui.html">Web UI</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="example-hyperopt.html">Hyperparameter Optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-rl-pong.html">Learning to Play Pong</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-policy-gradient.html">Policy Gradient Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-parameter-server.html">Parameter Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-resnet.html">ResNet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-a3c.html">Asynchronous Advantage Actor Critic (A3C)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-lbfgs.html">Batch L-BFGS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-evolution-strategies.html">Evolution Strategies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-cython.html">Cython</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-streaming.html">Streaming MapReduce</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-with-tensorflow.html">Using Ray with TensorFlow</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Design</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="internals-overview.html">An Overview of the Internals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="serialization.html">Serialization in the Object Store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fault-tolerance.html">Fault Tolerance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plasma-object-store.html">The Plasma Object Store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">Resource (CPUs, GPUs)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Cluster Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="autoscaling.html">Cloud Setup and Auto-Scaling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-on-a-cluster.html">Using Ray on a Cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-on-a-large-cluster.html">Using Ray on a Large Cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-and-docker-on-a-cluster.html">Using Ray and Docker on a Cluster (EXPERIMENTAL)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Help</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ray</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Ray.tune: Hyperparameter Optimization Framework</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/tune.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="ray-tune-hyperparameter-optimization-framework">
+<h1>Ray.tune: Hyperparameter Optimization Framework<a class="headerlink" href="#ray-tune-hyperparameter-optimization-framework" title="Permalink to this headline">¶</a></h1>
+<p>This document describes Ray.tune, a hyperparameter tuning framework for long-running tasks such as RL and deep learning training. It has the following features:</p>
+<ul class="simple">
+<li>Early stopping algorithms such as <a class="reference external" href="https://research.google.com/pubs/pub46180.html">Median Stopping Rule</a> and <a class="reference external" href="https://arxiv.org/abs/1603.06560">HyperBand</a>.</li>
+<li>Integration with visualization tools such as <a class="reference external" href="https://www.tensorflow.org/get_started/summaries_and_tensorboard">TensorBoard</a>, <a class="reference external" href="https://media.readthedocs.org/pdf/rllab/latest/rllab.pdf">rllab’s VisKit</a>, and a <a class="reference external" href="https://en.wikipedia.org/wiki/Parallel_coordinates">parallel coordinates visualization</a>.</li>
+<li>Flexible trial variant generation, including grid search, random search, and conditional parameter distributions.</li>
+<li>Resource-aware scheduling, including support for concurrent runs of algorithms that may themselves be parallel and distributed.</li>
+</ul>
+<p>You can find the code for Ray.tune <a class="reference external" href="https://github.com/ray-project/ray/tree/master/python/ray/tune">here on GitHub</a>.</p>
+<div class="section" id="getting-started">
+<h2>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ray.tune</span> <span class="k">import</span> <span class="n">register_trainable</span><span class="p">,</span> <span class="n">grid_search</span><span class="p">,</span> <span class="n">run_experiments</span>
+
+<span class="k">def</span> <span class="nf">my_func</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">reporter</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">time</span><span class="o">,</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">reporter</span><span class="p">(</span><span class="n">timesteps_total</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">mean_accuracy</span><span class="o">=</span><span class="n">i</span> <span class="o">**</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;alpha&quot;</span><span class="p">])</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;beta&quot;</span><span class="p">]</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="o">.</span><span class="mi">01</span><span class="p">)</span>
+
+<span class="n">register_trainable</span><span class="p">(</span><span class="s2">&quot;my_func&quot;</span><span class="p">,</span> <span class="n">my_func</span><span class="p">)</span>
+
+<span class="n">run_experiments</span><span class="p">({</span>
+    <span class="s2">&quot;my_experiment&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;run&quot;</span><span class="p">:</span> <span class="s2">&quot;my_func&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;resources&quot;</span><span class="p">:</span> <span class="p">{</span> <span class="s2">&quot;cpu&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;gpu&quot;</span><span class="p">:</span> <span class="mi">0</span> <span class="p">},</span>
+        <span class="s2">&quot;stop&quot;</span><span class="p">:</span> <span class="p">{</span> <span class="s2">&quot;mean_accuracy&quot;</span><span class="p">:</span> <span class="mi">100</span> <span class="p">},</span>
+        <span class="s2">&quot;config&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="n">grid_search</span><span class="p">([</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">]),</span>
+            <span class="s2">&quot;beta&quot;</span><span class="p">:</span> <span class="n">grid_search</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]),</span>
+        <span class="p">},</span>
+    <span class="p">}</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+<p>This script runs a small grid search over the <code class="docutils literal"><span class="pre">my_func</span></code> function using ray.tune, reporting status on the command line until the stopping condition of <code class="docutils literal"><span class="pre">mean_accuracy</span> <span class="pre">&gt;=</span> <span class="pre">100</span></code> is reached (for metrics like _loss_ that decrease over time, specify <a class="reference external" href="https://github.com/ray-project/ray/blob/master/python/ray/tune/result.py#L40">neg_mean_loss</a> as a condition instead):</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">==</span> <span class="n">Status</span> <span class="o">==</span>
+<span class="n">Using</span> <span class="n">FIFO</span> <span class="n">scheduling</span> <span class="n">algorithm</span><span class="o">.</span>
+<span class="n">Resources</span> <span class="n">used</span><span class="p">:</span> <span class="mi">4</span><span class="o">/</span><span class="mi">8</span> <span class="n">CPUs</span><span class="p">,</span> <span class="mi">0</span><span class="o">/</span><span class="mi">0</span> <span class="n">GPUs</span>
+<span class="n">Result</span> <span class="n">logdir</span><span class="p">:</span> <span class="o">~/</span><span class="n">ray_results</span><span class="o">/</span><span class="n">my_experiment</span>
+ <span class="o">-</span> <span class="n">my_func_0_alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span><span class="n">beta</span><span class="o">=</span><span class="mi">1</span><span class="p">:</span>      <span class="n">RUNNING</span> <span class="p">[</span><span class="n">pid</span><span class="o">=</span><span class="mi">6778</span><span class="p">],</span> <span class="mi">209</span> <span class="n">s</span><span class="p">,</span> <span class="mi">20604</span> <span class="n">ts</span><span class="p">,</span> <span class="mf">7.29</span> <span class="n">acc</span>
+ <span class="o">-</span> <span class="n">my_func_1_alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span><span class="n">beta</span><span class="o">=</span><span class="mi">1</span><span class="p">:</span>      <span class="n">RUNNING</span> <span class="p">[</span><span class="n">pid</span><span class="o">=</span><span class="mi">6780</span><span class="p">],</span> <span class="mi">208</span> <span class="n">s</span><span class="p">,</span> <span class="mi">20522</span> <span class="n">ts</span><span class="p">,</span> <span class="mf">53.1</span> <span class="n">acc</span>
+ <span class="o">-</span> <span class="n">my_func_2_alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span><span class="n">beta</span><span class="o">=</span><span class="mi">1</span><span class="p">:</span>      <span class="n">TERMINATED</span> <span class="p">[</span><span class="n">pid</span><span class="o">=</span><span class="mi">6789</span><span class="p">],</span> <span class="mi">21</span> <span class="n">s</span><span class="p">,</span> <span class="mi">2190</span> <span class="n">ts</span><span class="p">,</span> <span class="mi">101</span> <span class="n">acc</span>
+ <span class="o">-</span> <span class="n">my_func_3_alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span><span class="n">beta</span><span class="o">=</span><span class="mi">2</span><span class="p">:</span>      <span class="n">RUNNING</span> <span class="p">[</span><span class="n">pid</span><span class="o">=</span><span class="mi">6791</span><span class="p">],</span> <span class="mi">208</span> <span class="n">s</span><span class="p">,</span> <span class="mi">41004</span> <span class="n">ts</span><span class="p">,</span> <span class="mf">8.37</span> <span class="n">acc</span>
+ <span class="o">-</span> <span class="n">my_func_4_alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span><span class="n">beta</span><span class="o">=</span><span class="mi">2</span><span class="p">:</span>      <span class="n">RUNNING</span> <span class="p">[</span><span class="n">pid</span><span class="o">=</span><span class="mi">6800</span><span class="p">],</span> <span class="mi">209</span> <span class="n">s</span><span class="p">,</span> <span class="mi">41204</span> <span class="n">ts</span><span class="p">,</span> <span class="mf">70.1</span> <span class="n">acc</span>
+ <span class="o">-</span> <span class="n">my_func_5_alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span><span class="n">beta</span><span class="o">=</span><span class="mi">2</span><span class="p">:</span>      <span class="n">TERMINATED</span> <span class="p">[</span><span class="n">pid</span><span class="o">=</span><span class="mi">6809</span><span class="p">],</span> <span class="mi">10</span> <span class="n">s</span><span class="p">,</span> <span class="mi">2164</span> <span class="n">ts</span><span class="p">,</span> <span class="mi">100</span> <span class="n">acc</span>
+</pre></div>
+</div>
+<p>In order to report incremental progress, <code class="docutils literal"><span class="pre">my_func</span></code> periodically calls the <code class="docutils literal"><span class="pre">reporter</span></code> function passed in by Ray.tune to return the current timestep and other metrics as defined in <a class="reference external" href="https://github.com/ray-project/ray/blob/master/python/ray/tune/result.py">ray.tune.result.TrainingResult</a>.</p>
+</div>
+<div class="section" id="visualizing-results">
+<h2>Visualizing Results<a class="headerlink" href="#visualizing-results" title="Permalink to this headline">¶</a></h2>
+<p>Ray.tune logs trial results to a unique directory per experiment, e.g. <code class="docutils literal"><span class="pre">~/ray_results/my_experiment</span></code> in the above example. The log records are compatible with a number of visualization tools:</p>
+<p>To visualize learning in tensorboard, run:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ pip install tensorboard
+$ tensorboard --logdir=~/ray_results/my_experiment
+</pre></div>
+</div>
+<img alt="_images/ray-tune-tensorboard.png" src="_images/ray-tune-tensorboard.png" />
+<p>To use rllab’s VisKit (you may have to install some dependencies), run:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ git clone https://github.com/rll/rllab.git
+$ python rllab/rllab/viskit/frontend.py ~/ray_results/my_experiment
+</pre></div>
+</div>
+<img alt="_images/ray-tune-viskit.png" src="_images/ray-tune-viskit.png" />
+<p>Finally, to view the results with a <a class="reference external" href="https://en.wikipedia.org/wiki/Parallel_coordinates">parallel coordinates visualization</a>, open <a class="reference external" href="https://github.com/ray-project/ray/blob/master/python/ray/tune/ParallelCoordinatesVisualization.ipynb">ParalleCoordinatesVisualization.ipynb</a> as follows and run its cells:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ cd $RAY_HOME/python/ray/tune
+$ jupyter-notebook ParallelCoordinatesVisualization.ipynb
+</pre></div>
+</div>
+</div>
+<div class="section" id="trial-variant-generation">
+<h2>Trial Variant Generation<a class="headerlink" href="#trial-variant-generation" title="Permalink to this headline">¶</a></h2>
+<p>In the above example, we specified a grid search over two parameters using the <code class="docutils literal"><span class="pre">grid_search</span></code> helper function. Ray.tune also supports sampling parameters from user-specified lambda functions, which can be used in combination with grid search.</p>
+<p>The following shows grid search over two nested parameters combined with random sampling from two lambda functions. Note that the value of <code class="docutils literal"><span class="pre">beta</span></code> depends on the value of <code class="docutils literal"><span class="pre">alpha</span></code>, which is represented by referencing <code class="docutils literal"><span class="pre">spec.config.alpha</span></code> in the lambda function. This lets you specify conditional parameter distributions.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="s2">&quot;config&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">spec</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span>
+    <span class="s2">&quot;beta&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">spec</span><span class="p">:</span> <span class="n">spec</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">alpha</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(),</span>
+    <span class="s2">&quot;nn_layers&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="n">grid_search</span><span class="p">([</span><span class="mi">16</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">256</span><span class="p">]),</span>
+        <span class="n">grid_search</span><span class="p">([</span><span class="mi">16</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">256</span><span class="p">]),</span>
+    <span class="p">],</span>
+<span class="p">},</span>
+<span class="s2">&quot;repeat&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+</pre></div>
+</div>
+<p>By default, each random variable and grid search point is sampled once. To take multiple random samples or repeat grid search runs, add <code class="docutils literal"><span class="pre">repeat:</span> <span class="pre">N</span></code> to the experiment config. E.g. in the above, <code class="docutils literal"><span class="pre">&quot;repeat&quot;:</span> <span class="pre">10</span></code> repeats the 3x3 grid search 10 times, for a total of 90 trials, each with randomly sampled values of <code class="docutils literal"><span class="pre">alpha</span></code> and <code class="docutils literal"><span class="pre">beta</span></code>.</p>
+<p>For more information on variant generation, see <a class="reference external" href="https://github.com/ray-project/ray/blob/master/python/ray/tune/variant_generator.py">variant_generator.py</a>.</p>
+</div>
+<div class="section" id="early-stopping">
+<h2>Early Stopping<a class="headerlink" href="#early-stopping" title="Permalink to this headline">¶</a></h2>
+<p>To reduce costs, long-running trials can often be early stopped if their initial performance is not promising. Ray.tune allows early stopping algorithms to be plugged in on top of existing grid or random searches. This can be enabled by setting the <code class="docutils literal"><span class="pre">scheduler</span></code> parameter of <code class="docutils literal"><span class="pre">run_experiments</span></code>, e.g.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">run_experiments</span><span class="p">({</span><span class="o">...</span><span class="p">},</span> <span class="n">scheduler</span><span class="o">=</span><span class="n">MedianStoppingRule</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>Currently we support the following early stopping algorithms, or you can write your own that implements the <a class="reference external" href="https://github.com/ray-project/ray/blob/master/python/ray/tune/trial_scheduler.py">TrialScheduler</a> interface:</p>
+<dl class="class">
+<dt id="ray.tune.median_stopping_rule.MedianStoppingRule">
+<em class="property">class </em><code class="descclassname">ray.tune.median_stopping_rule.</code><code class="descname">MedianStoppingRule</code><span class="sig-paren">(</span><em>time_attr='time_total_s'</em>, <em>reward_attr='episode_reward_mean'</em>, <em>grace_period=60.0</em>, <em>min_samples_required=3</em>, <em>hard_stop=True</em><span class="sig-paren">)</span><a class="headerlink" href="#ray.tune.median_stopping_rule.MedianStoppingRule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements the median stopping rule as described in the Vizier paper:</p>
+<p><a class="reference external" href="https://research.google.com/pubs/pub46180.html">https://research.google.com/pubs/pub46180.html</a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>time_attr</strong> (<em>str</em>) – The TrainingResult attr to use for comparing time.
+Note that you can pass in something non-temporal such as
+<cite>training_iteration</cite> as a measure of progress, the only requirement
+is that the attribute should increase monotonically.</li>
+<li><strong>reward_attr</strong> (<em>str</em>) – The TrainingResult objective value attribute. As
+with <cite>time_attr</cite>, this may refer to any objective value that
+is supposed to increase with time.</li>
+<li><strong>grace_period</strong> (<em>float</em>) – Only stop trials at least this old in time.
+The units are the same as the attribute named by <cite>time_attr</cite>.</li>
+<li><strong>min_samples_required</strong> (<em>int</em>) – Min samples to compute median over.</li>
+<li><strong>hard_stop</strong> (<em>bool</em>) – If False, pauses trials instead of stopping
+them. When all other trials are complete, paused trials will be
+resumed and allowed to run FIFO.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="ray.tune.hyperband.HyperBandScheduler">
+<em class="property">class </em><code class="descclassname">ray.tune.hyperband.</code><code class="descname">HyperBandScheduler</code><span class="sig-paren">(</span><em>time_attr='training_iteration'</em>, <em>reward_attr='episode_reward_mean'</em>, <em>max_t=81</em><span class="sig-paren">)</span><a class="headerlink" href="#ray.tune.hyperband.HyperBandScheduler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements the HyperBand early stopping algorithm.</p>
+<p>HyperBandScheduler early stops trials using the HyperBand optimization
+algorithm. It divides trials into brackets of varying sizes, and
+periodically early stops low-performing trials within each bracket.</p>
+<p>To use this implementation of HyperBand with Ray.tune, all you need
+to do is specify the max length of time a trial can run <cite>max_t</cite>, the time
+units <cite>time_attr</cite>, and the name of the reported objective value
+<cite>reward_attr</cite>. We automatically determine reasonable values for the other
+HyperBand parameters based on the given values.</p>
+<p>For example, to limit trials to 10 minutes and early stop based on the
+<cite>episode_mean_reward</cite> attr, construct:</p>
+<p><code class="docutils literal"><span class="pre">HyperBand('time_total_s',</span> <span class="pre">'episode_reward_mean',</span> <span class="pre">600)</span></code></p>
+<p>See also: <a class="reference external" href="https://people.eecs.berkeley.edu/~kjamieson/hyperband.html">https://people.eecs.berkeley.edu/~kjamieson/hyperband.html</a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>time_attr</strong> (<em>str</em>) – The TrainingResult attr to use for comparing time.
+Note that you can pass in something non-temporal such as
+<cite>training_iteration</cite> as a measure of progress, the only requirement
+is that the attribute should increase monotonically.</li>
+<li><strong>reward_attr</strong> (<em>str</em>) – The TrainingResult objective value attribute. As
+with <cite>time_attr</cite>, this may refer to any objective value. Stopping
+procedures will use this attribute.</li>
+<li><strong>max_t</strong> (<em>int</em>) – max time units per trial. Trials will be stopped after
+max_t time units (determined by time_attr) have passed.
+The HyperBand scheduler automatically tries to determine a
+reasonable number of brackets based on this.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="checkpointing-support">
+<h2>Checkpointing support<a class="headerlink" href="#checkpointing-support" title="Permalink to this headline">¶</a></h2>
+<p>To enable checkpoint / resume, the full <code class="docutils literal"><span class="pre">Trainable</span></code> API must be implemented (though as shown in the examples above, you can get away with just supplying a <code class="docutils literal"><span class="pre">train(config,</span> <span class="pre">reporter)</span></code> func if you don’t need checkpointing). Implementing this interface is required to support resource multiplexing in schedulers such as HyperBand. For example, all <a class="reference external" href="https://github.com/ray-project/ray/blob/master/python/ray/rllib/agent.py">RLlib agents</a> implement the <code class="docutils literal"><span class="pre">Trainable</span></code> API.</p>
+<dl class="class">
+<dt id="ray.tune.trainable.Trainable">
+<em class="property">class </em><code class="descclassname">ray.tune.trainable.</code><code class="descname">Trainable</code><a class="headerlink" href="#ray.tune.trainable.Trainable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Interface for trainable models, functions, etc.</p>
+<p>Implementing this interface is required to use Ray.tune’s full
+functionality, though you can also get away with supplying just a
+<cite>my_train(config, reporter)</cite> function and calling:</p>
+<p><code class="docutils literal"><span class="pre">register_trainable(&quot;my_func&quot;,</span> <span class="pre">train)</span></code></p>
+<p>to register it for use with tune. The function will be automatically
+converted to this interface (sans checkpoint functionality).</p>
+<dl class="method">
+<dt id="ray.tune.trainable.Trainable.restore">
+<code class="descname">restore</code><span class="sig-paren">(</span><em>checkpoint_path</em><span class="sig-paren">)</span><a class="headerlink" href="#ray.tune.trainable.Trainable.restore" title="Permalink to this definition">¶</a></dt>
+<dd><p>Restores training state from a given model checkpoint.</p>
+<p>These checkpoints are returned from calls to save().</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ray.tune.trainable.Trainable.save">
+<code class="descname">save</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ray.tune.trainable.Trainable.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves the current model state to a checkpoint.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Checkpoint path that may be passed to restore().</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ray.tune.trainable.Trainable.stop">
+<code class="descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ray.tune.trainable.Trainable.stop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Releases all resources used by this class.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ray.tune.trainable.Trainable.train">
+<code class="descname">train</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ray.tune.trainable.Trainable.train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs one logical iteration of training.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A TrainingResult that describes training progress.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="resource-allocation">
+<h2>Resource Allocation<a class="headerlink" href="#resource-allocation" title="Permalink to this headline">¶</a></h2>
+<p>Ray.tune runs each trial as a Ray actor, allocating the specified GPU and CPU <code class="docutils literal"><span class="pre">resources</span></code> to each actor (defaulting to 1 CPU per trial). A trial will not be scheduled unless at least that amount of resources is available in the cluster, preventing the cluster from being overloaded.</p>
+<p>If your trainable function / class creates further Ray actors or tasks that also consume CPU / GPU resources, you will also want to set <code class="docutils literal"><span class="pre">driver_cpu_limit</span></code> or <code class="docutils literal"><span class="pre">driver_gpu_limit</span></code> to tell Ray not to assign the entire resource reservation to your top-level trainable function, as described in <a class="reference external" href="https://github.com/ray-project/ray/blob/master/python/ray/tune/trial.py">trial.py</a>.</p>
+</div>
+<div class="section" id="command-line-json-yaml-api">
+<h2>Command-line JSON/YAML API<a class="headerlink" href="#command-line-json-yaml-api" title="Permalink to this headline">¶</a></h2>
+<p>The JSON config passed to <code class="docutils literal"><span class="pre">run_experiments</span></code> can also be put in a JSON or YAML file, and the experiments run using the <code class="docutils literal"><span class="pre">tune.py</span></code> script. This supports the same functionality as the Python API, e.g.:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">ray</span><span class="o">/</span><span class="n">python</span><span class="o">/</span><span class="n">tune</span>
+<span class="o">./</span><span class="n">tune</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">f</span> <span class="n">examples</span><span class="o">/</span><span class="n">tune_mnist_ray</span><span class="o">.</span><span class="n">yaml</span> <span class="o">--</span><span class="n">scheduler</span><span class="o">=</span><span class="n">MedianStoppingRule</span>
+</pre></div>
+</div>
+<p>For more examples of experiments described by YAML files, see <a class="reference external" href="https://github.com/ray-project/ray/tree/master/python/ray/rllib/tuned_examples">RLlib tuned examples</a>.</p>
+</div>
+<div class="section" id="running-in-a-large-cluster">
+<h2>Running in a large cluster<a class="headerlink" href="#running-in-a-large-cluster" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal"><span class="pre">run_experiments</span></code> also takes any arguments that <code class="docutils literal"><span class="pre">ray.init()</span></code> does. This can be used to pass in the redis address of a multi-node Ray cluster. For more details, check out the <a class="reference external" href="https://github.com/ray-project/ray/blob/master/python/ray/tune/tune.py">tune.py script</a>.</p>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="rllib.html" class="btn btn-neutral float-right" title="Ray RLlib: A Scalable Reinforcement Learning Library" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="using-ray-with-gpus.html" class="btn btn-neutral" title="Using Ray with GPUs" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, The Ray Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

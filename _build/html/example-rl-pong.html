@@ -1,0 +1,377 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Learning to Play Pong &mdash; Ray 0.3.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Ray 0.3.0 documentation" href="index.html"/>
+        <link rel="next" title="Policy Gradient Methods" href="example-policy-gradient.html"/>
+        <link rel="prev" title="Hyperparameter Optimization" href="example-hyperopt.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Ray
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install-on-ubuntu.html">Installation on Ubuntu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install-on-macosx.html">Installation on Mac OS X</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install-on-docker.html">Installation on Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation-troubleshooting.html">Installation Troubleshooting</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">The Ray API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="actors.html">Actors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-with-gpus.html">Using Ray with GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tune.html">Ray.tune: Hyperparameter Optimization Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rllib.html">Ray RLlib: A Scalable Reinforcement Learning Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rllib-dev.html">RLlib Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="webui.html">Web UI</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Examples</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="example-hyperopt.html">Hyperparameter Optimization</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Learning to Play Pong</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#the-distributed-version">The distributed version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="example-policy-gradient.html">Policy Gradient Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-parameter-server.html">Parameter Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-resnet.html">ResNet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-a3c.html">Asynchronous Advantage Actor Critic (A3C)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-lbfgs.html">Batch L-BFGS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-evolution-strategies.html">Evolution Strategies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-cython.html">Cython</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-streaming.html">Streaming MapReduce</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-with-tensorflow.html">Using Ray with TensorFlow</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Design</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="internals-overview.html">An Overview of the Internals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="serialization.html">Serialization in the Object Store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fault-tolerance.html">Fault Tolerance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plasma-object-store.html">The Plasma Object Store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">Resource (CPUs, GPUs)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Cluster Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="autoscaling.html">Cloud Setup and Auto-Scaling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-on-a-cluster.html">Using Ray on a Cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-on-a-large-cluster.html">Using Ray on a Large Cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-and-docker-on-a-cluster.html">Using Ray and Docker on a Cluster (EXPERIMENTAL)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Help</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ray</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Learning to Play Pong</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/example-rl-pong.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="learning-to-play-pong">
+<h1>Learning to Play Pong<a class="headerlink" href="#learning-to-play-pong" title="Permalink to this headline">¶</a></h1>
+<p>In this example, we’ll train a <strong>very simple</strong> neural network to play Pong using
+the OpenAI Gym. This application is adapted, with minimal modifications, from
+Andrej Karpathy’s <a class="reference external" href="https://gist.github.com/karpathy/a4166c7fe253700972fcbc77e4ea32c5">code</a> (see the accompanying <a class="reference external" href="http://karpathy.github.io/2016/05/31/rl/">blog post</a>).</p>
+<p>You can view the <a class="reference external" href="https://github.com/ray-project/ray/tree/master/examples/rl_pong">code for this example</a>.</p>
+<p>To run the application, first install some dependencies.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>pip install gym<span class="o">[</span>atari<span class="o">]</span>
+</pre></div>
+</div>
+<p>Then you can run the example as follows.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>python ray/examples/rl_pong/driver.py --batch-size<span class="o">=</span><span class="m">10</span>
+</pre></div>
+</div>
+<p>To run the example on a cluster, simply pass in the flag
+<code class="docutils literal"><span class="pre">--redis-address=&lt;redis-address&gt;</span></code>.</p>
+<p>At the moment, on a large machine with 64 physical cores, computing an update
+with a batch of size 1 takes about 1 second, a batch of size 10 takes about 2.5
+seconds. A batch of size 60 takes about 3 seconds. On a cluster with 11 nodes,
+each with 18 physical cores, a batch of size 300 takes about 10 seconds. If the
+numbers you see differ from these by much, take a look at the
+<strong>Troubleshooting</strong> section at the bottom of this page and consider <a class="reference external" href="https://github.com/ray-project/ray/issues">submitting
+an issue</a>.</p>
+<p><strong>Note</strong> that these times depend on how long the rollouts take, which in turn
+depends on how well the policy is doing. For example, a really bad policy will
+lose very quickly. As the policy learns, we should expect these numbers to
+increase.</p>
+<div class="section" id="the-distributed-version">
+<h2>The distributed version<a class="headerlink" href="#the-distributed-version" title="Permalink to this headline">¶</a></h2>
+<p>At the core of Andrej’s <a class="reference external" href="https://gist.github.com/karpathy/a4166c7fe253700972fcbc77e4ea32c5">code</a>, a neural network is used to define a “policy”
+for playing Pong (that is, a function that chooses an action given a state). In
+the loop, the network repeatedly plays games of Pong and records a gradient from
+each game. Every ten games, the gradients are combined together and used to
+update the network.</p>
+<p>This example is easy to parallelize because the network can play ten games in
+parallel and no information needs to be shared between the games.</p>
+<p>We define an <strong>actor</strong> for the Pong environment, which includes a method for
+performing a rollout and computing a gradient update. Below is pseudocode for
+the actor.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="nd">@ray.remote</span>
+<span class="k">class</span> <span class="nc">PongEnv</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Tell numpy to only use one core. If we don&#39;t do this, each actor may try</span>
+        <span class="c1"># to use all of the cores and the resulting contention may result in no</span>
+        <span class="c1"># speedup over the serial version. Note that if numpy is using OpenBLAS,</span>
+        <span class="c1"># then you need to set OPENBLAS_NUM_THREADS=1, and you probably need to do</span>
+        <span class="c1"># it from the command line (so it happens before numpy is imported).</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;MKL_NUM_THREADS&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;Pong-v0&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">compute_gradient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+        <span class="c1"># Reset the game.</span>
+        <span class="n">observation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="k">while</span> <span class="ow">not</span> <span class="n">done</span><span class="p">:</span>
+            <span class="c1"># Choose an action using policy_forward.</span>
+            <span class="c1"># Take the action and observe the new state of the world.</span>
+        <span class="c1"># Compute a gradient using policy_backward. Return the gradient and reward.</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">gradient</span><span class="p">,</span> <span class="n">reward_sum</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>We then create a number of actors, so that we can perform rollouts in parallel.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">actors</span> <span class="o">=</span> <span class="p">[</span><span class="n">PongEnv</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">batch_size</span><span class="p">)]</span>
+</pre></div>
+</div>
+<p>Calling this remote function inside of a for loop, we launch multiple tasks to
+perform rollouts and compute gradients in parallel.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">model_id</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="n">actions</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="c1"># Launch tasks to compute gradients from multiple rollouts in parallel.</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">batch_size</span><span class="p">):</span>
+    <span class="n">action_id</span> <span class="o">=</span> <span class="n">actors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">compute_gradient</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">model_id</span><span class="p">)</span>
+    <span class="n">actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">action_id</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline">¶</a></h2>
+<p>If you are not seeing any speedup from Ray (and assuming you’re using a
+multicore machine), the problem may be that numpy is trying to use multiple
+threads. When many processes are each trying to use multiple threads, the result
+is often no speedup. When running this example, try opening up <code class="docutils literal"><span class="pre">top</span></code> and
+seeing if some python processes are using more than 100% CPU. If yes, then this
+is likely the problem.</p>
+<p>The example tries to set <code class="docutils literal"><span class="pre">MKL_NUM_THREADS=1</span></code> in the actor. However, that only
+works if the numpy on your machine is actually using MKL. If it’s using
+OpenBLAS, then you’ll need to set <code class="docutils literal"><span class="pre">OPENBLAS_NUM_THREADS=1</span></code>. In fact, you may
+have to do this <strong>before</strong> running the script (it may need to happen before
+numpy is imported).</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">OPENBLAS_NUM_THREADS</span><span class="o">=</span><span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="example-policy-gradient.html" class="btn btn-neutral float-right" title="Policy Gradient Methods" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="example-hyperopt.html" class="btn btn-neutral" title="Hyperparameter Optimization" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, The Ray Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

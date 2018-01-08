@@ -1,0 +1,692 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>The Ray API &mdash; Ray 0.3.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Ray 0.3.0 documentation" href="index.html"/>
+        <link rel="next" title="Actors" href="actors.html"/>
+        <link rel="prev" title="Tutorial" href="tutorial.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Ray
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install-on-ubuntu.html">Installation on Ubuntu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install-on-macosx.html">Installation on Mac OS X</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install-on-docker.html">Installation on Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation-troubleshooting.html">Installation Troubleshooting</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">The Ray API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#starting-ray">Starting Ray</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#starting-and-stopping-a-cluster-within-a-script">Starting and stopping a cluster within a script</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#connecting-to-an-existing-cluster">Connecting to an existing cluster</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#defining-remote-functions">Defining remote functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#getting-values-from-object-ids">Getting values from object IDs</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#numpy-arrays">Numpy arrays</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#putting-objects-in-the-object-store">Putting objects in the object store</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#waiting-for-a-subset-of-tasks-to-finish">Waiting for a subset of tasks to finish</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#viewing-errors">Viewing errors</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="actors.html">Actors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-with-gpus.html">Using Ray with GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tune.html">Ray.tune: Hyperparameter Optimization Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rllib.html">Ray RLlib: A Scalable Reinforcement Learning Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rllib-dev.html">RLlib Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="webui.html">Web UI</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="example-hyperopt.html">Hyperparameter Optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-rl-pong.html">Learning to Play Pong</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-policy-gradient.html">Policy Gradient Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-parameter-server.html">Parameter Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-resnet.html">ResNet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-a3c.html">Asynchronous Advantage Actor Critic (A3C)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-lbfgs.html">Batch L-BFGS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-evolution-strategies.html">Evolution Strategies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-cython.html">Cython</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-streaming.html">Streaming MapReduce</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-with-tensorflow.html">Using Ray with TensorFlow</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Design</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="internals-overview.html">An Overview of the Internals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="serialization.html">Serialization in the Object Store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fault-tolerance.html">Fault Tolerance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plasma-object-store.html">The Plasma Object Store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">Resource (CPUs, GPUs)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Cluster Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="autoscaling.html">Cloud Setup and Auto-Scaling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-on-a-cluster.html">Using Ray on a Cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-on-a-large-cluster.html">Using Ray on a Large Cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-and-docker-on-a-cluster.html">Using Ray and Docker on a Cluster (EXPERIMENTAL)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Help</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ray</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>The Ray API</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/api.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="the-ray-api">
+<h1>The Ray API<a class="headerlink" href="#the-ray-api" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="starting-ray">
+<h2>Starting Ray<a class="headerlink" href="#starting-ray" title="Permalink to this headline">¶</a></h2>
+<p>There are two main ways in which Ray can be used. First, you can start all of
+the relevant Ray processes and shut them all down within the scope of a single
+script. Second, you can connect to and use an existing Ray cluster.</p>
+<div class="section" id="starting-and-stopping-a-cluster-within-a-script">
+<h3>Starting and stopping a cluster within a script<a class="headerlink" href="#starting-and-stopping-a-cluster-within-a-script" title="Permalink to this headline">¶</a></h3>
+<p>One use case is to start all of the relevant Ray processes when you call
+<code class="docutils literal"><span class="pre">ray.init</span></code> and shut them down when the script exits. These processes include
+local and global schedulers, an object store and an object manager, a redis
+server, and more.</p>
+<p><strong>Note:</strong> this approach is limited to a single machine.</p>
+<p>This can be done as follows.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">ray</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>If there are GPUs available on the machine, you should specify this with the
+<code class="docutils literal"><span class="pre">num_gpus</span></code> argument. Similarly, you can also specify the number of CPUs with
+<code class="docutils literal"><span class="pre">num_cpus</span></code>.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">ray</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">num_cpus</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">num_gpus</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>By default, Ray will use <code class="docutils literal"><span class="pre">psutil.cpu_count()</span></code> to determine the number of CPUs.
+Ray will also attempt to automatically determine the number of GPUs.</p>
+<p>Instead of thinking about the number of “worker” processes on each node, we
+prefer to think in terms of the quantities of CPU and GPU resources on each
+node and to provide the illusion of an infinite pool of workers. Tasks will be
+assigned to workers based on the availability of resources so as to avoid
+contention and not based on the number of available worker processes.</p>
+</div>
+<div class="section" id="connecting-to-an-existing-cluster">
+<h3>Connecting to an existing cluster<a class="headerlink" href="#connecting-to-an-existing-cluster" title="Permalink to this headline">¶</a></h3>
+<p>Once a Ray cluster has been started, the only thing you need in order to connect
+to it is the address of the Redis server in the cluster. In this case, your
+script will not start up or shut down any processes. The cluster and all of its
+processes may be shared between multiple scripts and multiple users. To do this,
+you simply need to know the address of the cluster’s Redis server. This can be
+done with a command like the following.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">ray</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">redis_address</span><span class="o">=</span><span class="s2">&quot;12.345.67.89:6379&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In this case, you cannot specify <code class="docutils literal"><span class="pre">num_cpus</span></code> or <code class="docutils literal"><span class="pre">num_gpus</span></code> in <code class="docutils literal"><span class="pre">ray.init</span></code>
+because that information is passed into the cluster when the cluster is started,
+not when your script is started.</p>
+<p>View the instructions for how to <a class="reference external" href="http://ray.readthedocs.io/en/latest/using-ray-on-a-cluster.html">start a Ray cluster</a> on multiple nodes.</p>
+<dl class="function">
+<dt id="ray.init">
+<code class="descclassname">ray.</code><code class="descname">init</code><span class="sig-paren">(</span><em>redis_address=None</em>, <em>node_ip_address=None</em>, <em>object_id_seed=None</em>, <em>num_workers=None</em>, <em>driver_mode=0</em>, <em>redirect_output=False</em>, <em>num_cpus=None</em>, <em>num_gpus=None</em>, <em>resources=None</em>, <em>num_custom_resource=None</em>, <em>num_redis_shards=None</em>, <em>redis_max_clients=None</em>, <em>plasma_directory=None</em>, <em>huge_pages=False</em>, <em>include_webui=True</em><span class="sig-paren">)</span><a class="headerlink" href="#ray.init" title="Permalink to this definition">¶</a></dt>
+<dd><p>Connect to an existing Ray cluster or start one and connect to it.</p>
+<p>This method handles two cases. Either a Ray cluster already exists and we
+just attach this driver to it, or we start all of the processes associated
+with a Ray cluster and attach to the newly started cluster.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>node_ip_address</strong> (<em>str</em>) – The IP address of the node that we are on.</li>
+<li><strong>redis_address</strong> (<em>str</em>) – The address of the Redis server to connect to. If
+this address is not provided, then this command will start Redis, a
+global scheduler, a local scheduler, a plasma store, a plasma
+manager, and some workers. It will also kill these processes when
+Python exits.</li>
+<li><strong>object_id_seed</strong> (<em>int</em>) – Used to seed the deterministic generation of
+object IDs. The same value can be used across multiple runs of the
+same job in order to generate the object IDs in a consistent
+manner. However, the same ID should not be used for different jobs.</li>
+<li><strong>num_workers</strong> (<em>int</em>) – The number of workers to start. This is only
+provided if redis_address is not provided.</li>
+<li><strong>driver_mode</strong> (<em>bool</em>) – The mode in which to start the driver. This should
+be one of ray.SCRIPT_MODE, ray.PYTHON_MODE, and ray.SILENT_MODE.</li>
+<li><strong>redirect_output</strong> (<em>bool</em>) – True if stdout and stderr for all the processes
+should be redirected to files and false otherwise.</li>
+<li><strong>num_cpus</strong> (<em>int</em>) – Number of cpus the user wishes all local schedulers to
+be configured with.</li>
+<li><strong>num_gpus</strong> (<em>int</em>) – Number of gpus the user wishes all local schedulers to
+be configured with.</li>
+<li><strong>resources</strong> – A dictionary mapping the name of a resource to the quantity
+of that resource available.</li>
+<li><strong>num_redis_shards</strong> – The number of Redis shards to start in addition to
+the primary Redis shard.</li>
+<li><strong>redis_max_clients</strong> – If provided, attempt to configure Redis with this
+maxclients number.</li>
+<li><strong>plasma_directory</strong> – A directory where the Plasma memory mapped files will
+be created.</li>
+<li><strong>huge_pages</strong> – Boolean flag indicating whether to start the Object
+Store with hugetlbfs support. Requires plasma_directory.</li>
+<li><strong>include_webui</strong> – Boolean flag indicating whether to start the web
+UI, which is a Jupyter notebook.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Address information about the started processes.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal"><span class="pre">Exception</span></code> – An exception is raised if an inappropriate combination of
+arguments is passed in.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="defining-remote-functions">
+<h2>Defining remote functions<a class="headerlink" href="#defining-remote-functions" title="Permalink to this headline">¶</a></h2>
+<p>Remote functions are used to create tasks. To define a remote function, the
+<code class="docutils literal"><span class="pre">&#64;ray.remote</span></code> decorator is placed over the function definition.</p>
+<p>The function can then be invoked with <code class="docutils literal"><span class="pre">f.remote</span></code>. Invoking the function
+creates a <strong>task</strong> which will be scheduled on and executed by some worker
+process in the Ray cluster. The call will return an <strong>object ID</strong> (essentially a
+future) representing the eventual return value of the task. Anyone with the
+object ID can retrieve its value, regardless of where the task was executed (see
+<a class="reference internal" href="#getting-values-from-object-ids">Getting values from object IDs</a>).</p>
+<p>When a task executes, its outputs will be serialized into a string of bytes and
+stored in the object store.</p>
+<p>Note that arguments to remote functions can be values or object IDs.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="nd">@ray.remote</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
+
+<span class="n">x_id</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">x_id</span><span class="p">)</span>  <span class="c1"># 1</span>
+
+<span class="n">y_id</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">x_id</span><span class="p">)</span>
+<span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">y_id</span><span class="p">)</span>  <span class="c1"># 2</span>
+</pre></div>
+</div>
+<p>If you want a remote function to return multiple object IDs, you can do that by
+passing the <code class="docutils literal"><span class="pre">num_return_vals</span></code> argument into the remote decorator.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="nd">@ray.remote</span><span class="p">(</span><span class="n">num_return_vals</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">():</span>
+    <span class="k">return</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span>
+
+<span class="n">x_id</span><span class="p">,</span> <span class="n">y_id</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">remote</span><span class="p">()</span>
+<span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">x_id</span><span class="p">)</span>  <span class="c1"># 1</span>
+<span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">y_id</span><span class="p">)</span>  <span class="c1"># 2</span>
+</pre></div>
+</div>
+<dl class="function">
+<dt id="ray.remote">
+<code class="descclassname">ray.</code><code class="descname">remote</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ray.remote" title="Permalink to this definition">¶</a></dt>
+<dd><p>This decorator is used to define remote functions and to define actors.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>num_return_vals</strong> (<em>int</em>) – The number of object IDs that a call to this
+function should return.</li>
+<li><strong>num_cpus</strong> (<em>int</em>) – The number of CPUs needed to execute this function.</li>
+<li><strong>num_gpus</strong> (<em>int</em>) – The number of GPUs needed to execute this function.</li>
+<li><strong>resources</strong> – A dictionary mapping resource name to the required quantity
+of that resource.</li>
+<li><strong>max_calls</strong> (<em>int</em>) – The maximum number of tasks of this kind that can be
+run on a worker before the worker needs to be restarted.</li>
+<li><strong>checkpoint_interval</strong> (<em>int</em>) – The number of tasks to run between
+checkpoints of the actor state.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="getting-values-from-object-ids">
+<h2>Getting values from object IDs<a class="headerlink" href="#getting-values-from-object-ids" title="Permalink to this headline">¶</a></h2>
+<p>Object IDs can be converted into objects by calling <code class="docutils literal"><span class="pre">ray.get</span></code> on the object
+ID. Note that <code class="docutils literal"><span class="pre">ray.get</span></code> accepts either a single object ID or a list of object
+IDs.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="nd">@ray.remote</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">():</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;key1&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]}</span>
+
+<span class="c1"># Get one object ID.</span>
+<span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">remote</span><span class="p">())</span>  <span class="c1"># {&#39;key1&#39;: [&#39;value&#39;]}</span>
+
+<span class="c1"># Get a list of object IDs.</span>
+<span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">([</span><span class="n">f</span><span class="o">.</span><span class="n">remote</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">)])</span>  <span class="c1"># [{&#39;key1&#39;: [&#39;value&#39;]}, {&#39;key1&#39;: [&#39;value&#39;]}]</span>
+</pre></div>
+</div>
+<div class="section" id="numpy-arrays">
+<h3>Numpy arrays<a class="headerlink" href="#numpy-arrays" title="Permalink to this headline">¶</a></h3>
+<p>Numpy arrays are handled more efficiently than other data types, so <strong>use numpy
+arrays whenever possible</strong>.</p>
+<p>Any numpy arrays that are part of the serialized object will not be copied out
+of the object store. They will remain in the object store and the resulting
+deserialized object will simply have a pointer to the relevant place in the
+object store’s memory.</p>
+<p>Since objects in the object store are immutable, this means that if you want to
+mutate a numpy array that was returned by a remote function, you will have to
+first copy it.</p>
+<dl class="function">
+<dt id="ray.get">
+<code class="descclassname">ray.</code><code class="descname">get</code><span class="sig-paren">(</span><em>object_ids</em>, <em>worker=&lt;ray.worker.Worker object&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#ray.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a remote object or a list of remote objects from the object store.</p>
+<p>This method blocks until the object corresponding to the object ID is
+available in the local object store. If this object is not in the local
+object store, it will be shipped from an object store that has it (once the
+object has been created). If object_ids is a list, then the objects
+corresponding to each object in the list will be returned.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>object_ids</strong> – Object ID of the object to get or a list of object IDs to
+get.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A Python object or a list of Python objects.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="putting-objects-in-the-object-store">
+<h2>Putting objects in the object store<a class="headerlink" href="#putting-objects-in-the-object-store" title="Permalink to this headline">¶</a></h2>
+<p>The primary way that objects are placed in the object store is by being returned
+by a task. However, it is also possible to directly place objects in the object
+store using <code class="docutils literal"><span class="pre">ray.put</span></code>.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">x_id</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">x_id</span><span class="p">)</span>  <span class="c1"># 1</span>
+</pre></div>
+</div>
+<p>The main reason to use <code class="docutils literal"><span class="pre">ray.put</span></code> is that you want to pass the same large
+object into a number of tasks. By first doing <code class="docutils literal"><span class="pre">ray.put</span></code> and then passing the
+resulting object ID into each of the tasks, the large object is copied into the
+object store only once, whereas when we directly pass the object in, it is
+copied multiple times.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="nd">@ray.remote</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">10</span> <span class="o">**</span> <span class="mi">6</span><span class="p">)</span>
+
+<span class="c1"># Alternative 1: Here, x is copied into the object store 10 times.</span>
+<span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)]</span>
+
+<span class="c1"># Alternative 2: Here, x is copied into the object store once.</span>
+<span class="n">x_id</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">x_id</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)]</span>
+</pre></div>
+</div>
+<p>Note that <code class="docutils literal"><span class="pre">ray.put</span></code> is called under the hood in a couple situations.</p>
+<ul class="simple">
+<li>It is called on the values returned by a task.</li>
+<li>It is called on the arguments to a task, unless the arguments are Python
+primitives like integers or short strings, lists, tuples, or dictionaries.</li>
+</ul>
+<dl class="function">
+<dt id="ray.put">
+<code class="descclassname">ray.</code><code class="descname">put</code><span class="sig-paren">(</span><em>value</em>, <em>worker=&lt;ray.worker.Worker object&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#ray.put" title="Permalink to this definition">¶</a></dt>
+<dd><p>Store an object in the object store.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> – The Python object to be stored.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The object ID assigned to this value.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="waiting-for-a-subset-of-tasks-to-finish">
+<h2>Waiting for a subset of tasks to finish<a class="headerlink" href="#waiting-for-a-subset-of-tasks-to-finish" title="Permalink to this headline">¶</a></h2>
+<p>It is often desirable to adapt the computation being done based on when
+different tasks finish. For example, if a bunch of tasks each take a variable
+length of time, and their results can be processed in any order, then it makes
+sense to simply process the results in the order that they finish. In other
+settings, it makes sense to discard straggler tasks whose results may not be
+needed.</p>
+<p>To do this, we introduce the <code class="docutils literal"><span class="pre">ray.wait</span></code> primitive, which takes a list of
+object IDs and returns when a subset of them are available. By default it blocks
+until a single object is available, but the <code class="docutils literal"><span class="pre">num_returns</span></code> value can be
+specified to wait for a different number. If a <code class="docutils literal"><span class="pre">timeout</span></code> argument is passed
+in, it will block for at most that many milliseconds and may return a list with
+fewer than <code class="docutils literal"><span class="pre">num_returns</span></code> elements.</p>
+<p>The <code class="docutils literal"><span class="pre">ray.wait</span></code> function returns two lists. The first list is a list of object
+IDs of available objects (of length at most <code class="docutils literal"><span class="pre">num_returns</span></code>), and the second
+list is a list of the remaining object IDs, so the combination of these two
+lists is equal to the list passed in to <code class="docutils literal"><span class="pre">ray.wait</span></code> (up to ordering).</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="nd">@ray.remote</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">n</span>
+
+<span class="c1"># Start 3 tasks with different durations.</span>
+<span class="n">results</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
+<span class="c1"># Block until 2 of them have finished.</span>
+<span class="n">ready_ids</span><span class="p">,</span> <span class="n">remaining_ids</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">num_returns</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="c1"># Start 5 tasks with different durations.</span>
+<span class="n">results</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
+<span class="c1"># Block until 4 of them have finished or 2.5 seconds pass.</span>
+<span class="n">ready_ids</span><span class="p">,</span> <span class="n">remaining_ids</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">num_returns</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">2500</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>It is easy to use this construct to create an infinite loop in which multiple
+tasks are executing, and whenever one task finishes, a new one is launched.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="nd">@ray.remote</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">():</span>
+    <span class="k">return</span> <span class="mi">1</span>
+
+<span class="c1"># Start 5 tasks.</span>
+<span class="n">remaining_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">remote</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)]</span>
+<span class="c1"># Whenever one task finishes, start a new one.</span>
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
+    <span class="n">ready_ids</span><span class="p">,</span> <span class="n">remaining_ids</span> <span class="o">=</span> <span class="n">ray</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">remaining_ids</span><span class="p">)</span>
+    <span class="c1"># Get the available object and do something with it.</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">ray</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">ready_ids</span><span class="p">))</span>
+    <span class="c1"># Start a new task.</span>
+    <span class="n">remaining_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">remote</span><span class="p">())</span>
+</pre></div>
+</div>
+<dl class="function">
+<dt id="ray.wait">
+<code class="descclassname">ray.</code><code class="descname">wait</code><span class="sig-paren">(</span><em>object_ids</em>, <em>num_returns=1</em>, <em>timeout=None</em>, <em>worker=&lt;ray.worker.Worker object&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#ray.wait" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of IDs that are ready and a list of IDs that are not.</p>
+<p>If timeout is set, the function returns either when the requested number of
+IDs are ready or when the timeout is reached, whichever occurs first. If it
+is not set, the function simply waits until that number of objects is ready
+and returns that exact number of objectids.</p>
+<p>This method returns two lists. The first list consists of object IDs that
+correspond to objects that are stored in the object store. The second list
+corresponds to the rest of the object IDs (which may or may not be ready).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>object_ids</strong> (<em>List</em><em>[</em><em>ObjectID</em><em>]</em>) – List of object IDs for objects that may or
+may not be ready. Note that these IDs must be unique.</li>
+<li><strong>num_returns</strong> (<em>int</em>) – The number of object IDs that should be returned.</li>
+<li><strong>timeout</strong> (<em>int</em>) – The maximum amount of time in milliseconds to wait
+before returning.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><dl class="docutils">
+<dt>A list of object IDs that are ready and a list of the remaining object</dt>
+<dd><p class="first last">IDs.</p>
+</dd>
+</dl>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="viewing-errors">
+<h2>Viewing errors<a class="headerlink" href="#viewing-errors" title="Permalink to this headline">¶</a></h2>
+<p>Keeping track of errors that occur in different processes throughout a cluster
+can be challenging. There are a couple mechanisms to help with this.</p>
+<ol class="arabic simple">
+<li>If a task throws an exception, that exception will be printed in the
+background of the driver process.</li>
+<li>If <code class="docutils literal"><span class="pre">ray.get</span></code> is called on an object ID whose parent task threw an exception
+before creating the object, the exception will be re-raised by <code class="docutils literal"><span class="pre">ray.get</span></code>.</li>
+</ol>
+<p>The errors will also be accumulated in Redis and can be accessed with
+<code class="docutils literal"><span class="pre">ray.error_info</span></code>. Normally, you shouldn’t need to do this, but it is possible.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="nd">@ray.remote</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">():</span>
+    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;This task failed!!&quot;</span><span class="p">)</span>
+
+<span class="n">f</span><span class="o">.</span><span class="n">remote</span><span class="p">()</span>  <span class="c1"># An error message will be printed in the background.</span>
+
+<span class="c1"># Wait for the error to propagate to Redis.</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">ray</span><span class="o">.</span><span class="n">error_info</span><span class="p">()</span>  <span class="c1"># This returns a list containing the error message.</span>
+</pre></div>
+</div>
+<dl class="function">
+<dt id="ray.error_info">
+<code class="descclassname">ray.</code><code class="descname">error_info</code><span class="sig-paren">(</span><em>worker=&lt;ray.worker.Worker object&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#ray.error_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return information about failed tasks.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="actors.html" class="btn btn-neutral float-right" title="Actors" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="tutorial.html" class="btn btn-neutral" title="Tutorial" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, The Ray Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

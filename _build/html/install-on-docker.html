@@ -1,0 +1,438 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Installation on Docker &mdash; Ray 0.3.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Ray 0.3.0 documentation" href="index.html"/>
+        <link rel="next" title="Installation Troubleshooting" href="installation-troubleshooting.html"/>
+        <link rel="prev" title="Installation on Mac OS X" href="install-on-macosx.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Ray
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Installation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install-on-ubuntu.html">Installation on Ubuntu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install-on-macosx.html">Installation on Mac OS X</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation on Docker</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#install-docker">Install Docker</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#mac-linux-windows-platforms">Mac, Linux, Windows platforms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#docker-installation-on-ec2-with-ubuntu">Docker installation on EC2 with Ubuntu</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#clone-the-ray-repository">Clone the Ray repository</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#build-docker-images">Build Docker images</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#launch-ray-in-docker">Launch Ray in Docker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#test-if-the-installation-succeeded">Test if the installation succeeded</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-examples-in-docker">Running examples in Docker</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#hyperparameter-optimization">Hyperparameter optimization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#batch-l-bfgs">Batch L-BFGS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#learning-to-play-pong">Learning to play Pong</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="installation-troubleshooting.html">Installation Troubleshooting</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">The Ray API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="actors.html">Actors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-with-gpus.html">Using Ray with GPUs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tune.html">Ray.tune: Hyperparameter Optimization Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rllib.html">Ray RLlib: A Scalable Reinforcement Learning Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rllib-dev.html">RLlib Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="webui.html">Web UI</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="example-hyperopt.html">Hyperparameter Optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-rl-pong.html">Learning to Play Pong</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-policy-gradient.html">Policy Gradient Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-parameter-server.html">Parameter Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-resnet.html">ResNet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-a3c.html">Asynchronous Advantage Actor Critic (A3C)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-lbfgs.html">Batch L-BFGS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-evolution-strategies.html">Evolution Strategies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-cython.html">Cython</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example-streaming.html">Streaming MapReduce</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-with-tensorflow.html">Using Ray with TensorFlow</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Design</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="internals-overview.html">An Overview of the Internals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="serialization.html">Serialization in the Object Store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fault-tolerance.html">Fault Tolerance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plasma-object-store.html">The Plasma Object Store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">Resource (CPUs, GPUs)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Cluster Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="autoscaling.html">Cloud Setup and Auto-Scaling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-on-a-cluster.html">Using Ray on a Cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-on-a-large-cluster.html">Using Ray on a Large Cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-ray-and-docker-on-a-cluster.html">Using Ray and Docker on a Cluster (EXPERIMENTAL)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Help</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ray</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Installation on Docker</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/install-on-docker.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="installation-on-docker">
+<h1>Installation on Docker<a class="headerlink" href="#installation-on-docker" title="Permalink to this headline">¶</a></h1>
+<p>You can install Ray on any platform that runs Docker. We do not presently
+publish Docker images for Ray, but you can build them yourself using the Ray
+distribution.</p>
+<p>Using Docker can streamline the build process and provide a reliable way to get
+up and running quickly.</p>
+<div class="section" id="install-docker">
+<h2>Install Docker<a class="headerlink" href="#install-docker" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="mac-linux-windows-platforms">
+<h3>Mac, Linux, Windows platforms<a class="headerlink" href="#mac-linux-windows-platforms" title="Permalink to this headline">¶</a></h3>
+<p>The Docker Platform release is available for Mac, Windows, and Linux platforms.
+Please download the appropriate version from the <a class="reference external" href="https://www.docker.com/products/overview#/install_the_platform">Docker website</a> and follow
+the corresponding installation instructions. Linux user may find these
+<a class="reference external" href="https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-16-04">alternate instructions</a> helpful.</p>
+</div>
+<div class="section" id="docker-installation-on-ec2-with-ubuntu">
+<h3>Docker installation on EC2 with Ubuntu<a class="headerlink" href="#docker-installation-on-ec2-with-ubuntu" title="Permalink to this headline">¶</a></h3>
+<p>The instructions below show in detail how to prepare an Amazon EC2 instance
+running Ubuntu 16.04 for use with Docker.</p>
+<p>Apply initialize the package repository and apply system updates:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo apt-get update
+sudo apt-get -y dist-upgrade
+</pre></div>
+</div>
+<p>Install Docker and start the service:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo apt-get install -y docker.io
+sudo service docker start
+</pre></div>
+</div>
+<p>Add the <code class="docutils literal"><span class="pre">ubuntu</span></code> user to the <code class="docutils literal"><span class="pre">docker</span></code> group to allow running Docker commands
+without sudo:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo usermod -a -G docker ubuntu
+</pre></div>
+</div>
+<p>Initiate a new login to gain group permissions (alternatively, log out and log
+back in again):</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="nb">exec</span> sudo su -l ubuntu
+</pre></div>
+</div>
+<p>Confirm that docker is running:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>docker images
+</pre></div>
+</div>
+<p>Should produce an empty table similar to the following:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="clone-the-ray-repository">
+<h2>Clone the Ray repository<a class="headerlink" href="#clone-the-ray-repository" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>git clone https://github.com/ray-project/ray.git
+</pre></div>
+</div>
+</div>
+<div class="section" id="build-docker-images">
+<h2>Build Docker images<a class="headerlink" href="#build-docker-images" title="Permalink to this headline">¶</a></h2>
+<p>Run the script to create Docker images.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="nb">cd</span> ray
+./build-docker.sh
+</pre></div>
+</div>
+<p>This script creates several Docker images:</p>
+<ul class="simple">
+<li>The <code class="docutils literal"><span class="pre">ray-project/deploy</span></code> image is a self-contained copy of code and binaries
+suitable for end users.</li>
+<li>The <code class="docutils literal"><span class="pre">ray-project/examples</span></code> adds additional libraries for running examples.</li>
+<li>The <code class="docutils literal"><span class="pre">ray-project/base-deps</span></code> image builds from Ubuntu Xenial and includes
+Anaconda and other basic dependencies and can serve as a starting point for
+developers.</li>
+</ul>
+<p>Review images by listing them:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>docker images
+</pre></div>
+</div>
+<p>Output should look something like the following:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>REPOSITORY                          TAG                 IMAGE ID            CREATED             SIZE
+ray-project/examples                latest              7584bde65894        <span class="m">4</span> days ago          <span class="m">3</span>.257 GB
+ray-project/deploy                  latest              970966166c71        <span class="m">4</span> days ago          <span class="m">2</span>.899 GB
+ray-project/base-deps               latest              f45d66963151        <span class="m">4</span> days ago          <span class="m">2</span>.649 GB
+ubuntu                              xenial              f49eec89601e        <span class="m">3</span> weeks ago         <span class="m">129</span>.5 MB
+</pre></div>
+</div>
+</div>
+<div class="section" id="launch-ray-in-docker">
+<h2>Launch Ray in Docker<a class="headerlink" href="#launch-ray-in-docker" title="Permalink to this headline">¶</a></h2>
+<p>Start out by launching the deployment container.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>docker run --shm-size<span class="o">=</span>&lt;shm-size&gt; -t -i ray-project/deploy
+</pre></div>
+</div>
+<p>Replace <code class="docutils literal"><span class="pre">&lt;shm-size&gt;</span></code> with a limit appropriate for your system, for example
+<code class="docutils literal"><span class="pre">512M</span></code> or <code class="docutils literal"><span class="pre">2G</span></code>. The <code class="docutils literal"><span class="pre">-t</span></code> and <code class="docutils literal"><span class="pre">-i</span></code> options here are required to support
+interactive use of the container.</p>
+<p><strong>Note:</strong> Ray requires a <strong>large</strong> amount of shared memory because each object
+store keeps all of its objects in shared memory, so the amount of shared memory
+will limit the size of the object store.</p>
+<p>You should now see a prompt that looks something like:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>root@ebc78f68d100:/ray#
+</pre></div>
+</div>
+</div>
+<div class="section" id="test-if-the-installation-succeeded">
+<h2>Test if the installation succeeded<a class="headerlink" href="#test-if-the-installation-succeeded" title="Permalink to this headline">¶</a></h2>
+<p>To test if the installation was successful, try running some tests. Within the
+container shell enter the following commands:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>python test/runtest.py <span class="c1"># This tests basic functionality.</span>
+</pre></div>
+</div>
+<p>You are now ready to continue with the <a class="reference external" href="http://ray.readthedocs.io/en/latest/tutorial.html">tutorial</a>.</p>
+</div>
+<div class="section" id="running-examples-in-docker">
+<h2>Running examples in Docker<a class="headerlink" href="#running-examples-in-docker" title="Permalink to this headline">¶</a></h2>
+<p>Ray includes a Docker image that includes dependencies necessary for running
+some of the examples. This can be an easy way to see Ray in action on a variety
+of workloads.</p>
+<p>Launch the examples container.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>docker run --shm-size<span class="o">=</span>1024m -t -i ray-project/examples
+</pre></div>
+</div>
+<div class="section" id="hyperparameter-optimization">
+<h3>Hyperparameter optimization<a class="headerlink" href="#hyperparameter-optimization" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="nb">cd</span> /ray/examples/hyperopt/
+python /ray/examples/hyperopt/hyperopt_simple.py
+</pre></div>
+</div>
+</div>
+<div class="section" id="batch-l-bfgs">
+<h3>Batch L-BFGS<a class="headerlink" href="#batch-l-bfgs" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>python /ray/examples/lbfgs/driver.py
+</pre></div>
+</div>
+</div>
+<div class="section" id="learning-to-play-pong">
+<h3>Learning to play Pong<a class="headerlink" href="#learning-to-play-pong" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>python /ray/examples/rl_pong/driver.py
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="installation-troubleshooting.html" class="btn btn-neutral float-right" title="Installation Troubleshooting" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="install-on-macosx.html" class="btn btn-neutral" title="Installation on Mac OS X" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, The Ray Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.3.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
