@@ -61,7 +61,7 @@
   # Set the weights
   variables.set_weights(weights)
 
-**注意：** 如果我们想要使用如下的方法 ``assign``设置权重，每次对 ``assign`` 的调用将会添加节点到图上，这个图随着时间不可控地变大.
+**注意：** 如果我们想要使用如下的方法 ``assign`` 设置权重，每次对 ``assign`` 的调用将会添加节点到图上，这个图随着时间不可控地变大.
 
 .. code-block:: python
 
