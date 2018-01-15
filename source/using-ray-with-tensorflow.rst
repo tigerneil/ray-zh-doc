@@ -1,9 +1,9 @@
-Using Ray with TensorFlow
+结合 TensorFlow 使用 Ray
 =========================
 
-This document describes best practices for using Ray with TensorFlow.
+本文档描述结合 TensorFlow 使用 Ray 的最佳实践.
 
-To see more involved examples using TensorFlow, take a look at `hyperparameter optimization`_,
+想要看到更多相关的样例，参看 `hyperparameter optimization`_,
 `A3C`_, `ResNet`_, `Policy Gradients`_, and `LBFGS`_.
 
 .. _`hyperparameter optimization`: http://ray.readthedocs.io/en/latest/example-hyperopt.html
@@ -13,22 +13,13 @@ To see more involved examples using TensorFlow, take a look at `hyperparameter o
 .. _`LBFGS`: http://ray.readthedocs.io/en/latest/example-lbfgs.html
 
 
-If you are training a deep network in the distributed setting, you may need to
-ship your deep network between processes (or machines). For example, you may
-update your model on one machine and then use that model to compute a gradient
-on another machine. However, shipping the model is not always straightforward.
+如果你在分布式的设置上训练一个深度神经网络，那么你可能需要将网络在进程（或者机器）间进行传递. 比如说，你可能在一台机器上更新模型然后使用这个模型在另外一台机器上计算梯度. 但是，传递模型过程并不总是那么直接.
 
-For example, a straightforward attempt to pickle a TensorFlow graph gives mixed
-results. Some examples fail, and some succeed (but produce very large strings).
-The results are similar with other pickling libraries as well.
+例如，直接尝试去 pickle 一个 TensorFlow 的计算图（graph）会得到一个混合的结果（mixed results）. 有些样例失败，有些例子会成功（但是会产生非常大的字符串）. 这些结果其实在其他 pickling 的库中也很类似.
 
-Furthermore, creating a TensorFlow graph can take tens of seconds, and so
-serializing a graph and recreating it in another process will be inefficient.
-The better solution is to create the same TensorFlow graph on each worker once
-at the beginning and then to ship only the weights between the workers.
+另外，创建 TensorFlow 计算图需要数十秒的时间，所以序列一个图，并在另一个进程中重新创建这个图也非常低效. 更好的解决方法是开始时就在每个 worker 上创建同样的 TensorFlow 图，然后只需要将权重在 worker 间进行传递.
 
-Suppose we have a simple network definition (this one is modified from the
-TensorFlow documentation).
+假设我们有一个简单网络的定义（这个是从 TensorFlow 文档中修改的版本）.
 
 .. code-block:: python
 
@@ -50,19 +41,16 @@ TensorFlow documentation).
   init = tf.global_variables_initializer()
   sess = tf.Session()
 
-To extract the weights and set the weights, you can use the following helper
-method.
+为了抽取权重和设置权重，你可以使用下面的帮助方法.
 
 .. code-block:: python
 
   import ray
   variables = ray.experimental.TensorFlowVariables(loss, sess)
 
-The ``TensorFlowVariables`` object provides methods for getting and setting the
-weights as well as collecting all of the variables in the model.
+``TensorFlowVariables`` 对象提供方法来 get 和 set 权重并收集模型中所有的变量.
 
-Now we can use these methods to extract the weights, and place them back in the
-network as follows.
+现在我们可以使用这些方法来抽取权重， 并将他们放回入网络中.
 
 .. code-block:: python
 
@@ -73,24 +61,17 @@ network as follows.
   # Set the weights
   variables.set_weights(weights)
 
-**Note:** If we were to set the weights using the ``assign`` method like below,
-each call to ``assign`` would add a node to the graph, and the graph would grow
-unmanageably large over time.
+**注意：** 如果我们想要使用如下的方法 ``assign``设置权重，每次对 ``assign`` 的调用将会添加节点到图上，这个图随着时间不可控地变大.
 
 .. code-block:: python
 
   w.assign(np.zeros(1))  # This adds a node to the graph every time you call it.
   b.assign(np.zeros(1))  # This adds a node to the graph every time you call it.
 
-Complete Example
+完整的样例
 ----------------
 
-Putting this all together, we would first embed the graph in an actor. Within
-the actor, we would use the ``get_weights`` and ``set_weights`` methods of the
-``TensorFlowVariables`` class. We would then use those methods to ship the weights
-(as a dictionary of variable names mapping to numpy arrays) between the
-processes without shipping the actual TensorFlow graphs, which are much more
-complex Python objects.
+将这些放在一起，我们首先会将图放入到 Actor 中. 在 Actor 内部，我们会使用 ``TensorFlowVariables`` 类的 ``get_weights`` 和 ``set_weights`` 方法. 然后使用这些方法来在进程中进行权重传递（作为变量名映射到 numpy 数组的字典）而不需要传递是更加复杂的 Python 对象的实际的 TensorFlow 计算图.
 
 .. code-block:: python
 
@@ -185,21 +166,19 @@ complex Python objects.
       if iteration % 20 == 0:
           print("Iteration {}: weights are {}".format(iteration, weights))
 
-How to Train in Parallel using Ray
+如何使用 Ray 进行并行训练
 ----------------------------------
 
-In some cases, you may want to do data-parallel training on your network. We use the network
-above to illustrate how to do this in Ray. The only differences are in the remote function
-``step`` and the driver code.
+在某些案例中，你可能想要在训练网络时进行数据并行. 我们使用上面的网络来解释如何做到数据并行. 唯一的差异是在远程函数 ``step`` 和 driver 代码.
 
-In the function ``step``, we run the grad operation rather than the train operation to get the gradients.
-Since Tensorflow pairs the gradients with the variables in a tuple, we extract the gradients to avoid
-needless computation.
+在函数 ``step`` 中，我们运行 grad 操作而不是 train 操作来获得梯度.
 
-Extracting numerical gradients
+因为 TensorFlow 将梯度和变量配对在元组中，我们要抽取出梯度出来减少不必要的计算量.
+
+抽取数值梯度
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Code like the following can be used in a remote function to compute numerical gradients.
+下面的代码可以用在远程函数中来计算数值梯度.
 
 .. code-block:: python
 
@@ -207,10 +186,10 @@ Code like the following can be used in a remote function to compute numerical gr
   y_values = [2] * 100
   numerical_grads = sess.run([grad[0] for grad in grads], feed_dict={x_data: x_values, y_data: y_values})
 
-Using the returned gradients to train the network
+使用返回的梯度来训练网络
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-By pairing the symbolic gradients with the numerical gradients in a feed_dict, we can update the network.
+通过配对符号梯度和数值梯度在 feed_dict 中，我们能够进行网络的更新.
 
 .. code-block:: python
 
@@ -219,9 +198,9 @@ By pairing the symbolic gradients with the numerical gradients in a feed_dict, w
   feed_dict = {grad[0]: numerical_grad for (grad, numerical_grad) in zip(grads, numerical_grads)}
   sess.run(train, feed_dict=feed_dict)
 
-You can then run ``variables.get_weights()`` to see the updated weights of the network.
+然后运行 ``variables.get_weights()`` 观察更新后的网络权重.
 
-For reference, the full code is below:
+下面完整的代码作为参考：
 
 .. code-block:: python
 
