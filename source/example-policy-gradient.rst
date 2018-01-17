@@ -1,42 +1,38 @@
-Policy Gradient Methods
+策略梯度方法
 =======================
 
-This code shows how to do reinforcement learning with policy gradient methods.
-View the `code for this example`_.
+这里给出如何进行基于策略梯度方法的强化学习的代码.
+
+参看： `code for this example`_.
 
 .. note::
 
-    For an overview of Ray's reinforcement learning library, see `Ray RLlib <http://ray.readthedocs.io/en/latest/rllib.html>`__.
+    Ray 强化学习库总览，请看这里 `Ray RLlib <http://ray.readthedocs.io/en/latest/rllib.html>`__.
 
 
-To run this example, you will need to install `TensorFlow with GPU support`_ (at
-least version ``1.0.0``) and a few other dependencies.
+要运行此例，需要安装 `TensorFlow with GPU support`_ (版本至少是 ``1.0.0``) 和其他的一些依赖库.
 
 .. code-block:: bash
 
   pip install gym[atari]
   pip install tensorflow
 
-Then you can run the example as follows.
+然后可以运行下面的例子.
 
 .. code-block:: bash
 
   python/ray/rllib/train.py --env=Pong-ram-v4 --run=PPO
 
-This will train an agent on the ``Pong-ram-v4`` Atari environment. You can also
-try passing in the ``Pong-v0`` environment or the ``CartPole-v0`` environment.
-If you wish to use a different environment, you will need to change a few lines
-in ``example.py``.
+这个命令会在 Atari 环境 ``Pong-ram-v4`` 中训练一个 agent. 你同样可以将 ``Pong-v0`` 环境或者 ``CartPole-v0`` 环境.
+如果你想要使用不同的环境，你就需要改变一些 ``example.py`` 的代码.
 
-Current and historical training progress can be monitored by pointing
-TensorBoard to the log output directory as follows.
+当前和历史训练过程可以通过指定 TensorBoard 的日志输出目录来进行监控.
 
 .. code-block:: bash
 
   tensorboard --logdir=~/ray_results
 
-Many of the TensorBoard metrics are also printed to the console, but you might
-find it easier to visualize and compare between runs using the TensorBoard UI.
+很多 TensorBoard 度量也能在终端打印，但你发现通过 TensorBoard 来可视化并比对运行效果更加容易.
 
 .. _`TensorFlow with GPU support`: https://www.tensorflow.org/install/
 .. _`code for this example`: https://github.com/ray-project/ray/tree/master/python/ray/rllib/ppo
